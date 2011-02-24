@@ -1,0 +1,24 @@
+<div class="span-22 prepend-1 append-1 append-bottom last">
+    <div class="portlet -lutece-border-radius">
+        <p>
+		${score_message}
+        <!-- Score : ${score} Questions count : ${questions_count} -->
+
+        <br/>
+        </p>
+        <p>
+            <#if invalid_answers_list?size != 0>
+            Voici la ou les questions auxquelles vous avez mal répondu :<br/>
+            </#if>
+        <ul>
+            <#list invalid_answers_list as invalid>
+            <li class="error">
+                Question ${invalid.questionId} : ${invalid.question}<br/>
+                Votre réponse : ${invalid.invalidAnswer}<br/>
+                La réponse correcte était : ${invalid.explaination}<br/>
+            </li>
+            </#list>
+        </ul>
+        </p>
+    </div>
+</div>

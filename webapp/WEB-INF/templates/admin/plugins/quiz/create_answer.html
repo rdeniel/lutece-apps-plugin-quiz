@@ -1,0 +1,42 @@
+<#include "/admin/util/editor/editor.html" />
+<div class="content-box" >
+	<h2>#i18n{quiz.create_answer.pageTitle}</h2>
+        <form  name="create_answer" action="jsp/admin/plugins/quiz/DoCreateAnswer.jsp" method="post" >
+            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+            <input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}"/>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>
+                            #i18n{quiz.create_answer.titleQuestionLabel} :
+                        </th>
+                        <td>
+                            ${question.questionLabel}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            #i18n{quiz.create_answer.titleAnswerLabel} : *
+                        </th>
+                        <td>
+                            <input type="text" id="answer_label" name="answer_label" size="60" maxlength="60" tabindex="1" value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            #i18n{quiz.create_answer.titleValidity} : *
+                        </th>
+                        <td>
+                            <@combo name="validity_id" default_value="" items=yesno_list />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+            <input type="submit" value="#i18n{quiz.create_answer.buttonValidate}" class="button" tabindex="3" />
+            <input class="button" type="button" onclick="javascript:history.go(-1)" value="#i18n{portal.admin.message.buttonCancel}" />
+        </p>
+        </form>
+</div>
+
+<@initEditor />

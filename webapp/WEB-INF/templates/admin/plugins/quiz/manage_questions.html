@@ -1,0 +1,68 @@
+<div class="content-box" >
+	<h2>#i18n{quiz.manage_questions.pageTitle} ${quiz.name}</h2>
+        <table>
+            <tbody>
+                <th>#i18n{quiz.manage_questions.columnTitleName}</th>
+                <th>#i18n{quiz.manage_questions.columnTitleAction}</th>
+                <#list groups_list?sort_by("positionGroup") as group>
+                    <tr>
+                        <th>
+                            ${group.labelGroup}
+                        </th>
+                        <td></td>
+                        <td>
+                            <#if group.positionGroup==1>
+                                <a href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}">
+                                    <#if group_has_next>
+                                        <img src="images/admin/skin/plugins/quiz/actions/group_down.png" alt="up" title="Descendre"> </a>
+                                    </#if>
+                            <#elseif group_has_next>
+                                <a href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"> <img src="images/admin/skin/plugins/quiz/actions/group_up.png" alt="up" title="Monter"> </a>
+                                <a href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"> <img src="images/admin/skin/plugins/quiz/actions/group_down.png" alt="up" title="Descendre"> </a>
+                            <#else>
+                                <a href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"> <img src="images/admin/skin/plugins/quiz/actions/group_up.png" alt="up" title="Monter"> </a>
+                            </#if>
+                            <a href="jsp/admin/plugins/quiz/ModifyGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"><img src="images/admin/skin/plugins/quiz/actions/modify.png"  alt="disable" title="Modifier" ></a>
+                            <a alt="#i18n{quiz.manage_question.linkTitleDeleteGroup}"  title="#i18n{quiz.manage_question.linkTitleDeleteGroup}" href="jsp/admin/plugins/quiz/RemoveGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"><img src="images/admin/skin/actions/delete.png" alt="#i18n{quiz.manage_question.linkTitleDeleteGroup"></a>
+                        </td>
+                    </tr>
+                <#list questions_list_group as question>
+                    <#if group.idGroup == question.idGroup>
+                        <tr>
+                            <td>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<a href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" alt="#i18n{quiz.manage_questions.linkTitleModifyQuestion}"  title="#i18n{quiz.manage_questions.linkTitleModifyQuestion}" class="bullet-link"  alt="">&nbsp;&nbsp;${question.questionLabel}</a>
+                            </td>
+                            <td>
+                                <a href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"><img src="images/admin/skin/plugins/quiz/actions/modify.png"  alt="disable" title="Modifier" /></a>
+                                <a href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" alt="#i18n{quiz.manage_question.linkTitleDeleteQuestion}"  title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}"><img src="images/admin/skin/actions/delete.png" alt="#i18n{quiz.manage_question.linkTitleDeleteQuestion}"/></a>
+                            </td>
+                        </tr>
+                    </#if>
+                </#list>
+                </#list>
+
+                 <#list questions_list_without_group as question>
+                    <tr>
+                        <td>
+                            <a href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" alt="#i18n{quiz.manage_questions.linkTitleModifyQuestion}"  title="#i18n{quiz.manage_questions.linkTitleModifyQuestion}" class="bullet-link"  alt="">&nbsp;&nbsp;${question.questionLabel}</a>
+                        </td>
+                        <td>
+                            <a href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"><img src="images/admin/skin/plugins/quiz/actions/modify.png"  alt="disable" title="Modifier" /></a>
+                            <a alt="#i18n{quiz.manage_question.linkTitleDeleteQuestion}"  title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"><img src="images/admin/skin/actions/delete.png" alt="#i18n{quiz.manage_question.linkTitleDeleteQuestion}"/></a>
+                        </td>
+                    </tr>
+                </#list>
+            </tbody>
+	</table>
+
+    <p>
+	<form action="jsp/admin/plugins/quiz/CreateQuestion.jsp">
+            <input type="submit" class="button" name="#i18n{quiz.manage_questions.buttonValueCreateQuestion}" value="#i18n{quiz.manage_questions.buttonValueCreateQuestion}" />
+            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+	</form>
+        <form action="jsp/admin/plugins/quiz/CreateGroup.jsp">
+            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+            <input type="submit" class="button" name="#i18n{quiz.manage_questions.buttonValueCreateGroup}" value="#i18n{quiz.manage_questions.buttonValueCreateGroup}" />
+	</form>
+    </p>
+</div>

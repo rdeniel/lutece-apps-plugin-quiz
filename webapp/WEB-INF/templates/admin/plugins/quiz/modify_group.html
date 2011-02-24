@@ -1,0 +1,19 @@
+<div class="content-box" >
+    <h2>#i18n{quiz.create_group.pageTitle}</h2>
+    <form name="modify_group" action="jsp/admin/plugins/quiz/DoModifyGroup.jsp" method="post">
+        <input type="hidden" id="group_id" name="group_id" value="${group.idGroup}"/>
+        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+        <p>
+            <label for="group_name" >#i18n{quiz.create_group.name} * :</label>
+            <input type="text" id="group_name" name="group_name" size="50" maxlength="50" tabindex="1" value="${group.labelGroup}"/>
+        </p>
+        <p>
+            <label for="group_name" >#i18n{quiz.create_group.subject} :</label>
+            <textarea id="group_subject" name="group_subject" rows="5" cols="60" >${group.subject}</textarea>
+        </p>
+        <p>
+            <input type="submit" value="#i18n{quiz.create_group.buttonValidate}" class="button" tabindex="3" />
+            <input class="button" type="button" onclick="javascript:history.go(-1)" value="#i18n{portal.admin.message.buttonCancel}" />
+        </p>
+    </form>
+</div>

@@ -1,0 +1,43 @@
+<#include "/admin/util/editor/editor.html" />
+<div class="content-box" >
+	<h2>#i18n{quiz.modify_answer.pageTitle}</h2>
+        <form  name="modify_answer" action="jsp/admin/plugins/quiz/DoModifyAnswer.jsp" method="post">
+            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+            <input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}"/>
+            <input type="hidden" name="answer_id" id="answer_id" value="${answer.idAnswer}"/>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>
+                            #i18n{quiz.modify_answer.titleQuestionLabel} :
+                        </th>
+                        <td>
+                            ${question.questionLabel}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            #i18n{quiz.modify_answer.titleAnswerLabel} : *
+                        </th>
+                        <td>
+                            <input type="text" id="answer_label" name="answer_label" size="60" maxlength="60" tabindex="1" value="${answer.labelAnswer}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            #i18n{quiz.modify_answer.titleValidity} : *
+                        </th>
+                        <td>
+                            <@combo name="validity_id" default_value="${answer.valid}" items=yesno_list />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+            <input type="submit" value="#i18n{quiz.modify_answer.buttonValidate}" class="button" tabindex="3" />
+            <input class="button" type="button" onclick="javascript:history.go(-1)" value="#i18n{portal.admin.message.buttonCancel}" />
+        </p>
+        </form>
+</div>
+
+<@initEditor />

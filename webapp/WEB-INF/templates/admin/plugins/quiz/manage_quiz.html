@@ -1,0 +1,51 @@
+<div class="content-box" >
+	<h2>#i18n{quiz.manage_quiz.pageTitle}</h2>
+	<table>
+            <tbody>
+                <th>#i18n{quiz.manage_quiz.columnTitleName}</th>
+                <th>#i18n{quiz.manage_quiz.columnTitleDisponibility}</th>
+                <th>#i18n{quiz.manage_quiz.columnTitleStatus}</th>
+                <th>#i18n{quiz.manage_quiz.columnTitleAction}</th>
+                <#list quiz_list?sort_by('idQuiz') as quiz>
+		<tr>
+                    <td>
+                        ${quiz.name}
+                    </td>
+                    <td>
+                        <#if quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility?? && quiz.dateBeginDisponibility == quiz.dateEndDisponibility>
+                            #i18n{quiz.manage_quiz.rowPeriodDisponibilityThe} ${quiz.dateBeginDisponibility}
+                         <#elseif quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility??>
+                            #i18n{quiz.manage_quiz.rowPeriodDisponibilityFromTo} ${quiz.dateBeginDisponibility} #i18n{quiz.manage_quiz.rowPeriodDisponibilityTo} ${quiz.dateEndDisponibility}
+                         <#elseif quiz.dateBeginDisponibility??>
+                            #i18n{quiz.manage_quiz.rowPeriodDisponibilityFrom} ${quiz.dateBeginDisponibility}
+                         <#elseif quiz.dateEndDisponibility??>
+                            #i18n{quiz.manage_quiz.rowPeriodDisponibilityUntil} ${quiz.dateEndDisponibility}
+                         <#else>
+                            &nbsp;
+                         </#if>
+                    </td>
+                    <td>
+                        <#if quiz.enabled>
+                            <img  src="images/admin/skin/plugins/quiz/actions/enable.png" />
+                        <#else>
+                            <img src="images/admin/skin/plugins/quiz/actions/disable.png" />
+                        </#if>
+                    </td>
+                    <td>
+                        <a href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/plugins/quiz/actions/modify.png"  alt="disable" title="Modifier" /></a>
+                        <a href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/plugins/quiz/actions/questions.png" alt="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}"</a>
+                        <#if quiz.enabled>
+                            <a alt="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/plugins/quiz/actions/disable.png" alt="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}"/></a>
+                        <#else>
+                            <a alt="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"><img  src="images/admin/skin/plugins/quiz/actions/enable.png" alt="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}"/></a>
+                        </#if>
+                            <a alt="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/actions/delete.png" alt="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}"/></a>
+                    </td>
+                </tr>
+                </#list>
+            </tbody>
+	</table>
+	<form action="jsp/admin/plugins/quiz/CreateQuiz.jsp">
+            <input type="submit" value="#i18n{quiz.manage_quiz.buttonValueCreateQuiz}">
+	</form>
+</div>

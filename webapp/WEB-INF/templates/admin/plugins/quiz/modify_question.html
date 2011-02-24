@@ -1,0 +1,91 @@
+<#include "/admin/util/editor/editor.html" />
+<div class="content-box" >
+	<h2>#i18n{quiz.create_question.pageTitle}</h2>
+    <form name="modify_question" action="jsp/admin/plugins/quiz/DoModifyQuestion.jsp"  method="post">
+        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+        <input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}"/>
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        #i18n{quiz.create_question.groupsList} : *
+                    </th>
+                    <td>
+                        <@combo name="group_id" default_value="${question.idGroup}" items=groups_list />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        #i18n{quiz.create_question.questionLabel} : *
+                    </th>
+                        <td>
+                            <div class="editor">
+                                <textarea class="richtext" name="question_label" id="question_label" rows="3" cols="60">${question.questionLabel}</textarea>
+                            </div>
+                        </td>
+                </tr>
+                <tr>
+                    <th>
+                        #i18n{quiz.create_question.titleExplication} :
+                    </th>
+                    <td>
+                        <div class="editor">
+                            <textarea class="richtext" name="explaination" id="explaination" rows="10" cols="60">${question.explaination}</textarea>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        
+        <br>
+        <br>
+        <p>
+            <input type="submit" value="#i18n{quiz.modify_question.buttonValidate}" class="button" tabindex="3" />
+            <input class="button" type="button" onclick="javascript:history.go(-1)" value="#i18n{portal.admin.message.buttonCancel}" />
+        </p>
+    </form>
+</div>
+<div class="content-box" >
+    <form name="create_answer" action="jsp/admin/plugins/quiz/CreateAnswer.jsp">
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        #i18n{quiz.modify_question.titleAnswer}
+                    </th>
+                    <th>
+                        #i18n{quiz.modify_question.titleCorrects}
+                    </th>
+                    <th>
+                        #i18n{quiz.modify_question.titleActions}
+                    </th>
+                </tr>
+                <#list answer_list as answer>
+                    <tr>
+                        <td>
+                            ${answer.labelAnswer}
+                        </td>
+                        <td>
+                            <#if answer.correct >
+                                <img  src="images/admin/skin/plugins/quiz/actions/enable.png" />
+                            <#else>
+                                <img src="images/admin/skin/plugins/quiz/actions/disable.png" />
+                            </#if>
+                        </td>
+                        <td>
+                            <a href="jsp/admin/plugins/quiz/ModifyAnswer.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}&answer_id=${answer.idAnswer}" alt="#i18n{quiz.modify_question.linkTitleModifyAnswer}"  title="#i18n{quiz.modify_answer.linkTitleModifyAnswer}"><img src="images/admin/skin/plugins/quiz/actions/modify.png"  alt="disable" title="Modifier" /></a>
+                            <a href="jsp/admin/plugins/quiz/RemoveAnswer.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}&answer_id=${answer.idAnswer}" alt="#i18n{quiz.modify_question.linkTitleDeleteAnswer}"  title="#i18n{quiz.modify_answer.linkTitleDeleteAnswer}"><img src="images/admin/skin/actions/delete.png" alt="#i18n{quiz.modify_question.linkTitleDeleteAnswer}"/></a>
+                        </td>
+                    </tr>
+                </#list>
+            </tbody>
+        </table>
+        <br>
+        <input type="submit" value="#i18n{quiz.modify_question.buttonValueCreateAnswer}">
+        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+        <input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}"/>
+    </form>
+</div>
+<@initEditor />
