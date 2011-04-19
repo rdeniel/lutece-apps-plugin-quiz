@@ -1,44 +1,37 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <plug-in>
 
-   <!-- Plugin Informations -->
-   <name>quiz</name>
-   <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
-   <version>1.3</version>
-   <description>quiz.plugin.description</description>
-   <documentation></documentation>
-   <installation></installation>
-   <changes></changes>
-   <user-guide></user-guide>
-   <provider>quiz.plugin.provider</provider>
-   <provider-url>http://lutece.paris.fr</provider-url>
-   <icon-url>images/admin/skin/plugins/quiz/quiz.png</icon-url>
-   <copyright>Copyright 2001-2006 Mairie de Paris</copyright>
-   <db-pool-required>1</db-pool-required>
+    <!-- Plugin Informations -->
+    <name>quiz</name>
+    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <version>1.3</version>
+    <description>quiz.plugin.description</description>
+    <documentation></documentation>
+    <installation></installation>
+    <changes></changes>
+    <user-guide></user-guide>
+    <provider>quiz.plugin.provider</provider>
+    <provider-url>http://lutece.paris.fr</provider-url>
+    <icon-url>images/admin/skin/plugins/quiz/quiz.png</icon-url>
+    <copyright>Copyright 2001-2011 Mairie de Paris</copyright>
+    <db-pool-required>1</db-pool-required>
 
-   <!-- Xpage configuration 
-   <application>
-     <application-class>fr.paris.lutece.plugins.quiz.web.QuizApp</application-class>
-     <application-roles></application-roles>
-   </application>-->
-
-    <!--  Specific plugin CSS stylesheet   -->
+    <!-- Specific plugin CSS stylesheet -->
     <css-stylesheets>
-          <css-stylesheet>quiz/quiz.css</css-stylesheet>
+        <css-stylesheets-scope>xpage</css-stylesheets-scope>
+        <css-stylesheet>quiz/quiz.css</css-stylesheet>
     </css-stylesheets>
 
-   <!-- Administration interface parameters -->
-   <admin-features>
-     <admin-feature>
-       <feature-id>QUIZ_MANAGEMENT</feature-id>
-       <feature-title>quiz.adminFeature.quiz_management.name</feature-title>
-	   <feature-description>quiz.adminFeature.quiz_management.description</feature-description>
-	   <feature-level>3</feature-level>
-	   <feature-url>jsp/admin/plugins/quiz/ManageQuiz.jsp</feature-url>
-     </admin-feature>
-   </admin-features>
-
+    <!-- Administration interface parameters -->
+    <admin-features>
+        <admin-feature>
+            <feature-id>QUIZ_MANAGEMENT</feature-id>
+            <feature-title>quiz.adminFeature.quiz_management.name</feature-title>
+            <feature-description>quiz.adminFeature.quiz_management.description</feature-description>
+            <feature-level>3</feature-level>
+            <feature-url>jsp/admin/plugins/quiz/ManageQuiz.jsp</feature-url>
+        </admin-feature>
+    </admin-features>
 
     <!-- Applications -->
     <applications>
@@ -49,4 +42,3 @@
     </applications>
 
 </plug-in>
-
