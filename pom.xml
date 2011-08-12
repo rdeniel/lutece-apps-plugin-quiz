@@ -40,8 +40,8 @@
 
     <properties>
         <componentName>quiz</componentName>
-        <jiraProjectName>LUTECE</jiraProjectName>
-        <jiraComponentId>10033</jiraComponentId>
+        <jiraProjectName>QUIZ</jiraProjectName>
+        <jiraComponentId>10164</jiraComponentId>
     </properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/collaboration/plugin-quiz</connection>
