@@ -33,12 +33,11 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -52,7 +51,6 @@ public final class AnswerDAO implements IAnswerDAO
     private static final String SQL_QUERY_INSERT = "INSERT INTO quiz_answer ( id_answer, id_question, label_answer, is_valid ) VALUES ( ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM quiz_answer WHERE id_answer = ? ";
     private static final String SQL_QUERY_DELETE_ANSWERS_BY_QUESTION = "DELETE FROM quiz_answer WHERE id_question = ? ";
-    private static final String SQL_QUERY_DELETE_ANSWERS_BY_QUIZ = "DELETE FROM quiz_answer WHERE id_quiz = ? ";
     private static final String SQL_QUERY_UPDATE = "UPDATE quiz_answer SET id_answer = ?, id_question = ?, label_answer = ?, is_valid = ? WHERE id_answer = ?";
     private static final String SQL_QUERY_SELECTALL = "SELECT id_answer, id_question, label_answer, is_valid FROM quiz_answer WHERE id_question = ?";
 
@@ -190,23 +188,6 @@ public final class AnswerDAO implements IAnswerDAO
         daoUtil.free(  );
 
         return answerList;
-    }
-
-    /**
-    * Delete a record from the table
-    *
-    * @param questionList the list of the quizQuestions
-    * @param plugin the plugin
-    */
-    public void deleteAnswersByQuiz( Collection<QuizQuestion> questionList, Plugin plugin )
-    {
-        for ( QuizQuestion question : questionList )
-        {
-            DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ANSWERS_BY_QUIZ, plugin );
-            daoUtil.setInt( 1, question.getIdQuestion(  ) );
-            daoUtil.executeUpdate(  );
-            daoUtil.free(  );
-        }
     }
 
     /**

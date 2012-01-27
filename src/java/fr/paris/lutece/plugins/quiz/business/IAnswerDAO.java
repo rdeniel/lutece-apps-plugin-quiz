@@ -33,10 +33,9 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-import fr.paris.lutece.portal.service.plugin.Plugin;
-
-import java.util.Collection;
 import java.util.List;
+
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 
 /**
@@ -84,13 +83,6 @@ public interface IAnswerDAO
     * @return The List which contains the data of all the answer objects
     */
     List<Answer> selectAnswersList( int nIdQuestion, Plugin plugin );
-
-    /**
-     * Delete answer for a quiz
-     * @param questionList The question list
-     * @param plugin The plugin
-     */
-    void deleteAnswersByQuiz( Collection<QuizQuestion> questionList, Plugin plugin );
 
     /**
      * Delete answer for a question

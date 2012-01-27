@@ -33,11 +33,11 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
-
 import java.util.Collection;
 import java.util.List;
+
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 
 /**
@@ -144,9 +144,12 @@ public final class AnswerHome
      * @param questionList The question list
      * @param plugin The plugin
      */
-    public static void removeAnswersByQuiz( Collection<QuizQuestion> questionList, Plugin plugin )
+    public static void removeAnswersByQuestionList( Collection<QuizQuestion> questionList, Plugin plugin )
     {
-        _dao.deleteAnswersByQuiz( questionList, plugin );
+        for ( QuizQuestion question : questionList )
+        {
+            removeAnswersByQuestion( question.getIdQuestion( ), plugin );
+        }
     }
 
     /**

@@ -33,6 +33,15 @@
  */
 package fr.paris.lutece.plugins.quiz.web;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import fr.paris.lutece.plugins.quiz.business.Answer;
 import fr.paris.lutece.plugins.quiz.business.AnswerHome;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroup;
@@ -54,16 +63,6 @@ import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
-
-import java.sql.Timestamp;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -88,7 +87,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_PAGE_TITLE_CREATE_ANSWER = "quiz.create_answer.pageTitle";
     private static final String PROPERTY_CONFIRM_DELETE_ANSWER = "quiz.remove_answer.confirmRemoveAnswer";
     private static final String PROPERTY_CONFIRM_DELETE_ANSWER_TURN_RED = "quiz.remove_answer.confirmDeleteAnswerTurnRed";
-    private static final String MESSAGE_CANNOT_DELETE_QUIZ = "message_quiz.cannotDeleteQuiz";
+    private static final String MESSAGE_CANNOT_DELETE_QUIZ = "quiz.message_quiz.cannotDeleteQuiz";
     private static final String PROPERTY_LABEL_NO = "portal.util.labelNo";
     private static final String PROPERTY_LABEL_YES = "portal.util.labelYes";
     private static final String MESSAGE_ONLY_ONE_ANSWER = "quiz.message.noMoreThanOneGoodAnswer";
@@ -98,6 +97,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String JSP_DO_REMOVE_QUESTION = "jsp/admin/plugins/quiz/DoRemoveQuestion.jsp";
     private static final String JSP_DO_REMOVE_GROUP = "jsp/admin/plugins/quiz/DoRemoveGroup.jsp";
     private static final String JSP_DO_REMOVE_ANSWER = "jsp/admin/plugins/quiz/DoRemoveAnswer.jsp";
+    private static final String JSP_MANAGE_QUIZ = "jsp/admin/plugins/quiz/ManageQuiz.jsp";
 
     //Urls
     private static final String JSP_URL_MANAGE_QUIZ = "ManageQuiz.jsp";
@@ -375,7 +375,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         if ( quiz.isEnabled(  ) )
         {
             String strMessageKey = MESSAGE_CANNOT_DELETE_QUIZ;
-            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, JSP_URL_MANAGE_QUIZ, "",
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, JSP_MANAGE_QUIZ, "",
                     AdminMessage.TYPE_STOP );
         }
         else
@@ -406,7 +406,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         QuestionGroupHome.removeByQuiz( nIdQuiz, getPlugin(  ) );
         QuizHome.remove( nIdQuiz, getPlugin(  ) );
         QuizQuestionHome.removeQuestionsByQuiz( nIdQuiz, getPlugin(  ) );
-        AnswerHome.removeAnswersByQuiz( questions, getPlugin(  ) );
+        AnswerHome.removeAnswersByQuestionList( questions, getPlugin(  ) );
 
         // Go to the parent page
         return getHomeUrl( request );
