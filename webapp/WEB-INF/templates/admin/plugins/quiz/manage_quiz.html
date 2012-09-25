@@ -1,6 +1,12 @@
-<div class="content-box" >
-	<h2>#i18n{quiz.manage_quiz.pageTitle}</h2>
-	<table>
+<div class="row" >
+	<div class="span12">
+	<fieldset>
+	<legend>#i18n{quiz.manage_quiz.pageTitle}
+	<form class="form-inline pull-right" action="jsp/admin/plugins/quiz/CreateQuiz.jsp">
+			<button class="btn btn-primary" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{quiz.manage_quiz.buttonValueCreateQuiz}</button>
+		</form>
+	</legend>
+	<table class="table table-striped table-condensed">
             <tbody>
                 <th>#i18n{quiz.manage_quiz.columnTitleName}</th>
                 <th>#i18n{quiz.manage_quiz.columnTitleDisponibility}</th>
@@ -26,26 +32,40 @@
                     </td>
                     <td>
                         <#if quiz.enabled>
-                            <img  src="images/admin/skin/plugins/quiz/actions/enable.png" />
+						<span class="label label-success">
+                           <i class="icon-ok icon-white"></i>
+						</span>
                         <#else>
-                            <img src="images/admin/skin/plugins/quiz/actions/disable.png" />
+						<span class="label label-important">
+                            <i class="icon-remove icon-white"></i>
+						</span>
                         </#if>
                     </td>
                     <td>
-                        <a href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/plugins/quiz/actions/modify.png"  alt="disable" title="Modifier" /></a>
-                        <a href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/plugins/quiz/actions/questions.png" alt="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}"</a>
-                        <#if quiz.enabled>
-                            <a alt="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/plugins/quiz/actions/disable.png" alt="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}"/></a>
-                        <#else>
-                            <a alt="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"><img  src="images/admin/skin/plugins/quiz/actions/enable.png" alt="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}"/></a>
-                        </#if>
-                            <a alt="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"><img src="images/admin/skin/actions/delete.png" alt="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}"/></a>
-                    </td>
+                        <a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="Modifier" >
+							<i class="icon-edit icon-white"></i>
+						</a>
+						<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" >
+							<i class="icon-question-sign icon-white"></i>
+						</a>
+						<#if quiz.enabled>
+                        <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" >
+							<i class="icon-remove icon-white"></i>
+						</a>
+						<#else>
+                        <a class="btn btn-success btn-mini" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" >
+							<i class="icon-ok icon-white"></i>
+						</a>
+						</#if>
+                        <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" >
+								<i class="icon-trash icon-white"></i>
+						</a>
+					</td>
                 </tr>
                 </#list>
             </tbody>
 	</table>
-	<form action="jsp/admin/plugins/quiz/CreateQuiz.jsp">
-            <input type="submit" value="#i18n{quiz.manage_quiz.buttonValueCreateQuiz}">
-	</form>
+		
+		</fieldset>
+	</div>
 </div>

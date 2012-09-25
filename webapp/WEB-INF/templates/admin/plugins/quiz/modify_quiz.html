@@ -1,167 +1,60 @@
 <#include "/admin/util/editor/editor.html" />
-<script type="text/javascript">
-	function doDisplayAdvancedSettings(isChecked)
-	{
-		if (isChecked)
-		{
-			displayId('advanced_settings');
-		}
-		else
-		{
-			hideId('advanced_settings');
-		}
-	}
-
-	function doDisplayPublication(isChecked)
-	{
-		if (isChecked)
-		{
-			displayId('publication');
-		}
-		else
-		{
-			hideId('publication');
-		}
-	}
-
-	function doChangePublicationMode(radio)
-	{
-		for (var i=0; i<radio.length; i++)
-		{
-			if (radio[i].checked)
-			{
-				if (radio[i].value=="0")
-				{
-					document.getElementById('date_begin_disponibility').value="";
-					document.getElementById('date_end_disponibility').value="";
-				}
-				else
-				{
-					document.getElementById('date_begin_disponibility').value=document.getElementById('date_begin_disponibility_save').value;
-					document.getElementById('date_end_disponibility').value=document.getElementById('date_end_disponibility_save').value;
-				}
-			}
-		}
-	}
-
-	function doChangeDate(radio)
-	{
-		document.getElementById('date_begin_disponibility_save').value=document.getElementById('date_begin_disponibility').value;
-		document.getElementById('date_end_disponibility_save').value=document.getElementById('date_end_disponibility').value;
-
-		if (document.getElementById('date_begin_disponibility').value!="" || document.getElementById('date_end_disponibility').value!="")
-		{
-			radio[0].checked=false;
-			radio[1].checked=true;
-		}
-		else
-		{
-			radio[0].checked=true;
-			radio[1].checked=false;
-		}
-	}
-</script>
-
-<div class="content-box" >
-    <h2>#i18n{quiz.modify_quiz.pageTitle}</h2>
-    <form name="modify_quiz" action="jsp/admin/plugins/quiz/DoModifyQuiz.jsp"  method="post">
-        <input type="hidden" name="quiz_id" value="${quiz.idQuiz}" />
-        <div class="highlight-box">
-             <p>
-                <label for="quiz_name" >#i18n{quiz.modify_quiz.name} * :</label>
-                <input type="text" id="quiz_name" name="quiz_name" size="50" maxlength="50" tabindex="1" value="${quiz.name}" />
-            </p>
-            <p>
-                <label for="quiz_introduction" >#i18n{quiz.modify_quiz.introduction} :</label>
-                <div class="editor">
-                    <textarea class="richtext" name="quiz_introduction" id="quiz_introduction" rows="20" cols="90">${quiz.introduction}</textarea>
-                </div>
-            </p>
-            <p>
-                <label for="quiz_conclusion" >#i18n{quiz.modify_quiz.conclusion} :</label>
-                <div class="editor">
-                    <textarea class="richtext" name="quiz_conclusion" id="quiz_conclusion" rows="20" cols="90">${quiz.conclusion}</textarea>
-                </div>
-            </p>
-            <br>
-            <br>
-        </div>
-        <h2>
-            <a href="javascript:doDisplayAdvancedSettings(true)"><img src="images/admin/skin/open_block.gif" alt="#i18n{quiz.modify_quiz.titleOpen}"></a>
-            <a href="javascript:doDisplayAdvancedSettings(false)"><img src="images/admin/skin/closed_block.gif" alt="#i18n{quiz.modify_quiz.titleClose}"></a>
-            #i18n{quiz.modify_quiz.labelAdvancedSettings}
-        </h2>
-
-        <div id="advanced_settings" style="visibility:hidden;display:none;">
-            <div class="highlight-box">
-                <p>
-                    <label for="active_captcha">#i18n{quiz.modify_quiz.labelActiveCaptcha} :</label>
-                    <#if quiz.activeCaptcha==1>
-                            <input type="checkbox" name="active_captcha" value="1" checked="checked" />
-                    <#else>
-                            <input type="checkbox" name="active_captcha" value="1" />
-                    </#if>
-                    <br />
-                    <label>&nbsp;</label>
-                    #i18n{quiz.modify_quiz.labelActiveCaptchaComment}
-                </p>
-                <p>
-                    <label for="active_requirement">#i18n{quiz.modify_quiz.labelActiveRequirement} :</label>
-                    <#if quiz.activeRequirement==1>
-                            <input type="checkbox" name="active_requirement" value="1" checked="checked" />
-                    <#else>
-                            <input type="checkbox" name="active_requirement" value="1" />
-                    </#if>
-                    <br />
-                    <label for="quiz_cgu">#i18n{quiz.modify_quiz.labelActiveRequirementComment}</label>
-                    <div class="editor">
-                        <textarea class="richtext" name="quiz_cgu" id="quiz_cgu" rows="20" cols="90">${quiz.cgu}</textarea>
-                    </div>
-                </p>
-            </div>
-        </div>
-
-        <h2>
-            <a href="javascript:doDisplayPublication(true)"><img src="images/admin/skin/open_block.gif" alt="#i18n{quiz.modify_quiz.titleOpen}"></a>
-            <a href="javascript:doDisplayPublication(false)"><img src="images/admin/skin/closed_block.gif" alt="#i18n{quiz.modify_quiz.titleClose}"></a>
-            #i18n{quiz.modify_quiz.labelPublication}
-        </h2>
-
-        <div id="publication" style="visibility:hidden;display:none;">
-            <div class="highlight-box">
-            <p>
-                <label for="publication_mode">#i18n{quiz.modify_quiz.labelPublicationMode} :</label>
-                <input type="radio" name="publication_mode" id="publication_mode_user" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" checked="checked" value="0" />#i18n{quiz.modify_quiz.labelPublicationModeUser}
-                <input type="radio" name="publication_mode" id="publication_mode_auto" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" value="1" />#i18n{quiz.modify_quiz.labelPublicationModeAuto}
-                <br />
-                <label>&nbsp;</label>
-                #i18n{quiz.modify_quiz.labelPublicationModeComment}
-            </p>
-            <p>
-                <label for="date_begin_disponibility">#i18n{quiz.modify_quiz.labelDateBeginDisponibility} :</label>
-                <input type="text" name="date_begin_disponibility" id="date_begin_disponibility" value="${quiz.dateBeginDisponibility?if_exists}" size="10" onchange="javascript:doChangeDate(this.quiz.publication_mode);" />
-                <input type="hidden" name="date_begin_disponibility_save" id="date_begin_disponibility_save" value="" />
-                <br />
-                <label>&nbsp;</label>
-                #i18n{quiz.modify_quiz.labelDateBeginDisponibilityComment}
-            </p>
-            <p>
-                <label for="date_end_disponibility">#i18n{quiz.modify_quiz.labelDateEndDisponibility} :</label>
-                <input type="text" name="date_end_disponibility" id="date_end_disponibility" value="${quiz.dateEndDisponibility?if_exists}" size="10" onchange="javascript:doChangeDate(this.quiz.publication_mode);" />
-                <input type="hidden" name="date_end_disponibility_save" id="date_end_disponibility_save" value="" />
-                <br />
-                <label>&nbsp;</label>
-                #i18n{quiz.modify_quiz.labelDateEndDisponibilityComment}
-            </p>
-        </div>
-    </div>
-
-    <p>
-            <input type="submit" class="button" name="save" value="#i18n{quiz.modify_quiz.buttonSave}" />
-            <input type="submit" class="button" name="apply" value="#i18n{quiz.modify_quiz.buttonApply}" />
-            <input type="submit" class="button" name="cancel" value="#i18n{quiz.modify_quiz.buttonCancel}" />
-    </p>
-</form>
+<div class="row" >
+	<div class="span3">
+		<form class="form" name="modify_quiz" action="jsp/admin/plugins/quiz/DoModifyQuiz.jsp"  method="post">
+		<input type="hidden" name="quiz_id" value="${quiz.idQuiz}" />
+		<input type="hidden" name="date_begin_disponibility_save" id="date_begin_disponibility_save" value="" />
+		<input type="hidden" name="date_end_disponibility_save" id="date_end_disponibility_save" value="" />
+		<fieldset>
+		<legend>#i18n{quiz.modify_quiz.labelAdvancedSettings}</legend>
+		<label  for="">#i18n{quiz.modify_quiz.labelActiveCaptcha} :</label>
+		<label class="chechbox" for="active_captcha">
+			<input type="checkbox" name="active_captcha" value="1" <#if quiz.activeCaptcha==1>checked="checked"</#if> /> #i18n{quiz.modify_quiz.labelActiveCaptchaComment}
+		</label>
+		<label  for="active_requirement"> #i18n{quiz.modify_quiz.labelActiveRequirement} :</label>
+		<label class="chechbox" for="active_captcha">
+			<input type="checkbox" name="active_requirement" value="1"  <#if quiz.activeRequirement==1>checked="checked"</#if>/> #i18n{quiz.modify_quiz.labelActiveRequirementComment}
+		</label>
+		<label for="quiz_cgu" >&nbsp;</label><textarea class="span3" name="quiz_cgu" id="quiz_cgu" rows="5" >${quiz.cgu}</textarea>
+		</fieldset>    
+		<fieldset>    
+        <legend>#i18n{quiz.modify_quiz.labelPublication}</legend>
+		<label  for="">#i18n{quiz.modify_quiz.labelPublicationMode} :</label>
+        <label class="radio inline" for="publication_mode">
+			<input type="radio" name="publication_mode" id="publication_mode_user" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" checked="checked" value="0" />
+			#i18n{quiz.modify_quiz.labelPublicationModeUser}
+		</label>
+		<label class="radio inline" for="publication_mode">#i18n{quiz.modify_quiz.labelPublicationModeAuto}
+			<input type="radio" name="publication_mode" id="publication_mode_auto" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" value="1" />
+		</label>
+		<p class="help-block">#i18n{quiz.modify_quiz.labelPublicationModeComment}</p>
+		<label  for="date_begin_disponibility">#i18n{quiz.modify_quiz.labelDateBeginDisponibility} :</label>
+        	<input type="text" name="date_begin_disponibility" id="date_begin_disponibility" value="${quiz.dateBeginDisponibility?if_exists}" class="input-small" onchange="javascript:doChangeDate(this.quiz.publication_mode);" />
+		<p class="help-block">#i18n{quiz.modify_quiz.labelDateBeginDisponibilityComment}</p>
+		<label  for="date_end_disponibility">#i18n{quiz.modify_quiz.labelDateEndDisponibility} :</label>
+        	<input type="text" name="date_end_disponibility" id="date_end_disponibility" value="${quiz.dateEndDisponibility?if_exists}"  class="input-small" onchange="javascript:doChangeDate(this.quiz.publication_mode);" />
+		<p class="help-block">#i18n{quiz.modify_quiz.labelDateEndDisponibilityComment}</p>
+		</fieldset>
+	</div>
+	<div class="span9">
+		<fieldset>
+		<legend>#i18n{quiz.modify_quiz.pageTitle}</legend>
+		<label  for="quiz_name" >#i18n{quiz.modify_quiz.name} * :</label>
+        <input type="text" id="quiz_name" name="quiz_name" size="50" maxlength="50" tabindex="1" value="${quiz.name}"  />
+		<label  for="quiz_introduction" >#i18n{quiz.modify_quiz.introduction} :</label>
+		<textarea class="richtext span6" name="quiz_introduction" id="quiz_introduction" rows="5">${quiz.introduction}</textarea>
+		<label  for="quiz_conclusion" >#i18n{quiz.modify_quiz.conclusion} :</label>
+		<textarea class="richtext span6" name="quiz_conclusion" id="quiz_conclusion" rows="5" >${quiz.conclusion}</textarea>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonSave}</button>
+	        <button class="btn btn-primary" type="submit" name="apply"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonApply}</button>
+			<button class="btn btn-primary" type="submit" name="cancel"><i class="icon-remove-circle icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonCancel}</button>
+		</div>
+    	</form>
+		</fieldset>
+	</div>
 </div>
+<script src="js/jquery/plugins/ui/datepicker/ui.datepicker.js"></script>
+<script src="js/jquery/plugins/ui/datepicker/ui.datepicker-fr.js"></script>
 <@initEditor />
 <@getDatePickerRange idFieldFrom="date_begin_disponibility" idFieldTo="date_end_disponibility" language=locale />

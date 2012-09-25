@@ -1,18 +1,26 @@
-<div class="content-box" >
-    <h2>#i18n{quiz.create_group.pageTitle}</h2>
-    <form name="create_quiz" action="jsp/admin/plugins/quiz/DoCreateGroup.jsp"  method="post">
-        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
-        <p>
-            <label for="group_name" >#i18n{quiz.create_group.name} * :</label>
-            <input type="text" id="group_name" name="group_name" size="50" maxlength="50" tabindex="1" />
-        </p>
-        <p>
-            <label for="group_name" >#i18n{quiz.create_group.subject} :</label>
-            <textarea id="group_subject" name="group_subject" rows="5" cols="60"></textarea>
-        </p>
-        <p>
-            <input type="submit" value="#i18n{quiz.create_group.buttonValidate}" class="button" tabindex="3" />
-            <input class="button" type="button" onclick="javascript:history.go(-1)" value="#i18n{portal.admin.message.buttonCancel}" />
-        </p>
-    </form>
+<div class="row" >
+	<div class="span10 offset2" >
+	<fieldset>
+    <legend>#i18n{quiz.create_group.pageTitle}</legend>
+		<form class="form-horizontal" name="create_group" action="jsp/admin/plugins/quiz/DoCreateGroup.jsp"  method="post">
+		<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+        <div class="control-group">
+		<label class="control-label" for="group_name" >#i18n{quiz.create_group.name} * :</label>
+            <div class="controls">
+				<input type="text" id="group_name" name="group_name" size="50" maxlength="50" tabindex="1" />
+			</div>
+		</div>
+        <div class="control-group">
+		<label class="control-label" for="group_name" >#i18n{quiz.create_group.subject} :</label>
+		<div class="controls">
+			<textarea id="group_subject" name="group_subject" rows="5" cols="60"></textarea>
+			</div>
+		</div>
+        <div class="form-actions">
+		    <button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_group.buttonValidate}</button>
+	        <button class="btn btn-primary" type="button" name="cancel" onclick="javascript:window.history.back();" ><i class="icon-remove-circle icon-white"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}</button>
+		</div>
+		</form>
+    </fieldset>
+	</div>
 </div>
