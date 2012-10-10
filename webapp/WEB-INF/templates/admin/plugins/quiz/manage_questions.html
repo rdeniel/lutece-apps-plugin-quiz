@@ -26,26 +26,26 @@
             <td>
 				<#if group.positionGroup==1>
 					<#if group_has_next>
-					<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Descendre" >
+					<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Descendre" >
 						<i class="icon-chevron-down icon-white"></i>
 					</a>
 					</#if>
                 <#elseif group_has_next>
-                    <a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Monter" >
+                    <a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Monter" >
 						<i class="icon-chevron-up icon-white"></i>
 					</a>
-					<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Descendre" >
+					<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Descendre" >
 						<i class="icon-chevron-down icon-white"></i>
 					</a>
 				<#else>
-					<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Monter" >
+					<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Monter" >
 						<i class="icon-chevron-up icon-white"></i>
 					</a>
 				</#if>
-                <a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ModifyGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Modifier" >
+                <a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="Modifier" >
 					<i class="icon-edit icon-white"></i>
 				</a>
-				<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/RemoveGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="#i18n{quiz.manage_question.linkTitleDeleteGroup}" >
+				<a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}"  title="#i18n{quiz.manage_question.linkTitleDeleteGroup}" >
 					<i class="icon-trash icon-white"></i>
 				</a>
 			</td>
@@ -59,10 +59,10 @@
 					</blockquote>
 				</td>
                 <td>
-					<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="Modifier" >
+					<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="Modifier" >
 						<i class="icon-edit icon-white"></i>
 				</a>
-				<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}" >
+				<a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}" >
 					<i class="icon-trash icon-white"></i>
 				</a>
 				</td>
@@ -74,15 +74,15 @@
 		<tr>
             <td>
 				${question.questionLabel}
-				<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="#i18n{quiz.manage_questions.linkTitleModifyQuestion}" >
+				<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="#i18n{quiz.manage_questions.linkTitleModifyQuestion}" >
 					<i class="icon-pencil icon-white"></i>
 				</a>
 			</td>
             <td>
-				<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="Modifier" >
+				<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="Modifier" >
 					<i class="icon-edit icon-white"></i>
 				</a>
-				<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}" >
+				<a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}"  title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}" >
 					<i class="icon-trash icon-white"></i>
 				</a>
 			</td>

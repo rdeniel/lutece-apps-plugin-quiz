@@ -42,22 +42,22 @@
                         </#if>
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="Modifier" >
+                        <a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="Modifier" >
 							<i class="icon-edit icon-white"></i>
 						</a>
-						<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" >
+						<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" >
 							<i class="icon-question-sign icon-white"></i>
 						</a>
 						<#if quiz.enabled>
-                        <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" >
+                        <a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" >
 							<i class="icon-remove icon-white"></i>
 						</a>
 						<#else>
-                        <a class="btn btn-success btn-mini" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" >
+                        <a class="btn btn-success btn-small" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" >
 							<i class="icon-ok icon-white"></i>
 						</a>
 						</#if>
-                        <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" >
+                        <a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" >
 								<i class="icon-trash icon-white"></i>
 						</a>
 					</td>
