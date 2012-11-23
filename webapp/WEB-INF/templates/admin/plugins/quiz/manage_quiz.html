@@ -15,7 +15,7 @@
                 <#list quiz_list?sort_by('idQuiz') as quiz>
 		<tr>
                     <td>
-                        ${quiz.name}
+                        ${quiz.name}&nbsp;<a href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}" target="_blank"><i class="icon-globe" title="View ${quiz.name}"></i></a>
                     </td>
                     <td>
                         <#if quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility?? && quiz.dateBeginDisponibility == quiz.dateEndDisponibility>
