@@ -1,14 +1,15 @@
-<div class="span-22 prepend-1 append-1 append-bottom last">
-	<div class="portlet -lutece-border-radius">
-		<div>#i18n{quiz.view_all_quiz.pageTitle}</div>
-		<#if quiz_list?has_content>
-			<ul>
-				<#list quiz_list as quiz>
-					<li>
-						<a href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}" >${quiz.name}</a>
-					</li>
-				</#list>
-			</ul>
-		</#if>
-	</div>
+<div class="row">
+    <div class="span12">
+        <fieldset>
+            <legend>#i18n{quiz.view_all_quiz.pageTitle}</legend>
+            <#if quiz_list?has_content>
+            <ul>
+                <#list quiz_list as quiz>
+                <li>
+                    <a class="btn btn-link" href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}" >${quiz.name}</a>
+                </li>
+                </#list>
+            </ul>
+            </#if>
+    </div>
 </div>

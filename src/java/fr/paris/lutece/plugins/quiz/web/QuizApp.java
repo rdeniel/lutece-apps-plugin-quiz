@@ -75,6 +75,7 @@ public class QuizApp implements XPageApplication
     private static final String PARAMETER_ID_QUIZ = "quiz_id";
     private static final String BEAN_QUIZ_SERVICE = "quiz.quizService";
     private static final String MARK_ERROR = "error";
+    private static final String MARK_ID_QUIZ = "quiz_id";
 
     /**
      * Returns the Quiz XPage content depending on the request parameters and the current mode.
@@ -173,7 +174,7 @@ public class QuizApp implements XPageApplication
 
         if ( strError != null )
         {
-            return getErrorPage( strError, locale );
+            return getErrorPage( nQuizId, strError, locale );
         }
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_RESULTS, locale, model );
@@ -196,11 +197,12 @@ public class QuizApp implements XPageApplication
      * @param locale The current locale
      * @return The XPage
      */
-    private XPage getErrorPage( String strError, Locale locale )
+    private XPage getErrorPage( int nIdQuiz, String strError, Locale locale )
     {
         XPage page = new XPage(  );
         Map model = new HashMap(  );
         model.put( MARK_ERROR, strError );
+        model.put( MARK_ID_QUIZ, Integer.toString(nIdQuiz) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_ERROR, locale, model );
 

@@ -22,7 +22,7 @@
 	<tbody>
         <#list groups_list?sort_by("positionGroup") as group>
 		 <tr>
-			<td>${group.labelGroup} - </td>
+			<td>${group.labelGroup}</td>
             <td>
 				<#if group.positionGroup==1>
 					<#if group_has_next>
