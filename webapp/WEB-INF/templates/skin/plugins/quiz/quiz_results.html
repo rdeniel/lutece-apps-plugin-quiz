@@ -1,19 +1,30 @@
 <div class="row">
     <div class="span12">
-		<div class="well well-small">${score_message}</div>
-		<div class="label label-important">
-			<#if invalid_answers_list?size != 0>
-				#i18n{quiz.view_result.badAnswerResponse}
-			</#if>
-		</div>   
-		<ul>
-        <#list invalid_answers_list as invalid>
-        <li class="error">
-            <div class="">#i18n{quiz.view_result.Question} ${invalid.questionId}: ${invalid.question}</div>
-            <div class="alert alert-error">#i18n{quiz.view_result.yourAnswer}: ${invalid.invalidAnswer}</div>
-            <div class="alert alert-success">#i18n{quiz.view_result.goodAnswerWas}: ${invalid.explaination}</div>
-        </li>
-        </#list>
-     </ul>
+        <#if profils_list?has_content>
+            <div class="well well-small">${message}</div>
+            <#list profils_list as profil>
+	            <div class="alert alert-success">
+	               <strong>${profil.name}</strong>
+	               <br/>
+	                    ${profil.description}            
+	            </div>
+            </#list>
+        <#else>
+            <div class="well well-small">${score_message}</div>
+            <div class="label label-important">
+                <#if invalid_answers_list?size != 0>
+                    #i18n{quiz.view_result.badAnswerResponse}
+                </#if>
+            </div>   
+            <ul>
+            <#list invalid_answers_list as invalid>
+            <li class="error">
+                <div class="">#i18n{quiz.view_result.Question} ${invalid.questionId}: ${invalid.question}</div>
+                <div class="alert alert-error">#i18n{quiz.view_result.yourAnswer}: ${invalid.invalidAnswer}</div>
+                <div class="alert alert-success">#i18n{quiz.view_result.goodAnswerWas}: ${invalid.explaination}</div>
+            </li>
+            </#list>
+            </ul>
+        </#if>
     </div>
 </div>

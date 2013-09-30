@@ -44,12 +44,14 @@ public class Answer
     private int _nIdQuestion;
     private String _strLabelAnswer;
     private int _nIsValid;
+    private int _nIdProfil;
+    private String _strProfil;
 
     /**
      * Returns the IdAnswer
      * @return The IdAnswer
      */
-    public int getIdAnswer(  )
+    public int getIdAnswer( )
     {
         return _nIdAnswer;
     }
@@ -67,7 +69,7 @@ public class Answer
      * Returns the IdQuestion
      * @return The IdQuestion
      */
-    public int getIdQuestion(  )
+    public int getIdQuestion( )
     {
         return _nIdQuestion;
     }
@@ -85,7 +87,7 @@ public class Answer
      * Returns the LabelAnswer
      * @return The LabelAnswer
      */
-    public String getLabelAnswer(  )
+    public String getLabelAnswer( )
     {
         return _strLabelAnswer;
     }
@@ -103,7 +105,7 @@ public class Answer
      * Returns the IsValid
      * @return The IsValid
      */
-    public int getValid(  )
+    public int getValid( )
     {
         return _nIsValid;
     }
@@ -112,7 +114,7 @@ public class Answer
      * Returns true if it is the correct answer
      * @return true if it is the correct answer
      */
-    public boolean isCorrect(  )
+    public boolean isCorrect( )
     {
         return _nIsValid == 1;
     }
@@ -124,5 +126,37 @@ public class Answer
     public void setValid( int nIsValid )
     {
         _nIsValid = nIsValid;
+    }
+
+    /**
+     * @return the _nIdProfil
+     */
+    public int getIdProfil( )
+    {
+        return _nIdProfil;
+    }
+
+    /**
+     * @param nIdProfil the _nIdProfil to set
+     */
+    public void setIdProfil( int nIdProfil )
+    {
+        this._nIdProfil = nIdProfil;
+    }
+
+    /**
+     * @return the _strProfil
+     */
+    public String getProfil( )
+    {
+        return _strProfil;
+    }
+
+    /**
+     * @param strProfil the _strProfil to set
+     */
+    public void setProfil( String strProfil )
+    {
+        this._strProfil = strProfil;
     }
 }

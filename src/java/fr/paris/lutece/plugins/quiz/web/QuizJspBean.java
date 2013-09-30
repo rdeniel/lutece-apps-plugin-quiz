@@ -33,21 +33,14 @@
  */
 package fr.paris.lutece.plugins.quiz.web;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import fr.paris.lutece.plugins.quiz.business.Answer;
 import fr.paris.lutece.plugins.quiz.business.AnswerHome;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroup;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroupHome;
 import fr.paris.lutece.plugins.quiz.business.Quiz;
 import fr.paris.lutece.plugins.quiz.business.QuizHome;
+import fr.paris.lutece.plugins.quiz.business.QuizProfil;
+import fr.paris.lutece.plugins.quiz.business.QuizProfilHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
@@ -64,9 +57,21 @@ import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 
 /**
- * This class provides the user interface to manage quiz features ( manage, create, modify, remove)
+ * This class provides the user interface to manage quiz features ( manage,
+ * create, modify, remove)
  */
 public class QuizJspBean extends PluginAdminPageJspBean
 {
@@ -78,12 +83,15 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_PAGE_TITLE_CREATE_QUIZ = "quiz.create_quiz.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_CREATE_QUESTION = "quiz.create_question.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MODIFY_QUIZ = "quiz.modify_quiz.pageTitle";
+    private static final String PROPERTY_PAGE_TITLE_MODIFY_PROFIL = "quiz.modify_profil.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MANAGE_QUESTIONS = "quiz.manage_questions.pageTitle";
     private static final String PROPERTY_CONFIRM_DELETE_QUIZ = "quiz.remove_quiz.confirmRemoveQuiz";
     private static final String PROPERTY_PAGE_TITLE_CREATE_GROUP = "quiz.create_group.pageTitle";
     private static final String PROPERTY_CONFIRM_DELETE_QUIZ_QUESTION = "quiz.remove_question.confirmRemoveQuestion";
     private static final String PROPERTY_CONFIRM_DELETE_GROUP_NO_QUESTION = "quiz.remove_group.confirmRemoveGroupNoQuestion";
     private static final String PROPERTY_CONFIRM_DELETE_GROUP_WITH_QUESTIONS = "quiz.remove_group.confirmRemoveGroupWithQuestion";
+    private static final String PROPERTY_CONFIRM_DELETE_QUIZ_PROFIL = "quiz.remove_question.confirmRemoveProfil";
+    private static final String PROPERTY_IMPOSSIBLE_DELETE_QUIZ_PROFIL = "quiz.remove_question.impossibleRemoveProfil";
     private static final String PROPERTY_PAGE_TITLE_CREATE_ANSWER = "quiz.create_answer.pageTitle";
     private static final String PROPERTY_CONFIRM_DELETE_ANSWER = "quiz.remove_answer.confirmRemoveAnswer";
     private static final String PROPERTY_CONFIRM_DELETE_ANSWER_TURN_RED = "quiz.remove_answer.confirmDeleteAnswerTurnRed";
@@ -91,6 +99,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_LABEL_NO = "portal.util.labelNo";
     private static final String PROPERTY_LABEL_YES = "portal.util.labelYes";
     private static final String MESSAGE_ONLY_ONE_ANSWER = "quiz.message.noMoreThanOneGoodAnswer";
+    private static final String PROPERTY_PAGE_TITLE_CREATE_PROFIL = "quiz.create_profil.pageTitle";
 
     //Jsps
     private static final String JSP_DO_REMOVE_QUIZ = "jsp/admin/plugins/quiz/DoRemoveQuiz.jsp";
@@ -98,6 +107,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String JSP_DO_REMOVE_GROUP = "jsp/admin/plugins/quiz/DoRemoveGroup.jsp";
     private static final String JSP_DO_REMOVE_ANSWER = "jsp/admin/plugins/quiz/DoRemoveAnswer.jsp";
     private static final String JSP_MANAGE_QUIZ = "jsp/admin/plugins/quiz/ManageQuiz.jsp";
+    private static final String JSP_DO_REMOVE_PROFIL = "jsp/admin/plugins/quiz/DoRemoveProfil.jsp";
 
     //Urls
     private static final String JSP_URL_MANAGE_QUIZ = "ManageQuiz.jsp";
@@ -117,13 +127,18 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_GROUP_NAME = "group_name";
     private static final String PARAMETER_GROUP_SUBJECT = "group_subject";
     private static final String PARAMETER_DATE_BEGIN_DISPONIBILITY = "date_begin_disponibility";
+    private static final String PARAMETER_TYPE = "quiz_type";
     private static final String PARAMETER_DATE_END_DISPONIBILITY = "date_end_disponibility";
     private static final String PARAMETER_ANSWER_LABEL = "answer_label";
     private static final String PARAMETER_ID_VALIDATION = "validity_id";
+    private static final String PARAMETER_ID_PROFIL = "profil_id";
     private static final String PARAMETER_EXPLAINATION = "explaination";
     private static final String PARAMETER_ANSWER_ID = "answer_id";
     private static final String PARAMETER_ACTIVE_CAPTCHA = "active_captcha";
     private static final String PARAMETER_ACTIVE_REQUIREMENT = "active_requirement";
+    private static final String PARAMETER_PROFIL_NAME = "profil_name";
+    private static final String PARAMETER_PROFIL_ID = "profil_id";
+    private static final String PARAMETER_PROFIL_DESCRIPTION = "profil_description";
 
     // Templates
     private static final String TEMPLATE_MANAGE_QUIZ = "admin/plugins/quiz/manage_quiz.html";
@@ -136,6 +151,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_MODIFY_GROUP = "admin/plugins/quiz/modify_group.html";
     private static final String TEMPLATE_CREATE_ANSWER = "admin/plugins/quiz/create_answer.html";
     private static final String TEMPLATE_MODIFY_ANSWER = "admin/plugins/quiz/modify_answer.html";
+    private static final String TEMPLATE_CREATE_PROFIL = "admin/plugins/quiz/create_profil.html";
+    private static final String TEMPLATE_MODIFY_PROFIL = "admin/plugins/quiz/modify_profil.html";
 
     //Markers
     private static final String MARK_QUIZ_LIST = "quiz_list";
@@ -151,12 +168,15 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String MARK_ANSWER_LIST = "answer_list";
     private static final String MARK_IS_ACTIVE_CAPTCHA = "is_active_captcha";
     private static final String MARK_ANSWER = "answer";
+    private static final String MARK_IS_TYPE_PROFIL = "isTypeProfil";
+    private static final String MARK_PROFIL = "profil";
+    private static final String MARK_LIST_PROFILS = "listProfils";
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
     private static final String MARK_YESNO_LIST = "yesno_list";
 
     /**
      * Returns quiz management form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -164,19 +184,19 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_QUIZ );
 
-        Collection<Quiz> listQuiz = QuizHome.findAll( getPlugin(  ) );
+        Collection<Quiz> listQuiz = QuizHome.findAll( getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ_LIST, listQuiz );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_QUIZ, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_QUIZ, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Returns the Quiz creation form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
@@ -184,19 +204,19 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_QUIZ );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         model.put( MARK_IS_ACTIVE_CAPTCHA, PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_QUIZ, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_QUIZ, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process quiz creation
-     *
+     * 
      * @param request The Http request
      * @return URL
      */
@@ -207,12 +227,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strConclusion = request.getParameter( PARAMETER_CONCLUSION );
         String strCGU = request.getParameter( PARAMETER_CGU );
         String strDateBeginDisponibility = request.getParameter( PARAMETER_DATE_BEGIN_DISPONIBILITY );
+        String strType = request.getParameter( PARAMETER_TYPE );
+
         java.util.Date tDateBeginDisponibility = null;
-        tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale(  ) );
+        tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale( ) );
 
         String strDateEndDisponibility = request.getParameter( PARAMETER_DATE_END_DISPONIBILITY );
         java.util.Date tDateEndDisponibility = null;
-        tDateEndDisponibility = DateUtil.formatDate( strDateEndDisponibility, getLocale(  ) );
+        tDateEndDisponibility = DateUtil.formatDate( strDateEndDisponibility, getLocale( ) );
 
         int nCaptcha;
         int nRequirement;
@@ -235,7 +257,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
             nRequirement = Integer.parseInt( request.getParameter( PARAMETER_ACTIVE_REQUIREMENT ) );
         }
 
-        Quiz quiz = new Quiz(  );
+        Quiz quiz = new Quiz( );
 
         // Mandatory field
         if ( strQuizName.equals( "" ) )
@@ -249,22 +271,23 @@ public class QuizJspBean extends PluginAdminPageJspBean
         quiz.setCgu( strCGU );
         quiz.setDateBeginDisponibility( tDateBeginDisponibility );
         quiz.setDateEndDisponibility( tDateEndDisponibility );
-        quiz.setDateCreation( new Timestamp( GregorianCalendar.getInstance(  ).getTimeInMillis(  ) ) );
+        quiz.setDateCreation( new Timestamp( GregorianCalendar.getInstance( ).getTimeInMillis( ) ) );
         quiz.setActiveCaptcha( nCaptcha );
         quiz.setActiveRequirement( nRequirement );
-        QuizHome.create( quiz, getPlugin(  ) );
+        quiz.setTypeQuiz( strType );
+        QuizHome.create( quiz, getPlugin( ) );
 
-        Quiz quizCreated = QuizHome.findLastQuiz( getPlugin(  ) );
+        Quiz quizCreated = QuizHome.findLastQuiz( getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
-        url.addParameter( PARAMETER_QUIZ_ID, quizCreated.getIdQuiz(  ) );
+        url.addParameter( PARAMETER_QUIZ_ID, quizCreated.getIdQuiz( ) );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
      * Returns the form for quiz modification
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -273,21 +296,21 @@ public class QuizJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_QUIZ );
 
         int nQuizId = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nQuizId, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nQuizId, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_QUIZ, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_QUIZ, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process the Quiz modifications
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -298,11 +321,11 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strConclusion = request.getParameter( PARAMETER_CONCLUSION );
         String strDateBeginDisponibility = request.getParameter( PARAMETER_DATE_BEGIN_DISPONIBILITY );
         java.util.Date tDateBeginDisponibility = null;
-        tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale(  ) );
+        tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale( ) );
 
         String strDateEndDisponibility = request.getParameter( PARAMETER_DATE_END_DISPONIBILITY );
         java.util.Date tDateEndDisponibility = null;
-        tDateEndDisponibility = DateUtil.formatDate( strDateEndDisponibility, getLocale(  ) );
+        tDateEndDisponibility = DateUtil.formatDate( strDateEndDisponibility, getLocale( ) );
 
         int nCaptcha;
         int nRequirement;
@@ -325,7 +348,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
             nRequirement = Integer.parseInt( request.getParameter( PARAMETER_ACTIVE_REQUIREMENT ) );
         }
 
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
 
         // Mandatory field
         if ( request.getParameter( PARAMETER_QUIZ_NAME ).equals( "" ) )
@@ -351,28 +374,28 @@ public class QuizJspBean extends PluginAdminPageJspBean
         quiz.setDateBeginDisponibility( tDateBeginDisponibility );
         quiz.setDateEndDisponibility( tDateEndDisponibility );
 
-        QuizHome.update( quiz, getPlugin(  ) );
+        QuizHome.update( quiz, getPlugin( ) );
 
         // if the operation occurred well, redirects towards the view of the User
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUIZ );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
      * Returns the quiz remove page
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
     public String getRemoveQuiz( HttpServletRequest request )
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         String strAdminMessageUrl;
         String strUrl;
 
-        if ( quiz.isEnabled(  ) )
+        if ( quiz.isEnabled( ) )
         {
             String strMessageKey = MESSAGE_CANNOT_DELETE_QUIZ;
             strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, JSP_MANAGE_QUIZ, "",
@@ -392,21 +415,22 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Remove a quiz
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
     public String doRemoveQuiz( HttpServletRequest request )
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
-        Collection questions = QuizQuestionHome.findAll( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
+        Collection questions = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         quiz.setQuestions( questions );
 
-        QuestionGroupHome.removeByQuiz( nIdQuiz, getPlugin(  ) );
-        QuizHome.remove( nIdQuiz, getPlugin(  ) );
-        QuizQuestionHome.removeQuestionsByQuiz( nIdQuiz, getPlugin(  ) );
-        AnswerHome.removeAnswersByQuestionList( questions, getPlugin(  ) );
+        QuestionGroupHome.removeByQuiz( nIdQuiz, getPlugin( ) );
+        QuizHome.remove( nIdQuiz, getPlugin( ) );
+        QuizQuestionHome.removeQuestionsByQuiz( nIdQuiz, getPlugin( ) );
+        AnswerHome.removeAnswersByQuestionList( questions, getPlugin( ) );
+        QuizProfilHome.removeProfilsByQuiz( nIdQuiz, getPlugin( ) );
 
         // Go to the parent page
         return getHomeUrl( request );
@@ -414,16 +438,16 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns quiz displaying form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
     public String doDisplayQuiz( HttpServletRequest request )
     {
         int nQuizId = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nQuizId, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nQuizId, getPlugin( ) );
 
-        if ( quiz.isEnabled(  ) )
+        if ( quiz.isEnabled( ) )
         {
             quiz.setStatus( 0 );
         }
@@ -432,11 +456,11 @@ public class QuizJspBean extends PluginAdminPageJspBean
             quiz.setStatus( 1 );
         }
 
-        QuizHome.update( quiz, getPlugin(  ) );
+        QuizHome.update( quiz, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUIZ );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -449,18 +473,18 @@ public class QuizJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_QUESTIONS );
 
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
 
-        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin(  ) );
-        List<QuestionGroup> listGroups = QuestionGroupHome.getGroupsList( nIdQuiz, getPlugin(  ) );
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
+        List<QuestionGroup> listGroups = QuestionGroupHome.getGroupsList( nIdQuiz, getPlugin( ) );
 
-        Collection<QuizQuestion> questionsListGroup = new ArrayList<QuizQuestion>(  );
-        Collection<QuizQuestion> questionsListWithoutGroup = new ArrayList<QuizQuestion>(  );
-        Collection<Answer> listAnswers = new ArrayList(  );
+        Collection<QuizQuestion> questionsListGroup = new ArrayList<QuizQuestion>( );
+        Collection<QuizQuestion> questionsListWithoutGroup = new ArrayList<QuizQuestion>( );
+        Collection<Answer> listAnswers = new ArrayList( );
 
         for ( QuizQuestion question : questionsList )
         {
-            if ( question.getIdGroup(  ) == 0 )
+            if ( question.getIdGroup( ) == 0 )
             {
                 questionsListWithoutGroup.add( question );
             }
@@ -469,26 +493,34 @@ public class QuizJspBean extends PluginAdminPageJspBean
                 questionsListGroup.add( question );
             }
 
-            listAnswers = AnswerHome.getAnswersList( question.getIdQuestion(  ), getPlugin(  ) );
+            listAnswers = AnswerHome.getAnswersList( question.getIdQuestion( ), getPlugin( ) );
 
-            QuizQuestionHome.update( question, getPlugin(  ) );
+            QuizQuestionHome.update( question, getPlugin( ) );
         }
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_QUESTIONS_GROUP, questionsListGroup );
         model.put( MARK_QUESTIONS_WITHOUT_GROUP, questionsListWithoutGroup );
         model.put( MARK_GROUPS_LIST, listGroups );
         model.put( MARK_ANSWER_LIST, listAnswers );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_QUESTIONS, getLocale(  ), model );
+        if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
+        {
+            Collection<QuizProfil> profilsList = QuizProfilHome.findAll( nIdQuiz, getPlugin( ) );
 
-        return getAdminPage( template.getHtml(  ) );
+            model.put( MARK_LIST_PROFILS, profilsList );
+            model.put( MARK_IS_TYPE_PROFIL, true );
+        }
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_QUESTIONS, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Returns the Question creation form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
@@ -497,23 +529,23 @@ public class QuizJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_QUESTION );
 
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
-        ReferenceList groupsList = QuestionGroupHome.getGroupsReferenceList( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
+        ReferenceList groupsList = QuestionGroupHome.getGroupsReferenceList( nIdQuiz, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_GROUPS_REFERENCE_LIST, groupsList );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_QUESTION, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_QUESTION, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process question creation
-     *
+     * 
      * @param request The Http request
      * @return URL
      */
@@ -531,26 +563,26 @@ public class QuizJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, "Vous n'avez pas remplis...", AdminMessage.TYPE_STOP );
         }
 
-        QuizQuestion quizQuestion = new QuizQuestion(  );
+        QuizQuestion quizQuestion = new QuizQuestion( );
         quizQuestion.setQuestionLabel( strQuestion );
         quizQuestion.setIdQuiz( nIdQuiz );
         quizQuestion.setIdGroup( nIdGroup );
         quizQuestion.setExplaination( strExplication );
-        QuizQuestionHome.create( quizQuestion, getPlugin(  ) );
+        QuizQuestionHome.create( quizQuestion, getPlugin( ) );
 
-        QuizQuestion questionCreated = QuizQuestionHome.findLastQuestion( getPlugin(  ) );
+        QuizQuestion questionCreated = QuizQuestionHome.findLastQuestion( getPlugin( ) );
 
         // if the operation occurred well, redirects towards the view of the Quiz
         UrlItem url = new UrlItem( JSP_URL_MODIFY_QUESTION );
-        url.addParameter( PARAMETER_QUIZ_ID, questionCreated.getIdQuiz(  ) );
-        url.addParameter( PARAMETER_QUESTION_ID, questionCreated.getIdQuestion(  ) );
+        url.addParameter( PARAMETER_QUIZ_ID, questionCreated.getIdQuiz( ) );
+        url.addParameter( PARAMETER_QUESTION_ID, questionCreated.getIdQuestion( ) );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
      * Returns the question modification form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -558,27 +590,37 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
-        QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin(  ) );
-        ReferenceList groupsList = QuestionGroupHome.getGroupsReferenceList( nIdQuiz, getPlugin(  ) );
-        Collection<Answer> listAnswer = AnswerHome.getAnswersList( nIdQuestion, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
+        QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin( ) );
+        ReferenceList groupsList = QuestionGroupHome.getGroupsReferenceList( nIdQuiz, getPlugin( ) );
+        Collection<Answer> listAnswer = AnswerHome.getAnswersList( nIdQuestion, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_GROUPS_REFERENCE_LIST, groupsList );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         model.put( MARK_QUESTION, quizQuestion );
         model.put( MARK_ANSWER_LIST, listAnswer );
+        if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
+        {
+            for ( Answer answer : listAnswer )
+            {
+                String profil = QuizProfilHome.getName( answer.getIdProfil( ), getPlugin( ) );
+                answer.setProfil( profil );
+            }
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_QUESTION, getLocale(  ), model );
+            model.put( MARK_IS_TYPE_PROFIL, true );
+        }
 
-        return getAdminPage( template.getHtml(  ) );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_QUESTION, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process the modifications of a question
-     *
+     * 
      * @param request The Http request
      * @return The Jsp URL of the process result
      */
@@ -596,23 +638,23 @@ public class QuizJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nQuestionId, getPlugin(  ) );
+        QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nQuestionId, getPlugin( ) );
 
         quizQuestion.setQuestionLabel( strQuestion );
         quizQuestion.setIdQuiz( nIdQuiz );
         quizQuestion.setIdGroup( nIdGroup );
         quizQuestion.setExplaination( strExplaination );
-        QuizQuestionHome.update( quizQuestion, getPlugin(  ) );
+        QuizQuestionHome.update( quizQuestion, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
      * Returns the question removing form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
@@ -620,8 +662,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuizQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        String strUrl = JSP_DO_REMOVE_QUESTION + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID +
-            "=" + nIdQuizQuestion;
+        String strUrl = JSP_DO_REMOVE_QUESTION + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID
+                + "=" + nIdQuizQuestion;
         String strMessageKey = PROPERTY_CONFIRM_DELETE_QUIZ_QUESTION;
         String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "",
                 AdminMessage.TYPE_CONFIRMATION );
@@ -638,14 +680,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuizQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        QuizQuestionHome.remove( nIdQuizQuestion, getPlugin(  ) );
-        AnswerHome.removeAnswersByQuestion( nIdQuizQuestion, getPlugin(  ) );
+        QuizQuestionHome.remove( nIdQuizQuestion, getPlugin( ) );
+        AnswerHome.removeAnswersByQuestion( nIdQuizQuestion, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -658,14 +700,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_GROUP );
 
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_GROUP, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_GROUP, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -679,18 +721,18 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strGroupName = request.getParameter( PARAMETER_GROUP_NAME );
         String strGroupSubject = request.getParameter( PARAMETER_GROUP_SUBJECT );
 
-        strGroupName = strGroupName.substring( 0, 1 ).toUpperCase(  ) + strGroupName.substring( 1 );
+        strGroupName = strGroupName.substring( 0, 1 ).toUpperCase( ) + strGroupName.substring( 1 );
 
-        QuestionGroup group = new QuestionGroup(  );
+        QuestionGroup group = new QuestionGroup( );
         group.setLabelGroup( strGroupName );
         group.setSubject( strGroupSubject );
         group.setIdQuiz( nIdQuiz );
-        QuestionGroupHome.create( nIdQuiz, group, getPlugin(  ) );
+        QuestionGroupHome.create( nIdQuiz, group, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -701,17 +743,17 @@ public class QuizJspBean extends PluginAdminPageJspBean
     public String getModifyGroup( HttpServletRequest request )
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
-        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin(  ) );
+        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_GROUP, group );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_GROUP, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_GROUP, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -727,21 +769,21 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strGroupName = request.getParameter( PARAMETER_GROUP_NAME );
         String strGroupSubject = request.getParameter( PARAMETER_GROUP_SUBJECT );
 
-        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin(  ) );
+        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin( ) );
         group.setLabelGroup( strGroupName );
         group.setSubject( strGroupSubject );
 
-        QuestionGroupHome.update( group, getPlugin(  ) );
+        QuestionGroupHome.update( group, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
      * Returns the question removing form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
@@ -750,10 +792,10 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
         String strMessageKey = "";
-        String strUrl = JSP_DO_REMOVE_GROUP + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_GROUP_ID + "=" +
-            nIdGroup;
+        String strUrl = JSP_DO_REMOVE_GROUP + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_GROUP_ID + "="
+                + nIdGroup;
 
-        Collection idQuestionsList = QuizQuestionHome.findIdQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin(  ) );
+        Collection idQuestionsList = QuizQuestionHome.findIdQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
 
         if ( idQuestionsList == null )
         {
@@ -772,7 +814,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Remove a group
-     *
+     * 
      * @param request The Http request
      * @return the exit url
      */
@@ -781,21 +823,22 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
 
-        Collection<QuizQuestion> listQuestions = QuizQuestionHome.findQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin(  ) );
+        Collection<QuizQuestion> listQuestions = QuizQuestionHome
+                .findQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
 
         for ( QuizQuestion question : listQuestions )
         {
-            AnswerHome.removeAnswersByQuestion( question.getIdQuestion(  ), getPlugin(  ) );
+            AnswerHome.removeAnswersByQuestion( question.getIdQuestion( ), getPlugin( ) );
         }
 
-        QuizQuestionHome.removeQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin(  ) );
-        QuestionGroupHome.remove( nIdQuiz, nIdGroup, getPlugin(  ) );
+        QuizQuestionHome.removeQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
+        QuestionGroupHome.remove( nIdQuiz, nIdGroup, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -809,19 +852,37 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
-        QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
+        QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_QUESTION, quizQuestion );
-        model.put( MARK_YESNO_LIST, getYesNoList(  ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_ANSWER, getLocale(  ), model );
+        if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
+        {
+            ReferenceList profilsList = QuizProfilHome.selectQuizProfilsReferenceList( nIdQuiz, getPlugin( ) );
 
-        return getAdminPage( template.getHtml(  ) );
+            if ( profilsList.isEmpty( ) )
+            {
+                return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil",
+                        AdminMessage.TYPE_STOP );
+            }
+            else
+            {
+                model.put( MARK_LIST_PROFILS, profilsList );
+            }
+        }
+        else
+        {
+            model.put( MARK_YESNO_LIST, getYesNoList( ) );
+        }
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_ANSWER, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -834,9 +895,20 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
         String strLabelAnswer = request.getParameter( PARAMETER_ANSWER_LABEL );
-        int nValid = Integer.parseInt( request.getParameter( PARAMETER_ID_VALIDATION ) );
+        int nValid = 0;
+        int profilId = 0;
 
-        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin(  ) ) > 0 ) )
+        if ( request.getParameter( PARAMETER_ID_VALIDATION ) != null )
+        {
+            nValid = Integer.parseInt( request.getParameter( PARAMETER_ID_VALIDATION ) );
+        }
+
+        if ( request.getParameter( PARAMETER_ID_PROFIL ) != null )
+        {
+            profilId = Integer.parseInt( request.getParameter( PARAMETER_ID_PROFIL ) );
+        }
+
+        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
         }
@@ -846,18 +918,19 @@ public class QuizJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        Answer answer = new Answer(  );
+        Answer answer = new Answer( );
         answer.setIdQuestion( nIdQuestion );
         answer.setLabelAnswer( strLabelAnswer );
         answer.setValid( nValid );
-        AnswerHome.create( nIdQuestion, answer, getPlugin(  ) );
+        answer.setIdProfil( profilId );
+        AnswerHome.create( nIdQuestion, answer, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MODIFY_QUESTION );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
         url.addParameter( PARAMETER_QUESTION_ID, nIdQuestion );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -868,23 +941,40 @@ public class QuizJspBean extends PluginAdminPageJspBean
     public String getModifyAnswer( HttpServletRequest request )
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
-        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin(  ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        QuizQuestion question = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin(  ) );
+        QuizQuestion question = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin( ) );
         int nIdAnswer = Integer.parseInt( request.getParameter( PARAMETER_ANSWER_ID ) );
-        Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin(  ) );
+        Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin( ) );
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_QUESTION, question );
         model.put( MARK_ANSWER, answer );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
-        model.put( MARK_YESNO_LIST, getYesNoList(  ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+        if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
+        {
+            ReferenceList profilsList = QuizProfilHome.selectQuizProfilsReferenceList( nIdQuiz, getPlugin( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_ANSWER, getLocale(  ), model );
+            if ( profilsList.isEmpty( ) )
+            {
+                return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil",
+                        AdminMessage.TYPE_STOP );
+            }
+            else
+            {
+                model.put( MARK_LIST_PROFILS, profilsList );
+            }
+        }
+        else
+        {
+            model.put( MARK_YESNO_LIST, getYesNoList( ) );
+        }
 
-        return getAdminPage( template.getHtml(  ) );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_ANSWER, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -898,11 +988,33 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
         String strLabelAnswer = request.getParameter( PARAMETER_ANSWER_LABEL );
-        int nValid = Integer.parseInt( request.getParameter( PARAMETER_ID_VALIDATION ) );
-        Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin(  ) );
+        Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin( ) );
 
-        if ( ( answer.getValid(  ) == 0 ) && ( nValid == 1 ) &&
-                ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin(  ) ) > 0 ) )
+        int nValid = 0;
+        int profilId = 0;
+
+        if ( request.getParameter( PARAMETER_ID_VALIDATION ) != null )
+        {
+            nValid = Integer.parseInt( request.getParameter( PARAMETER_ID_VALIDATION ) );
+        }
+
+        if ( request.getParameter( PARAMETER_ID_PROFIL ) != null )
+        {
+            profilId = Integer.parseInt( request.getParameter( PARAMETER_ID_PROFIL ) );
+        }
+
+        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
+        }
+
+        if ( ( strLabelAnswer == null ) || ( strLabelAnswer.equals( "" ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        if ( ( answer.getValid( ) == 0 ) && ( nValid == 1 )
+                && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
         }
@@ -915,19 +1027,20 @@ public class QuizJspBean extends PluginAdminPageJspBean
         answer.setIdQuestion( nIdQuestion );
         answer.setLabelAnswer( strLabelAnswer );
         answer.setValid( nValid );
-        AnswerHome.update( answer, getPlugin(  ) );
+        answer.setIdProfil( profilId );
+        AnswerHome.update( answer, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MODIFY_QUESTION );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
         url.addParameter( PARAMETER_QUESTION_ID, nIdQuestion );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
      * Returns the question removing form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
@@ -935,33 +1048,33 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        QuizQuestion question = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin(  ) );
+        QuizQuestion question = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin( ) );
         int nIdAnswer = Integer.parseInt( request.getParameter( PARAMETER_ANSWER_ID ) );
-        Answer answer2 = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin(  ) );
-        Collection<Answer> answersList = AnswerHome.getAnswersList( nIdQuestion, getPlugin(  ) );
+        Answer answer2 = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin( ) );
+        Collection<Answer> answersList = AnswerHome.getAnswersList( nIdQuestion, getPlugin( ) );
         int i = 0;
         String strMessageKey = "";
 
         for ( Answer answer : answersList )
         {
-            if ( answer.isCorrect(  ) )
+            if ( answer.isCorrect( ) )
             {
                 i++;
             }
         }
 
-        if ( ( i == 1 ) && ( answer2.getValid(  ) == 1 ) ) //si 1 r�ponse bonne et r�ponse ajout�e bonne
+        if ( ( i == 1 ) && ( answer2.getValid( ) == 1 ) ) //si 1 r�ponse bonne et r�ponse ajout�e bonne
         {
             strMessageKey = PROPERTY_CONFIRM_DELETE_ANSWER_TURN_RED;
-            QuizQuestionHome.update( question, getPlugin(  ) );
+            QuizQuestionHome.update( question, getPlugin( ) );
         }
         else
         {
             strMessageKey = PROPERTY_CONFIRM_DELETE_ANSWER;
         }
 
-        String strUrl = JSP_DO_REMOVE_ANSWER + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID +
-            "=" + nIdQuestion + "&" + PARAMETER_ANSWER_ID + "=" + nIdAnswer;
+        String strUrl = JSP_DO_REMOVE_ANSWER + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID
+                + "=" + nIdQuestion + "&" + PARAMETER_ANSWER_ID + "=" + nIdAnswer;
 
         String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "",
                 AdminMessage.TYPE_CONFIRMATION );
@@ -971,7 +1084,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Remove an answer
-     *
+     * 
      * @param request The HTTP request
      * @return The exit url
      */
@@ -980,14 +1093,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdAnswer = Integer.parseInt( request.getParameter( PARAMETER_ANSWER_ID ) );
         int nIdQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        AnswerHome.remove( nIdAnswer, getPlugin(  ) );
+        AnswerHome.remove( nIdAnswer, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MODIFY_QUESTION );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
         url.addParameter( PARAMETER_QUESTION_ID, nIdQuestion );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -999,14 +1112,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
-        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin(  ) );
-        QuestionGroupHome.moveUpGroup( nIdQuiz, group, getPlugin(  ) );
+        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin( ) );
+        QuestionGroupHome.moveUpGroup( nIdQuiz, group, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
     }
 
     /**
@@ -1018,25 +1131,180 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
-        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin(  ) );
-        QuestionGroupHome.moveDownGroup( nIdQuiz, group, getPlugin(  ) );
+        QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin( ) );
+        QuestionGroupHome.moveDownGroup( nIdQuiz, group, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
 
-        return url.getUrl(  );
+        return url.getUrl( );
+    }
+
+    /**
+     * Returns the create profil page
+     * @param request The HTTP request
+     * @return The page
+     */
+    public String getCreateProfil( HttpServletRequest request )
+    {
+        setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_PROFIL );
+
+        int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
+
+        HashMap model = new HashMap( );
+        model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+        model.put( MARK_QUIZ, quiz );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_PROFIL, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
+    }
+
+    /**
+     * Create a profil
+     * @param request The HTTP request
+     * @return The exit url
+     */
+    public String doCreateProfil( HttpServletRequest request )
+    {
+        int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
+        String strProfilName = request.getParameter( PARAMETER_PROFIL_NAME );
+        String strProfilDescription = request.getParameter( PARAMETER_PROFIL_DESCRIPTION );
+
+        if ( StringUtils.isEmpty( strProfilName ) || StringUtils.isEmpty( strProfilDescription ) )
+        {
+            return AdminMessageService.getMessageUrl( request, "quiz.create_profil.error", AdminMessage.TYPE_STOP );
+        }
+
+        strProfilName = strProfilName.substring( 0, 1 ).toUpperCase( ) + strProfilName.substring( 1 );
+
+        QuizProfil profil = new QuizProfil( );
+        profil.setName( strProfilName );
+        profil.setDescription( strProfilDescription );
+        profil.setIdQuiz( nIdQuiz );
+
+        QuizProfilHome.create( profil, getPlugin( ) );
+
+        UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
+        url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
+
+        return url.getUrl( );
+    }
+
+    /**
+     * Returns the profil removing form
+     * @param request The Http request
+     * @return Html creation form
+     */
+    public String getRemoveProfil( HttpServletRequest request )
+    {
+        int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
+        int nIdProfil = Integer.parseInt( request.getParameter( PARAMETER_PROFIL_ID ) );
+        String strAdminMessageUrl = "";
+
+        if ( AnswerHome.isAnswersWithProfil( nIdProfil, getPlugin( ) ) )
+        {
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, PROPERTY_IMPOSSIBLE_DELETE_QUIZ_PROFIL,
+                    AdminMessage.TYPE_STOP );
+        }
+        else
+        {
+            String strUrl = JSP_DO_REMOVE_PROFIL + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_PROFIL_ID
+                    + "=" + nIdProfil;
+
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, PROPERTY_CONFIRM_DELETE_QUIZ_PROFIL,
+                    strUrl, "", AdminMessage.TYPE_CONFIRMATION );
+        }
+
+        return strAdminMessageUrl;
+    }
+
+    /**
+     * Remove a profil
+     * @param request The HTTP request
+     * @return The exit url
+     */
+    public String doRemoveProfil( HttpServletRequest request )
+    {
+        int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
+        int nIdProfil = Integer.parseInt( request.getParameter( PARAMETER_PROFIL_ID ) );
+        QuizProfilHome.remove( nIdProfil, getPlugin( ) );
+
+        // Go to the parent page
+        UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
+        url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
+
+        return url.getUrl( );
+    }
+
+    /**
+     * Returns the form for profil modification
+     * @param request The Http request
+     * @return Html form
+     */
+    public String getModifyProfil( HttpServletRequest request )
+    {
+        setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_PROFIL );
+
+        int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
+        int nProfilId = Integer.parseInt( request.getParameter( PARAMETER_PROFIL_ID ) );
+        QuizProfil profil = QuizProfilHome.findByPrimaryKey( nProfilId, getPlugin( ) );
+        Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
+
+        HashMap model = new HashMap( );
+        model.put( MARK_QUIZ, quiz );
+        model.put( MARK_PROFIL, profil );
+        model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
+        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_PROFIL, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
+    }
+
+    /**
+     * Process the modifications of a profil
+     * @param request The Http request
+     * @return The Jsp URL of the process result
+     */
+    public String doModifyProfil( HttpServletRequest request )
+    {
+        int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
+        int nProfilId = Integer.parseInt( request.getParameter( PARAMETER_PROFIL_ID ) );
+        String strProfilName = request.getParameter( PARAMETER_PROFIL_NAME );
+        String strProfilDescription = request.getParameter( PARAMETER_PROFIL_DESCRIPTION );
+
+        // Mandatory fields
+        if ( StringUtils.isEmpty( strProfilName ) || StringUtils.isEmpty( strProfilDescription ) )
+        {
+            return AdminMessageService.getMessageUrl( request, "quiz.create_profil.error", AdminMessage.TYPE_STOP );
+        }
+
+        QuizProfil quizProfil = QuizProfilHome.findByPrimaryKey( nProfilId, getPlugin( ) );
+
+        quizProfil.setName( strProfilName );
+        quizProfil.setDescription( strProfilDescription );
+
+        QuizProfilHome.update( quizProfil, getPlugin( ) );
+
+        UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
+        url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
+
+        return url.getUrl( );
     }
 
     /**
      * Return a reference list with Yes/No choice
      * @return The list
      */
-    private ReferenceList getYesNoList(  )
+    private ReferenceList getYesNoList( )
     {
-        ReferenceList list = new ReferenceList(  );
-        list.addItem( 0, I18nService.getLocalizedString( PROPERTY_LABEL_NO, getLocale(  ) ) );
-        list.addItem( 1, I18nService.getLocalizedString( PROPERTY_LABEL_YES, getLocale(  ) ) );
+        ReferenceList list = new ReferenceList( );
+        list.addItem( 0, I18nService.getLocalizedString( PROPERTY_LABEL_NO, getLocale( ) ) );
+        list.addItem( 1, I18nService.getLocalizedString( PROPERTY_LABEL_YES, getLocale( ) ) );
 
         return list;
     }

@@ -46,7 +46,11 @@
 					<thead>
 						<tr>
 							<th>#i18n{quiz.modify_question.titleAnswer}</th>
-							<th>#i18n{quiz.modify_question.titleCorrects}</th>
+							<#if isTypeProfil?has_content && isTypeProfil>
+                             <th>#i18n{quiz.modify_question.titleProfil}</th>
+							<#else>
+							 <th>#i18n{quiz.modify_question.titleCorrects}</th>
+							</#if>
 							<th>#i18n{quiz.modify_question.titleActions}</th>
 						</tr>
 					</thead>
@@ -54,13 +58,19 @@
 					<#list answer_list as answer>
 					<tr>
 						<td>${answer.labelAnswer}</td>
-						<td>
-							<#if answer.correct>
-								<span class="label label-success"><i class="icon-ok icon-white"></i></span>
-							<#else>
-								<span class="label label-important"><i class="icon-remove icon-white"></i></span>
-							</#if>
-						</td>
+                        <#if isTypeProfil?has_content && isTypeProfil>
+                            <td>
+                                ${answer.profil}
+                            </td>
+                        <#else>
+							<td>
+								<#if answer.correct>
+									<span class="label label-success"><i class="icon-ok icon-white"></i></span>
+								<#else>
+									<span class="label label-important"><i class="icon-remove icon-white"></i></span>
+								</#if>
+							</td>
+                        </#if>
 						<td>
 							<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyAnswer.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}&answer_id=${answer.idAnswer}"  title="#i18n{quiz.modify_answer.linkTitleModifyAnswer}" >
 								<i class="icon-edit icon-white"></i>

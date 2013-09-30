@@ -33,15 +33,16 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-import java.util.Collection;
-import java.util.List;
-
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
+import java.util.Collection;
+import java.util.List;
+
 
 /**
- * This class provides instances management methods (create, find, ...) for Answer objects
+ * This class provides instances management methods (create, find, ...) for
+ * Answer objects
  */
 public final class AnswerHome
 {
@@ -51,7 +52,7 @@ public final class AnswerHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private AnswerHome(  )
+    private AnswerHome( )
     {
     }
 
@@ -68,7 +69,7 @@ public final class AnswerHome
 
         for ( Answer answer : answersList )
         {
-            if ( answer.isCorrect(  ) )
+            if ( answer.isCorrect( ) )
             {
                 nCount++;
             }
@@ -80,9 +81,11 @@ public final class AnswerHome
     /**
      * Create an instance of the answer class
      * @param nIdQuestion The question Id
-     * @param answer The instance of the Answer which contains the informations to store
+     * @param answer The instance of the Answer which contains the informations
+     *            to store
      * @param plugin the Plugin
-     * @return The  instance of answer which has been created with its primary key.
+     * @return The instance of answer which has been created with its primary
+     *         key.
      */
     public static Answer create( int nIdQuestion, Answer answer, Plugin plugin )
     {
@@ -95,7 +98,7 @@ public final class AnswerHome
      * Update of the answer which is specified in parameter
      * @param answer The instance of the Answer which contains the data to store
      * @param plugin the Plugin
-     * @return The instance of the  answer which has been updated
+     * @return The instance of the answer which has been updated
      */
     public static Answer update( Answer answer, Plugin plugin )
     {
@@ -118,7 +121,8 @@ public final class AnswerHome
     // Finders
 
     /**
-     * Returns an instance of a answer whose identifier is specified in parameter
+     * Returns an instance of a answer whose identifier is specified in
+     * parameter
      * @param nKey The answer primary key
      * @param plugin the Plugin
      * @return an instance of Answer
@@ -129,7 +133,8 @@ public final class AnswerHome
     }
 
     /**
-     * Load the data of all the answer objects and returns them in form of a list
+     * Load the data of all the answer objects and returns them in form of a
+     * list
      * @param nIdQuestion the id of the question
      * @param plugin the Plugin
      * @return the list which contains the data of all the answer objects
@@ -161,4 +166,17 @@ public final class AnswerHome
     {
         _dao.deleteAnswersByQuestion( nIdQuestion, plugin );
     }
+
+    /**
+     * Search asnwers with profil
+     * @param nIdProfil The identifier of the profil
+     * @param plugin The plugin
+     * @return <code>true</code> if there is at least one answer with profil,
+     *         <code>false</code> otherwise
+     */
+    public static boolean isAnswersWithProfil( int nIdProfil, Plugin plugin )
+    {
+        return _dao.isAnswersWithProfil( nIdProfil, plugin );
+    }
+
 }

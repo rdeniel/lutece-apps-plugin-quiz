@@ -4,6 +4,7 @@
 <beans>
     <bean id="quiz.quizService" class="fr.paris.lutece.plugins.quiz.service.QuizService" />
     <bean id="quiz.quizDAO"  class="fr.paris.lutece.plugins.quiz.business.QuizDAO" />
+    <bean id="quiz.quizProfilDAO"  class="fr.paris.lutece.plugins.quiz.business.QuizProfilDAO" />
     <bean id="quiz.questionDAO"  class="fr.paris.lutece.plugins.quiz.business.QuizQuestionDAO" />
     <bean id="quiz.questionGroupDAO" class="fr.paris.lutece.plugins.quiz.business.QuestionGroupDAO"/>
     <bean id="quiz.answerDAO" class="fr.paris.lutece.plugins.quiz.business.AnswerDAO"/>

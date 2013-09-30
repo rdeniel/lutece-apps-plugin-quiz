@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
 import java.sql.Date;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -49,42 +48,42 @@ public class QuizDAO implements IQuizDAO
 {
     //Requests
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_quiz ) FROM quiz_quiz ";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation FROM quiz_quiz";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, type_quiz FROM quiz_quiz";
     private static final String SQL_QUERY_DELETE = " DELETE FROM quiz_quiz WHERE id_quiz= ? ";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO quiz_quiz ( id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-    private static final String SQL_QUERY_SELECT = " SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu FROM quiz_quiz WHERE id_quiz = ? ";
-    private static final String SQL_QUERY_SELECT_LAST_QUIZ = " SELECT id_quiz, label_quiz, introduction, conclusion, activate_captcha, activate_requirement, status_quiz, date_begin_disponibility, date_end_disponibility, date_creation, cgu FROM quiz_quiz WHERE id_quiz = ( SELECT max( id_quiz ) FROM quiz_quiz ) ";
+    private static final String SQL_QUERY_INSERT = " INSERT INTO quiz_quiz ( id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+    private static final String SQL_QUERY_SELECT = " SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz FROM quiz_quiz WHERE id_quiz = ? ";
+    private static final String SQL_QUERY_SELECT_LAST_QUIZ = " SELECT id_quiz, label_quiz, introduction, conclusion, activate_captcha, activate_requirement, status_quiz, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz FROM quiz_quiz WHERE id_quiz = ( SELECT max( id_quiz ) FROM quiz_quiz ) ";
     private static final String SQL_QUERY_UPDATE = " UPDATE quiz_quiz SET label_quiz = ?, introduction = ?, conclusion = ?, status_quiz = ?, activate_captcha = ?, activate_requirement = ?, date_begin_disponibility = ?, date_end_disponibility = ?, cgu = ? WHERE id_quiz = ?  ";
     private static final String SQL_QUERY_SELECTALL_ENABLED = "SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, cgu FROM quiz_quiz WHERE status_quiz = 1";
 
     /**
      * Calculate a new primary key to add a new Quiz
-     *
+     * 
      * @param plugin the plugin
      * @return The new key.
      */
     int newPrimaryKey( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         int nKey;
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // if the table is empty
             nKey = 1;
         }
 
         nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
 
     /**
      * Insert a new record in the table.
-     *
+     * 
      * @param quiz The Instance of the object Quiz
      * @param plugin the plugin
      */
@@ -93,23 +92,23 @@ public class QuizDAO implements IQuizDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
         quiz.setIdQuiz( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, quiz.getIdQuiz(  ) );
-        daoUtil.setString( 2, quiz.getName(  ) );
-        daoUtil.setString( 3, quiz.getIntroduction(  ) );
-        daoUtil.setString( 4, quiz.getConclusion(  ) );
+        daoUtil.setInt( 1, quiz.getIdQuiz( ) );
+        daoUtil.setString( 2, quiz.getName( ) );
+        daoUtil.setString( 3, quiz.getIntroduction( ) );
+        daoUtil.setString( 4, quiz.getConclusion( ) );
         daoUtil.setBoolean( 5, false );
-        daoUtil.setInt( 6, quiz.getActiveCaptcha(  ) );
-        daoUtil.setInt( 7, quiz.getActiveRequirement(  ) );
-        daoUtil.setDate( 8,
-            ( quiz.getDateBeginDisponibility(  ) != null ) ? new Date( quiz.getDateBeginDisponibility(  ).getTime(  ) )
-                                                           : null );
-        daoUtil.setDate( 9,
-            ( quiz.getDateEndDisponibility(  ) != null ) ? new Date( quiz.getDateEndDisponibility(  ).getTime(  ) ) : null );
-        daoUtil.setTimestamp( 10, quiz.getDateCreation(  ) );
-        daoUtil.setString( 11, quiz.getCgu(  ) );
+        daoUtil.setInt( 6, quiz.getActiveCaptcha( ) );
+        daoUtil.setInt( 7, quiz.getActiveRequirement( ) );
+        daoUtil.setDate( 8, ( quiz.getDateBeginDisponibility( ) != null ) ? new Date( quiz.getDateBeginDisponibility( )
+                .getTime( ) ) : null );
+        daoUtil.setDate( 9, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( )
+                .getTime( ) ) : null );
+        daoUtil.setTimestamp( 10, quiz.getDateCreation( ) );
+        daoUtil.setString( 11, quiz.getCgu( ) );
+        daoUtil.setString( 12, quiz.getTypeQuiz( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
@@ -119,16 +118,16 @@ public class QuizDAO implements IQuizDAO
      */
     public Collection<Quiz> selectQuizList( Plugin plugin )
     {
-        Collection<Quiz> quizList = new ArrayList<Quiz>(  );
+        Collection<Quiz> quizList = new ArrayList<Quiz>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             quizList.add( load( daoUtil.getInt( 1 ), plugin ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return quizList;
     }
@@ -140,23 +139,23 @@ public class QuizDAO implements IQuizDAO
      */
     public Collection<Quiz> selectQuizEnabledList( Plugin plugin )
     {
-        Collection<Quiz> quizEnabledList = new ArrayList<Quiz>(  );
+        Collection<Quiz> quizEnabledList = new ArrayList<Quiz>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ENABLED, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             quizEnabledList.add( load( daoUtil.getInt( 1 ), plugin ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return quizEnabledList;
     }
 
     /**
      * Delete a record from the table
-     *
+     * 
      * @param nIdQuiz The indentifier of the object Quiz
      * @param plugin the plugin
      */
@@ -164,13 +163,13 @@ public class QuizDAO implements IQuizDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
         daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * load the data of Quiz from the table
-     *
+     * 
      * @param nIdQuiz The indentifier of the object Quiz
      * @param plugin the plugin
      * @return The Instance of the object Quiz
@@ -179,13 +178,13 @@ public class QuizDAO implements IQuizDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         Quiz quiz = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            quiz = new Quiz(  );
+            quiz = new Quiz( );
             quiz.setIdQuiz( daoUtil.getInt( 1 ) );
             quiz.setName( daoUtil.getString( 2 ) );
             quiz.setIntroduction( daoUtil.getString( 3 ) );
@@ -197,29 +196,30 @@ public class QuizDAO implements IQuizDAO
             quiz.setDateEndDisponibility( daoUtil.getDate( 9 ) );
             quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
             quiz.setCgu( daoUtil.getString( 11 ) );
+            quiz.setTypeQuiz( daoUtil.getString( 12 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return quiz;
     }
 
     /**
      * load the data of Quiz from the table
-     *
+     * 
      * @param plugin the plugin
      * @return The Instance of the object Quiz
      */
     public Quiz loadLastQuiz( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LAST_QUIZ, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         Quiz quiz = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            quiz = new Quiz(  );
+            quiz = new Quiz( );
             quiz.setIdQuiz( daoUtil.getInt( 1 ) );
             quiz.setName( daoUtil.getString( 2 ) );
             quiz.setIntroduction( daoUtil.getString( 3 ) );
@@ -231,38 +231,38 @@ public class QuizDAO implements IQuizDAO
             quiz.setDateEndDisponibility( daoUtil.getDate( 9 ) );
             quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
             quiz.setCgu( daoUtil.getString( 11 ) );
+            quiz.setTypeQuiz( daoUtil.getString( 12 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return quiz;
     }
 
     /**
      * Update the record in the table
-     *
+     * 
      * @param quiz The instance of the Quiz to update
      * @param plugin the plugin
      */
     public void store( Quiz quiz, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setString( 1, quiz.getName(  ) );
-        daoUtil.setString( 2, quiz.getIntroduction(  ) );
-        daoUtil.setString( 3, quiz.getConclusion(  ) );
-        daoUtil.setBoolean( 4, quiz.isEnabled(  ) );
-        daoUtil.setInt( 5, quiz.getActiveCaptcha(  ) );
-        daoUtil.setInt( 6, quiz.getActiveRequirement(  ) );
-        daoUtil.setDate( 7,
-            ( quiz.getDateBeginDisponibility(  ) != null ) ? new Date( quiz.getDateBeginDisponibility(  ).getTime(  ) )
-                                                           : null );
-        daoUtil.setDate( 8,
-            ( quiz.getDateEndDisponibility(  ) != null ) ? new Date( quiz.getDateEndDisponibility(  ).getTime(  ) ) : null );
-        daoUtil.setString( 9, quiz.getCgu(  ) );
-        daoUtil.setInt( 10, quiz.getIdQuiz(  ) );
+        daoUtil.setString( 1, quiz.getName( ) );
+        daoUtil.setString( 2, quiz.getIntroduction( ) );
+        daoUtil.setString( 3, quiz.getConclusion( ) );
+        daoUtil.setBoolean( 4, quiz.isEnabled( ) );
+        daoUtil.setInt( 5, quiz.getActiveCaptcha( ) );
+        daoUtil.setInt( 6, quiz.getActiveRequirement( ) );
+        daoUtil.setDate( 7, ( quiz.getDateBeginDisponibility( ) != null ) ? new Date( quiz.getDateBeginDisponibility( )
+                .getTime( ) ) : null );
+        daoUtil.setDate( 8, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( )
+                .getTime( ) ) : null );
+        daoUtil.setString( 9, quiz.getCgu( ) );
+        daoUtil.setInt( 10, quiz.getIdQuiz( ) );
 
-        daoUtil.executeUpdate(  );
+        daoUtil.executeUpdate( );
 
-        daoUtil.free(  );
+        daoUtil.free( );
     }
 }

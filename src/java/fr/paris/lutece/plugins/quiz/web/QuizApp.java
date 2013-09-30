@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.quiz.web;
 
 import fr.paris.lutece.plugins.quiz.business.Quiz;
+import fr.paris.lutece.plugins.quiz.business.QuizHome;
 import fr.paris.lutece.plugins.quiz.service.QuizService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
@@ -45,7 +46,6 @@ import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.text.MessageFormat;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -78,20 +78,21 @@ public class QuizApp implements XPageApplication
     private static final String MARK_ID_QUIZ = "quiz_id";
 
     /**
-     * Returns the Quiz XPage content depending on the request parameters and the current mode.
-     *
+     * Returns the Quiz XPage content depending on the request parameters and
+     * the current mode.
+     * 
      * @param request The HTTP request.
      * @param nMode The current mode.
      * @param plugin The Plugin
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException Message displayed if an exception occures
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             Message displayed if an exception occures
      * @return The page content.
      */
-    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin )
-        throws SiteMessageException
+    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin ) throws SiteMessageException
     {
         String strIdQuiz = request.getParameter( PARAMETER_ID_QUIZ );
         String strAction = request.getParameter( PARAMETER_ACTION );
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
 
         if ( strIdQuiz != null )
         {
@@ -99,16 +100,16 @@ public class QuizApp implements XPageApplication
 
             if ( ( strAction != null ) && strAction.equals( PARAMETER_RESULTS ) )
             {
-                page = getQuizResults( nIdQuiz, request.getLocale(  ), request.getParameterMap(  ) );
+                page = getQuizResults( nIdQuiz, request.getLocale( ), request.getParameterMap( ), plugin );
             }
             else
             {
-                page = getQuizPage( nIdQuiz, request.getLocale(  ) );
+                page = getQuizPage( nIdQuiz, request.getLocale( ) );
             }
         }
         else
         {
-            page = getQuizList( request.getLocale(  ) );
+            page = getQuizList( request.getLocale( ) );
         }
 
         return page;
@@ -121,11 +122,11 @@ public class QuizApp implements XPageApplication
      */
     private XPage getQuizList( Locale locale )
     {
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
         QuizService serviceQuiz = (QuizService) SpringContextService.getBean( BEAN_QUIZ_SERVICE );
-        Map model = serviceQuiz.getQuizList(  );
+        Map model = serviceQuiz.getQuizList( );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_LIST, locale, model );
-        page.setContent( template.getHtml(  ) );
+        page.setContent( template.getHtml( ) );
         page.setTitle( I18nService.getLocalizedString( PROPERTY_QUIZ_LIST_PAGE_TITLE, locale ) );
         page.setPathLabel( I18nService.getLocalizedString( PROPERTY_QUIZ_LIST_PAGE_PATH, locale ) );
 
@@ -140,16 +141,16 @@ public class QuizApp implements XPageApplication
      */
     private XPage getQuizPage( int nQuizId, Locale locale )
     {
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
         QuizService serviceQuiz = (QuizService) SpringContextService.getBean( BEAN_QUIZ_SERVICE );
         Map model = serviceQuiz.getQuiz( nQuizId );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST, locale, model );
-        page.setContent( template.getHtml(  ) );
+        page.setContent( template.getHtml( ) );
 
         String strPath = I18nService.getLocalizedString( PROPERTY_QUIZ_PAGE_PATH, locale );
         String strTitle = I18nService.getLocalizedString( PROPERTY_QUIZ_PAGE_TITLE, locale );
         Quiz quiz = (Quiz) model.get( QuizService.KEY_QUIZ );
-        Object[] args = { quiz.getName(  ) };
+        Object[] args = { quiz.getName( ) };
         page.setPathLabel( MessageFormat.format( strPath, args ) );
         page.setTitle( MessageFormat.format( strTitle, args ) );
 
@@ -158,17 +159,29 @@ public class QuizApp implements XPageApplication
 
     /**
      * Return The Answers list
-     * @param nQuizId  The quiz id
-     * @param locale  The current locale
-     * @param mapParameters  request parameters as a map
+     * @param nQuizId The quiz id
+     * @param locale The current locale
+     * @param mapParameters request parameters as a map
+     * @param plugin the plugin
      * @return The XPage
      */
-    private XPage getQuizResults( int nQuizId, Locale locale, Map mapParameters )
+    private XPage getQuizResults( int nQuizId, Locale locale, Map mapParameters, Plugin plugin )
     {
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
 
         QuizService serviceQuiz = (QuizService) SpringContextService.getBean( BEAN_QUIZ_SERVICE );
-        Map model = serviceQuiz.getResults( nQuizId, mapParameters, locale );
+        Quiz quiz = QuizHome.findByPrimaryKey( nQuizId, plugin );
+
+        Map model = new HashMap( );
+
+        if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
+        {
+            model = serviceQuiz.calculateQuizProfil( nQuizId, mapParameters, locale );
+        }
+        else
+        {
+            model = serviceQuiz.getResults( nQuizId, mapParameters, locale );
+        }
 
         String strError = (String) model.get( QuizService.KEY_ERROR );
 
@@ -179,12 +192,11 @@ public class QuizApp implements XPageApplication
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_RESULTS, locale, model );
 
-        page.setContent( template.getHtml(  ) );
+        page.setContent( template.getHtml( ) );
 
         String strPath = I18nService.getLocalizedString( PROPERTY_QUIZ_RESULTS_PAGE_PATH, locale );
         String strTitle = I18nService.getLocalizedString( PROPERTY_QUIZ_RESULTS_PAGE_TITLE, locale );
-        Quiz quiz = (Quiz) model.get( QuizService.KEY_QUIZ );
-        Object[] args = { quiz.getName(  ) };
+        Object[] args = { quiz.getName( ) };
         page.setPathLabel( MessageFormat.format( strPath, args ) );
         page.setTitle( MessageFormat.format( strTitle, args ) );
 
@@ -199,14 +211,14 @@ public class QuizApp implements XPageApplication
      */
     private XPage getErrorPage( int nIdQuiz, String strError, Locale locale )
     {
-        XPage page = new XPage(  );
-        Map model = new HashMap(  );
+        XPage page = new XPage( );
+        Map model = new HashMap( );
         model.put( MARK_ERROR, strError );
-        model.put( MARK_ID_QUIZ, Integer.toString(nIdQuiz) );
+        model.put( MARK_ID_QUIZ, Integer.toString( nIdQuiz ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_ERROR, locale, model );
 
-        page.setContent( template.getHtml(  ) );
+        page.setContent( template.getHtml( ) );
 
         String strPath = I18nService.getLocalizedString( PROPERTY_QUIZ_ERROR_PAGE_PATH, locale );
         String strTitle = I18nService.getLocalizedString( PROPERTY_QUIZ_ERROR_PAGE_TITLE, locale );

@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.quiz.business;
 
 import java.sql.Timestamp;
-
 import java.util.Collection;
 import java.util.Date;
 
@@ -58,10 +57,13 @@ public class Quiz
     private int _nCaptcha;
     private int _nRequirement;
 
+    /** Quiz type. */
+    private String _strTypeQuiz;
+
     /**
      * Creates a new Quiz object.
      */
-    public Quiz(  )
+    public Quiz( )
     {
     }
 
@@ -69,7 +71,7 @@ public class Quiz
      * Returns the identifier of this Quiz.
      * @return _nIdQuiz The Quiz identifier
      */
-    public int getIdQuiz(  )
+    public int getIdQuiz( )
     {
         return _nIdQuiz;
     }
@@ -87,7 +89,7 @@ public class Quiz
      * Returns the name of this quiz.
      * @return _strName The name of the quiz
      */
-    public String getName(  )
+    public String getName( )
     {
         return _strName;
     }
@@ -105,7 +107,7 @@ public class Quiz
      * Returns The boolean status of quiz
      * @return _bIsEnabled The boolean
      */
-    public boolean isEnabled(  )
+    public boolean isEnabled( )
     {
         return _bIsEnabled;
     }
@@ -130,7 +132,7 @@ public class Quiz
      * Returns a collection of questions
      * @return _questions The list of questions
      */
-    public Collection getQuestions(  )
+    public Collection getQuestions( )
     {
         return _questions;
     }
@@ -145,10 +147,10 @@ public class Quiz
     }
 
     /**
-    * Returns the name of this quiz.
-    * @return _strName The name of the quiz
-    */
-    public String getIntroduction(  )
+     * Returns the name of this quiz.
+     * @return _strName The name of the quiz
+     */
+    public String getIntroduction( )
     {
         return _strIntroduction;
     }
@@ -163,10 +165,10 @@ public class Quiz
     }
 
     /**
-    * Returns the conclusion of this quiz.
-    * @return The conclusion of the quiz
-    */
-    public String getConclusion(  )
+     * Returns the conclusion of this quiz.
+     * @return The conclusion of the quiz
+     */
+    public String getConclusion( )
     {
         return _strConclusion;
     }
@@ -184,7 +186,7 @@ public class Quiz
      * Gets the CGU
      * @return the CGU
      */
-    public String getCgu(  )
+    public String getCgu( )
     {
         return _strCgu;
     }
@@ -211,16 +213,16 @@ public class Quiz
      * Return the date begin of the publication
      * @return The date begin of the publication
      */
-    public Date getDateBeginDisponibility(  )
+    public Date getDateBeginDisponibility( )
     {
         return _tDateBeginDisponibility;
     }
 
     /**
-    *
-    * @return the date of end diosponibility
-    */
-    public Date getDateEndDisponibility(  )
+     * 
+     * @return the date of end diosponibility
+     */
+    public Date getDateEndDisponibility( )
     {
         return _tDateEndDisponibility;
     }
@@ -235,10 +237,10 @@ public class Quiz
     }
 
     /**
-     *
+     * 
      * @return the creation date
      */
-    public Timestamp getDateCreation(  )
+    public Timestamp getDateCreation( )
     {
         return _tDateCreation;
     }
@@ -256,7 +258,7 @@ public class Quiz
      * Returns the Value
      * @return The Value
      */
-    public byte[] getImg(  )
+    public byte[] getImg( )
     {
         return _strImg;
     }
@@ -274,7 +276,7 @@ public class Quiz
      * Gest captcha status
      * @return true if active
      */
-    public int getActiveCaptcha(  )
+    public int getActiveCaptcha( )
     {
         return _nCaptcha;
     }
@@ -292,7 +294,7 @@ public class Quiz
      * Gets the requirement status
      * @return the requirement status
      */
-    public int getActiveRequirement(  )
+    public int getActiveRequirement( )
     {
         return _nRequirement;
     }
@@ -305,4 +307,21 @@ public class Quiz
     {
         _nRequirement = nRequirement;
     }
+
+    /**
+     * @return the _strTypeQuiz
+     */
+    public String getTypeQuiz( )
+    {
+        return _strTypeQuiz;
+    }
+
+    /**
+     * @param strTypeQuiz the _strTypeQuiz to set
+     */
+    public void setTypeQuiz( String strTypeQuiz )
+    {
+        this._strTypeQuiz = strTypeQuiz;
+    }
+
 }

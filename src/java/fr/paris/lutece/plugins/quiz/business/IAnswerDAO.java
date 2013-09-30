@@ -33,29 +33,29 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-import java.util.List;
-
 import fr.paris.lutece.portal.service.plugin.Plugin;
+
+import java.util.List;
 
 
 /**
-* IAnswerDAO Interface
-*/
+ * IAnswerDAO Interface
+ */
 public interface IAnswerDAO
 {
     /**
      * Insert a new record in the table.
-     * @param nIdQuestion  The question Id
+     * @param nIdQuestion The question Id
      * @param answer instance of the Answer object to inssert
      * @param plugin the Plugin
      */
     void insert( int nIdQuestion, Answer answer, Plugin plugin );
 
     /**
-    * Update the record in the table
-    * @param answer the reference of the Answer
-    * @param plugin the Plugin
-    */
+     * Update the record in the table
+     * @param answer the reference of the Answer
+     * @param plugin the Plugin
+     */
     void store( Answer answer, Plugin plugin );
 
     /**
@@ -77,11 +77,11 @@ public interface IAnswerDAO
     Answer load( int nKey, Plugin plugin );
 
     /**
-    * Load the data of all the answer objects and returns them as a List
-    * @param plugin the Plugin
-    * @param nIdQuestion the id of the question
-    * @return The List which contains the data of all the answer objects
-    */
+     * Load the data of all the answer objects and returns them as a List
+     * @param plugin the Plugin
+     * @param nIdQuestion the id of the question
+     * @return The List which contains the data of all the answer objects
+     */
     List<Answer> selectAnswersList( int nIdQuestion, Plugin plugin );
 
     /**
@@ -90,4 +90,14 @@ public interface IAnswerDAO
      * @param plugin The plugin
      */
     void deleteAnswersByQuestion( int nIdQuestion, Plugin plugin );
+
+    /**
+     * Load the data of the answer from the table
+     * @param nIdProfil The identifier of the profil
+     * @param plugin The plugin
+     * @return <code>true</code> if there is at least one answer with profil,
+     *         <code>false</code> otherwise
+     */
+    boolean isAnswersWithProfil( int nIdProfil, Plugin plugin );
+
 }

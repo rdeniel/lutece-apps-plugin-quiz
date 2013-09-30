@@ -1,28 +1,39 @@
 <div class="row-fluid">
-	<form class="form" name="modify_quiz" action="jsp/admin/plugins/quiz/DoModifyQuiz.jsp"  method="post">
-		<input type="hidden" name="quiz_id" value="${quiz.idQuiz}" />
-		<input type="hidden" name="date_begin_disponibility_save" id="date_begin_disponibility_save" value="" />
-		<input type="hidden" name="date_end_disponibility_save" id="date_end_disponibility_save" value="" />
-		<div class="span8">
-			<fieldset>
-				<legend>#i18n{quiz.modify_quiz.pageTitle}</legend>
-				<label  for="quiz_name" >#i18n{quiz.modify_quiz.name} * :</label>
-				<input type="text" id="quiz_name" name="quiz_name" size="50" maxlength="50" tabindex="1" value="${quiz.name}"  />
-				<label  for="quiz_introduction" >#i18n{quiz.modify_quiz.introduction} :</label>
-				<textarea class="richtext" name="quiz_introduction" id="quiz_introduction" rows="5"  style="width:60%;">${quiz.introduction}</textarea>
-				<label  for="quiz_conclusion" >#i18n{quiz.modify_quiz.conclusion} :</label>
-				<textarea class="richtext" name="quiz_conclusion" id="quiz_conclusion" rows="5"  style="width:60%;">${quiz.conclusion}</textarea>
-				<div class="form-actions">
-					<button class="btn btn-primary btn-small" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonSave}</button>
-					<button class="btn btn-primary btn-small" type="submit" name="apply"><i class="icon-ok-circle icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonApply}</button>
-					<a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuiz.jsp">
-						<i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
-					</a>
-				</div>
-				
-			</fieldset>
-		</div>
-		<div class="span3">
+    <form class="form" name="modify_quiz" action="jsp/admin/plugins/quiz/DoModifyQuiz.jsp"  method="post">
+        <input type="hidden" name="quiz_id" value="${quiz.idQuiz}" />
+        <input type="hidden" name="date_begin_disponibility_save" id="date_begin_disponibility_save" value="" />
+        <input type="hidden" name="date_end_disponibility_save" id="date_end_disponibility_save" value="" />
+        <div class="span8">
+            <fieldset>
+                <legend>#i18n{quiz.modify_quiz.pageTitle}</legend>
+                <label  for="quiz_name" >#i18n{quiz.modify_quiz.name} * :</label>
+                <input type="text" id="quiz_name" name="quiz_name" size="50" maxlength="50" tabindex="1" value="${quiz.name}"  />
+                <label >#i18n{quiz.create_quiz.type} * :</label>
+                <label class="radio inline" for="quiz_type_reponse">
+                <input type="radio" name="quiz_type" id="quiz_type_reponse" <#if quiz.typeQuiz == 'REPONSE'> checked="checked" </#if> value="REPONSE" disabled="disabled"/>
+                #i18n{quiz.create_quiz.labelReponseType}
+                </label>
+                <label class="radio inline" for="quiz_type_profile">
+                    <input type="radio" name="quiz_type" id="quiz_type_profile" <#if quiz.typeQuiz == 'PROFIL'> checked="checked" </#if> value="PROFIL" disabled="disabled"/>
+                    #i18n{quiz.create_quiz.labelProfilType}
+                </label>
+                <br />
+                <br />
+                <label  for="quiz_introduction" >#i18n{quiz.modify_quiz.introduction} :</label>
+                <textarea class="richtext" name="quiz_introduction" id="quiz_introduction" rows="5"  style="width:60%;">${quiz.introduction}</textarea>
+                <label  for="quiz_conclusion" >#i18n{quiz.modify_quiz.conclusion} :</label>
+                <textarea class="richtext" name="quiz_conclusion" id="quiz_conclusion" rows="5"  style="width:60%;">${quiz.conclusion}</textarea>
+                <div class="form-actions">
+                    <button class="btn btn-primary btn-small" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonSave}</button>
+                    <button class="btn btn-primary btn-small" type="submit" name="apply"><i class="icon-ok-circle icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonApply}</button>
+                    <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuiz.jsp">
+                        <i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
+                    </a>
+                </div>
+                
+            </fieldset>
+        </div>
+        <div class="span3">
             <fieldset>
                 <legend>#i18n{quiz.modify_quiz.labelAdvancedSettings}</legend>
                 <label  for="">#i18n{quiz.modify_quiz.labelActiveCaptcha} :</label>
@@ -53,8 +64,8 @@
                 <input type="text" name="date_end_disponibility" id="date_end_disponibility" value="${quiz.dateEndDisponibility?if_exists}"  class="input-small" onchange="javascript:doChangeDate(this.quiz.publication_mode);" />
                 <p class="help-block">#i18n{quiz.modify_quiz.labelDateEndDisponibilityComment}</p>
             </fieldset>
-		</div>
-	</form>
+        </div>
+    </form>
 </div>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />

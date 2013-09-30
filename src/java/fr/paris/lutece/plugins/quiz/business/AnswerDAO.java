@@ -33,11 +33,11 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -47,12 +47,13 @@ public final class AnswerDAO implements IAnswerDAO
 {
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_answer ) FROM quiz_answer";
-    private static final String SQL_QUERY_SELECT = "SELECT id_answer, id_question, label_answer, is_valid FROM quiz_answer WHERE id_answer = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO quiz_answer ( id_answer, id_question, label_answer, is_valid ) VALUES ( ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_SELECT = "SELECT id_answer, id_question, label_answer, is_valid, id_profil FROM quiz_answer WHERE id_answer = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO quiz_answer ( id_answer, id_question, label_answer, is_valid, id_profil ) VALUES ( ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM quiz_answer WHERE id_answer = ? ";
     private static final String SQL_QUERY_DELETE_ANSWERS_BY_QUESTION = "DELETE FROM quiz_answer WHERE id_question = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE quiz_answer SET id_answer = ?, id_question = ?, label_answer = ?, is_valid = ? WHERE id_answer = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_answer, id_question, label_answer, is_valid FROM quiz_answer WHERE id_question = ?";
+    private static final String SQL_QUERY_UPDATE = "UPDATE quiz_answer SET id_answer = ?, id_question = ?, label_answer = ?, is_valid = ?, id_profil = ? WHERE id_answer = ?";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_answer, id_question, label_answer, is_valid, id_profil FROM quiz_answer WHERE id_question = ? ORDER BY id_answer";
+    private static final String SQL_QUERY_SELECT_BY_PROFIL = "SELECT id_answer FROM quiz_answer WHERE id_profil = ?";
 
     /**
      * Generates a new primary key
@@ -62,18 +63,18 @@ public final class AnswerDAO implements IAnswerDAO
     public int newPrimaryKey( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         int nKey;
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // if the table is empty
             nKey = 1;
         }
 
         nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
@@ -90,13 +91,14 @@ public final class AnswerDAO implements IAnswerDAO
 
         answer.setIdAnswer( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, answer.getIdAnswer(  ) );
-        daoUtil.setInt( 2, answer.getIdQuestion(  ) );
-        daoUtil.setString( 3, answer.getLabelAnswer(  ) );
-        daoUtil.setInt( 4, answer.getValid(  ) );
+        daoUtil.setInt( 1, answer.getIdAnswer( ) );
+        daoUtil.setInt( 2, answer.getIdQuestion( ) );
+        daoUtil.setString( 3, answer.getLabelAnswer( ) );
+        daoUtil.setInt( 4, answer.getValid( ) );
+        daoUtil.setInt( 5, answer.getIdProfil( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
@@ -109,21 +111,22 @@ public final class AnswerDAO implements IAnswerDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         Answer answer = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            answer = new Answer(  );
+            answer = new Answer( );
 
             answer.setIdAnswer( daoUtil.getInt( 1 ) );
             answer.setIdQuestion( daoUtil.getInt( 2 ) );
             answer.setLabelAnswer( daoUtil.getString( 3 ) );
             answer.setValid( daoUtil.getInt( 4 ) );
+            answer.setIdProfil( daoUtil.getInt( 5 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return answer;
     }
@@ -137,8 +140,8 @@ public final class AnswerDAO implements IAnswerDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
         daoUtil.setInt( 1, nAnswerId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
@@ -150,14 +153,15 @@ public final class AnswerDAO implements IAnswerDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
 
-        daoUtil.setInt( 1, answer.getIdAnswer(  ) );
-        daoUtil.setInt( 2, answer.getIdQuestion(  ) );
-        daoUtil.setString( 3, answer.getLabelAnswer(  ) );
-        daoUtil.setInt( 4, answer.getValid(  ) );
-        daoUtil.setInt( 5, answer.getIdAnswer(  ) );
+        daoUtil.setInt( 1, answer.getIdAnswer( ) );
+        daoUtil.setInt( 2, answer.getIdQuestion( ) );
+        daoUtil.setString( 3, answer.getLabelAnswer( ) );
+        daoUtil.setInt( 4, answer.getValid( ) );
+        daoUtil.setInt( 5, answer.getIdProfil( ) );
+        daoUtil.setInt( 6, answer.getIdAnswer( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
@@ -168,24 +172,25 @@ public final class AnswerDAO implements IAnswerDAO
      */
     public List<Answer> selectAnswersList( int nIdQuestion, Plugin plugin )
     {
-        List<Answer> answerList = new ArrayList<Answer>(  );
+        List<Answer> answerList = new ArrayList<Answer>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
         daoUtil.setInt( 1, nIdQuestion );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            Answer answer = new Answer(  );
+            Answer answer = new Answer( );
 
             answer.setIdAnswer( daoUtil.getInt( 1 ) );
             answer.setIdQuestion( daoUtil.getInt( 2 ) );
             answer.setLabelAnswer( daoUtil.getString( 3 ) );
             answer.setValid( daoUtil.getInt( 4 ) );
+            answer.setIdProfil( daoUtil.getInt( 5 ) );
 
             answerList.add( answer );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return answerList;
     }
@@ -199,7 +204,32 @@ public final class AnswerDAO implements IAnswerDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ANSWERS_BY_QUESTION, plugin );
         daoUtil.setInt( 1, nIdQuestion );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
+    }
+
+    /**
+     * Load the data of the answer from the table
+     * @param nIdProfil The identifier of the profil
+     * @param plugin The plugin
+     * @return <code>true</code> if there is at least one answer with profil,
+     *         <code>false</code> otherwise
+     */
+    public boolean isAnswersWithProfil( int nIdProfil, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PROFIL, plugin );
+        daoUtil.setInt( 1, nIdProfil );
+        daoUtil.executeQuery( );
+
+        boolean result = false;
+
+        if ( daoUtil.next( ) )
+        {
+            result = true;
+        }
+
+        daoUtil.free( );
+
+        return result;
     }
 }
