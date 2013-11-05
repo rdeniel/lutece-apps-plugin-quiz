@@ -39,8 +39,8 @@ import fr.paris.lutece.plugins.quiz.business.QuestionGroup;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroupHome;
 import fr.paris.lutece.plugins.quiz.business.Quiz;
 import fr.paris.lutece.plugins.quiz.business.QuizHome;
-import fr.paris.lutece.plugins.quiz.business.QuizProfil;
-import fr.paris.lutece.plugins.quiz.business.QuizProfilHome;
+import fr.paris.lutece.plugins.quiz.business.QuizProfile;
+import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
@@ -63,6 +63,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -77,6 +78,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
 {
     //Rights
     public static final String RIGHT_MANAGE_QUIZ = "QUIZ_MANAGEMENT";
+
+    private static final long serialVersionUID = 832830320966397744L;
 
     // Properties for page titles
     private static final String PROPERTY_PAGE_TITLE_MANAGE_QUIZ = "quiz.manage_quiz.pageTitle";
@@ -111,6 +114,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     //Urls
     private static final String JSP_URL_MANAGE_QUIZ = "ManageQuiz.jsp";
+    private static final String JSP_URL_MODIFY_QUIZ = "ModifyQuiz.jsp";
     private static final String JSP_URL_MANAGE_QUESTIONS = "ManageQuestions.jsp";
     private static final String JSP_URL_MODIFY_QUESTION = "ModifyQuestion.jsp";
 
@@ -127,6 +131,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_GROUP_NAME = "group_name";
     private static final String PARAMETER_GROUP_SUBJECT = "group_subject";
     private static final String PARAMETER_DATE_BEGIN_DISPONIBILITY = "date_begin_disponibility";
+    private static final String PARAMETER_DISPLAY_STEP_BY_STEP = "display_step_by_step";
+    private static final String PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP = "display_results_after_each_step";
     private static final String PARAMETER_TYPE = "quiz_type";
     private static final String PARAMETER_DATE_END_DISPONIBILITY = "date_end_disponibility";
     private static final String PARAMETER_ANSWER_LABEL = "answer_label";
@@ -139,6 +145,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_PROFIL_NAME = "profil_name";
     private static final String PARAMETER_PROFIL_ID = "profil_id";
     private static final String PARAMETER_PROFIL_DESCRIPTION = "profil_description";
+    private static final String PARAMETER_APPLY = "apply";
 
     // Templates
     private static final String TEMPLATE_MANAGE_QUIZ = "admin/plugins/quiz/manage_quiz.html";
@@ -186,7 +193,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         Collection<Quiz> listQuiz = QuizHome.findAll( getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ_LIST, listQuiz );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_QUIZ, getLocale( ), model );
@@ -204,7 +211,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_QUIZ );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         model.put( MARK_IS_ACTIVE_CAPTCHA, PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) );
@@ -228,6 +235,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strCGU = request.getParameter( PARAMETER_CGU );
         String strDateBeginDisponibility = request.getParameter( PARAMETER_DATE_BEGIN_DISPONIBILITY );
         String strType = request.getParameter( PARAMETER_TYPE );
+        boolean bDisplayStepByStep = Boolean.parseBoolean( request.getParameter( PARAMETER_DISPLAY_STEP_BY_STEP ) );
+        boolean bDisplayResultAfterEachStep = Boolean.parseBoolean( request
+                .getParameter( PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP ) );
 
         java.util.Date tDateBeginDisponibility = null;
         tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale( ) );
@@ -275,6 +285,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
         quiz.setActiveCaptcha( nCaptcha );
         quiz.setActiveRequirement( nRequirement );
         quiz.setTypeQuiz( strType );
+        quiz.setDisplayStepByStep( bDisplayStepByStep );
+        quiz.setDisplayResultAfterEachStep( bDisplayResultAfterEachStep );
         QuizHome.create( quiz, getPlugin( ) );
 
         Quiz quizCreated = QuizHome.findLastQuiz( getPlugin( ) );
@@ -298,7 +310,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nQuizId = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         Quiz quiz = QuizHome.findByPrimaryKey( nQuizId, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
@@ -320,6 +332,10 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strIntroduction = request.getParameter( PARAMETER_INTRODUCTION );
         String strConclusion = request.getParameter( PARAMETER_CONCLUSION );
         String strDateBeginDisponibility = request.getParameter( PARAMETER_DATE_BEGIN_DISPONIBILITY );
+        boolean bDisplayStepByStep = Boolean.parseBoolean( request.getParameter( PARAMETER_DISPLAY_STEP_BY_STEP ) );
+        boolean bDisplayResultAfterEachStep = Boolean.parseBoolean( request
+                .getParameter( PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP ) );
+
         java.util.Date tDateBeginDisponibility = null;
         tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale( ) );
 
@@ -373,9 +389,18 @@ public class QuizJspBean extends PluginAdminPageJspBean
         quiz.setActiveRequirement( nRequirement );
         quiz.setDateBeginDisponibility( tDateBeginDisponibility );
         quiz.setDateEndDisponibility( tDateEndDisponibility );
+        quiz.setDisplayStepByStep( bDisplayStepByStep );
+        quiz.setDisplayResultAfterEachStep( bDisplayResultAfterEachStep );
 
         QuizHome.update( quiz, getPlugin( ) );
 
+        if ( StringUtils.isNotEmpty( request.getParameter( PARAMETER_APPLY ) ) )
+        {
+            UrlItem url = new UrlItem( JSP_URL_MODIFY_QUIZ );
+            url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
+
+            return url.getUrl( );
+        }
         // if the operation occurred well, redirects towards the view of the User
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUIZ );
 
@@ -423,14 +448,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
-        Collection questions = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
+        Collection<QuizQuestion> questions = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         quiz.setQuestions( questions );
 
         QuestionGroupHome.removeByQuiz( nIdQuiz, getPlugin( ) );
         QuizHome.remove( nIdQuiz, getPlugin( ) );
         QuizQuestionHome.removeQuestionsByQuiz( nIdQuiz, getPlugin( ) );
         AnswerHome.removeAnswersByQuestionList( questions, getPlugin( ) );
-        QuizProfilHome.removeProfilsByQuiz( nIdQuiz, getPlugin( ) );
+        QuizProfileHome.removeProfilesByQuiz( nIdQuiz, getPlugin( ) );
 
         // Go to the parent page
         return getHomeUrl( request );
@@ -480,7 +505,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         Collection<QuizQuestion> questionsListGroup = new ArrayList<QuizQuestion>( );
         Collection<QuizQuestion> questionsListWithoutGroup = new ArrayList<QuizQuestion>( );
-        Collection<Answer> listAnswers = new ArrayList( );
+        Collection<Answer> listAnswers = new ArrayList<Answer>( );
 
         for ( QuizQuestion question : questionsList )
         {
@@ -498,7 +523,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
             QuizQuestionHome.update( question, getPlugin( ) );
         }
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_QUESTIONS_GROUP, questionsListGroup );
         model.put( MARK_QUESTIONS_WITHOUT_GROUP, questionsListWithoutGroup );
@@ -507,7 +532,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
         {
-            Collection<QuizProfil> profilsList = QuizProfilHome.findAll( nIdQuiz, getPlugin( ) );
+            Collection<QuizProfile> profilsList = QuizProfileHome.findAll( nIdQuiz, getPlugin( ) );
 
             model.put( MARK_LIST_PROFILS, profilsList );
             model.put( MARK_IS_TYPE_PROFIL, true );
@@ -532,7 +557,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         ReferenceList groupsList = QuestionGroupHome.getGroupsReferenceList( nIdQuiz, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_GROUPS_REFERENCE_LIST, groupsList );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
@@ -595,7 +620,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         ReferenceList groupsList = QuestionGroupHome.getGroupsReferenceList( nIdQuiz, getPlugin( ) );
         Collection<Answer> listAnswer = AnswerHome.getAnswersList( nIdQuestion, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_GROUPS_REFERENCE_LIST, groupsList );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
@@ -606,7 +631,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         {
             for ( Answer answer : listAnswer )
             {
-                String profil = QuizProfilHome.getName( answer.getIdProfil( ), getPlugin( ) );
+                String profil = QuizProfileHome.getName( answer.getIdProfil( ), getPlugin( ) );
                 answer.setProfil( profil );
             }
 
@@ -702,7 +727,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_GROUP, getLocale( ), model );
@@ -747,7 +772,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
         QuestionGroup group = QuestionGroupHome.findByPrimaryKey( nIdGroup, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_GROUP, group );
 
@@ -795,7 +820,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strUrl = JSP_DO_REMOVE_GROUP + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_GROUP_ID + "="
                 + nIdGroup;
 
-        Collection idQuestionsList = QuizQuestionHome.findIdQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
+        Collection<Integer> idQuestionsList = QuizQuestionHome.findIdQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
 
         if ( idQuestionsList == null )
         {
@@ -855,7 +880,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         QuizQuestion quizQuestion = QuizQuestionHome.findByPrimaryKey( nIdQuestion, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         model.put( MARK_QUIZ, quiz );
@@ -863,17 +888,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
         {
-            ReferenceList profilsList = QuizProfilHome.selectQuizProfilsReferenceList( nIdQuiz, getPlugin( ) );
+            ReferenceList profilsList = QuizProfileHome.selectQuizProfilsReferenceList( nIdQuiz, getPlugin( ) );
 
             if ( profilsList.isEmpty( ) )
             {
                 return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil",
                         AdminMessage.TYPE_STOP );
             }
-            else
-            {
-                model.put( MARK_LIST_PROFILS, profilsList );
-            }
+            model.put( MARK_LIST_PROFILS, profilsList );
         }
         else
         {
@@ -947,7 +969,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdAnswer = Integer.parseInt( request.getParameter( PARAMETER_ANSWER_ID ) );
         Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_QUESTION, question );
         model.put( MARK_ANSWER, answer );
@@ -955,17 +977,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
         {
-            ReferenceList profilsList = QuizProfilHome.selectQuizProfilsReferenceList( nIdQuiz, getPlugin( ) );
+            ReferenceList profilsList = QuizProfileHome.selectQuizProfilsReferenceList( nIdQuiz, getPlugin( ) );
 
             if ( profilsList.isEmpty( ) )
             {
                 return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil",
                         AdminMessage.TYPE_STOP );
             }
-            else
-            {
-                model.put( MARK_LIST_PROFILS, profilsList );
-            }
+            model.put( MARK_LIST_PROFILS, profilsList );
         }
         else
         {
@@ -1017,11 +1036,6 @@ public class QuizJspBean extends PluginAdminPageJspBean
                 && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
-        }
-
-        if ( ( strLabelAnswer == null ) || ( strLabelAnswer.equals( "" ) ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
         answer.setIdQuestion( nIdQuestion );
@@ -1153,7 +1167,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
         model.put( MARK_QUIZ, quiz );
@@ -1181,12 +1195,12 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         strProfilName = strProfilName.substring( 0, 1 ).toUpperCase( ) + strProfilName.substring( 1 );
 
-        QuizProfil profil = new QuizProfil( );
+        QuizProfile profil = new QuizProfile( );
         profil.setName( strProfilName );
         profil.setDescription( strProfilDescription );
         profil.setIdQuiz( nIdQuiz );
 
-        QuizProfilHome.create( profil, getPlugin( ) );
+        QuizProfileHome.create( profil, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
@@ -1231,7 +1245,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdProfil = Integer.parseInt( request.getParameter( PARAMETER_PROFIL_ID ) );
-        QuizProfilHome.remove( nIdProfil, getPlugin( ) );
+        QuizProfileHome.remove( nIdProfil, getPlugin( ) );
 
         // Go to the parent page
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
@@ -1251,10 +1265,10 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nProfilId = Integer.parseInt( request.getParameter( PARAMETER_PROFIL_ID ) );
-        QuizProfil profil = QuizProfilHome.findByPrimaryKey( nProfilId, getPlugin( ) );
+        QuizProfile profil = QuizProfileHome.findByPrimaryKey( nProfilId, getPlugin( ) );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_PROFIL, profil );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
@@ -1283,12 +1297,12 @@ public class QuizJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, "quiz.create_profil.error", AdminMessage.TYPE_STOP );
         }
 
-        QuizProfil quizProfil = QuizProfilHome.findByPrimaryKey( nProfilId, getPlugin( ) );
+        QuizProfile quizProfil = QuizProfileHome.findByPrimaryKey( nProfilId, getPlugin( ) );
 
         quizProfil.setName( strProfilName );
         quizProfil.setDescription( strProfilDescription );
 
-        QuizProfilHome.update( quizProfil, getPlugin( ) );
+        QuizProfileHome.update( quizProfil, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );

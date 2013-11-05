@@ -39,14 +39,14 @@ import java.util.Date;
 
 
 /**
- * This class represents business object Quiz
+ * This class represents the business object Quiz
  */
 public class Quiz
 {
     private int _nIdQuiz;
     private String _strName;
     private boolean _bIsEnabled;
-    private Collection _questions;
+    private Collection<QuizQuestion> _questions;
     private String _strIntroduction;
     private String _strConclusion;
     private String _strCgu;
@@ -56,6 +56,8 @@ public class Quiz
     private byte[] _strImg;
     private int _nCaptcha;
     private int _nRequirement;
+    private boolean _bDisplayStepByStep;
+    private boolean _bDisplayResultAfterEachStep;
 
     /** Quiz type. */
     private String _strTypeQuiz;
@@ -132,16 +134,16 @@ public class Quiz
      * Returns a collection of questions
      * @return _questions The list of questions
      */
-    public Collection getQuestions( )
+    public Collection<QuizQuestion> getQuestions( )
     {
         return _questions;
     }
 
     /**
      * Sets the list of questions on a Collection
-     * @param questions The Collection of quetsions
+     * @param questions The Collection of questions
      */
-    public void setQuestions( Collection questions )
+    public void setQuestions( Collection<QuizQuestion> questions )
     {
         _questions = questions;
     }
@@ -324,4 +326,44 @@ public class Quiz
         this._strTypeQuiz = strTypeQuiz;
     }
 
+    /**
+     * Check if this quiz should be displayed step by step or in a block
+     * @return True if this quiz should be displayed step by step, false if it
+     *         should be displayed in a block
+     */
+    public boolean getDisplayStepByStep( )
+    {
+        return _bDisplayStepByStep;
+    }
+
+    /**
+     * Set the display method of this quiz
+     * @param bDisplayStepByStep True if this quiz should be displayed step by
+     *            step, false if it should be displayed in a block
+     */
+    public void setDisplayStepByStep( boolean bDisplayStepByStep )
+    {
+        this._bDisplayStepByStep = bDisplayStepByStep;
+    }
+
+    /**
+     * Check if results of the quiz should be displayed after each step or at
+     * the end of the quiz
+     * @return True if results of the quiz should be displayed after each step
+     *         or at the end of the quiz
+     */
+    public boolean getDisplayResultAfterEachStep( )
+    {
+        return _bDisplayResultAfterEachStep;
+    }
+
+    /**
+     * Display results of the quiz after each step or at the end of the quiz
+     * @param bDisplayResultAfterEachStep True if results of the quiz should be
+     *            displayed after each step or at the end of the quiz
+     */
+    public void setDisplayResultAfterEachStep( boolean bDisplayResultAfterEachStep )
+    {
+        this._bDisplayResultAfterEachStep = bDisplayResultAfterEachStep;
+    }
 }

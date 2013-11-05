@@ -6,7 +6,10 @@ import fr.paris.lutece.util.ReferenceList;
 import java.util.Collection;
 
 
-public interface IQuizProfilDAO
+/**
+ * Interface of quiz profile DAO
+ */
+public interface IQuizProfileDAO
 {
     /**
      * Creation of an instance of an article Quiz profil
@@ -15,7 +18,7 @@ public interface IQuizProfilDAO
      *            informations to store
      * @param plugin the plugin
      */
-    void insert( QuizProfil profil, Plugin plugin );
+    void insert( QuizProfile profil, Plugin plugin );
 
     /**
      * Select the list of profile
@@ -39,7 +42,7 @@ public interface IQuizProfilDAO
      * @param plugin plugin Quiz
      * @return corresponding profil
      */
-    QuizProfil load( int nKey, Plugin plugin );
+    QuizProfile load( int nKey, Plugin plugin );
 
     /**
      * Find all profils for a quiz
@@ -47,7 +50,7 @@ public interface IQuizProfilDAO
      * @param plugin plugin Quiz
      * @return profils list
      */
-    Collection<QuizProfil> findAll( int nIdQuiz, Plugin plugin );
+    Collection<QuizProfile> findAll( int nIdQuiz, Plugin plugin );
 
     /**
      * Delete a profil
@@ -57,12 +60,12 @@ public interface IQuizProfilDAO
     void delete( int nIdProfil, Plugin plugin );
 
     /**
-     * Updates of the {@link QuizProfil} instance specified in parameter
-     * @param quizProfil An instance of the {@link QuizProfil} which contains
+     * Updates of the {@link QuizProfile} instance specified in parameter
+     * @param quizProfil An instance of the {@link QuizProfile} which contains
      *            the informations to store
      * @param plugin the plugin
      */
-    void store( QuizProfil quizProfil, Plugin plugin );
+    void store( QuizProfile quizProfil, Plugin plugin );
 
     /**
      * Delete profils linked to a quiz

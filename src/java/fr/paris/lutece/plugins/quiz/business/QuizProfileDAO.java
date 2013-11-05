@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class QuizProfilDAO implements IQuizProfilDAO
+/**
+ * Quiz profile DAO
+ */
+public class QuizProfileDAO implements IQuizProfileDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_profil ) FROM quiz_profil ";
     private static final String SQL_QUERY_INSERT_PROFIL = "INSERT INTO quiz_profil ( id_profil, name, description, id_quiz ) VALUES ( ?, ?, ?, ? )";
@@ -46,7 +49,7 @@ public class QuizProfilDAO implements IQuizProfilDAO
     }
 
     @Override
-    public void insert( QuizProfil profil, Plugin plugin )
+    public void insert( QuizProfile profil, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_PROFIL, plugin );
         profil.setIdProfil( newPrimaryKey( plugin ) );
@@ -104,17 +107,17 @@ public class QuizProfilDAO implements IQuizProfilDAO
     }
 
     @Override
-    public QuizProfil load( int nKey, Plugin plugin )
+    public QuizProfile load( int nKey, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PROFIL, plugin );
         daoUtil.setInt( 1, nKey );
         daoUtil.executeQuery( );
 
-        QuizProfil quizProfil = null;
+        QuizProfile quizProfil = null;
 
         if ( daoUtil.next( ) )
         {
-            quizProfil = new QuizProfil( );
+            quizProfil = new QuizProfile( );
             quizProfil.setIdProfil( daoUtil.getInt( 1 ) );
             quizProfil.setName( daoUtil.getString( 2 ) );
             quizProfil.setDescription( daoUtil.getString( 3 ) );
@@ -126,9 +129,9 @@ public class QuizProfilDAO implements IQuizProfilDAO
     }
 
     @Override
-    public Collection<QuizProfil> findAll( int nIdQuiz, Plugin plugin )
+    public Collection<QuizProfile> findAll( int nIdQuiz, Plugin plugin )
     {
-        Collection<QuizProfil> result = new ArrayList<QuizProfil>( );
+        Collection<QuizProfile> result = new ArrayList<QuizProfile>( );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
         daoUtil.setInt( 1, nIdQuiz );
@@ -137,7 +140,7 @@ public class QuizProfilDAO implements IQuizProfilDAO
 
         while ( daoUtil.next( ) )
         {
-            QuizProfil profil = new QuizProfil( );
+            QuizProfile profil = new QuizProfile( );
             profil.setIdProfil( daoUtil.getInt( 1 ) );
             profil.setName( daoUtil.getString( 2 ) );
             profil.setDescription( daoUtil.getString( 3 ) );
@@ -159,7 +162,7 @@ public class QuizProfilDAO implements IQuizProfilDAO
     }
 
     @Override
-    public void store( QuizProfil quizProfil, Plugin plugin )
+    public void store( QuizProfile quizProfil, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
         daoUtil.setString( 1, quizProfil.getName( ) );

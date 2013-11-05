@@ -48,13 +48,13 @@ public class QuizDAO implements IQuizDAO
 {
     //Requests
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_quiz ) FROM quiz_quiz ";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, type_quiz FROM quiz_quiz";
+    private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_quiz FROM quiz_quiz";
     private static final String SQL_QUERY_DELETE = " DELETE FROM quiz_quiz WHERE id_quiz= ? ";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO quiz_quiz ( id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-    private static final String SQL_QUERY_SELECT = " SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz FROM quiz_quiz WHERE id_quiz = ? ";
-    private static final String SQL_QUERY_SELECT_LAST_QUIZ = " SELECT id_quiz, label_quiz, introduction, conclusion, activate_captcha, activate_requirement, status_quiz, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz FROM quiz_quiz WHERE id_quiz = ( SELECT max( id_quiz ) FROM quiz_quiz ) ";
-    private static final String SQL_QUERY_UPDATE = " UPDATE quiz_quiz SET label_quiz = ?, introduction = ?, conclusion = ?, status_quiz = ?, activate_captcha = ?, activate_requirement = ?, date_begin_disponibility = ?, date_end_disponibility = ?, cgu = ? WHERE id_quiz = ?  ";
-    private static final String SQL_QUERY_SELECTALL_ENABLED = "SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, cgu FROM quiz_quiz WHERE status_quiz = 1";
+    private static final String SQL_QUERY_INSERT = " INSERT INTO quiz_quiz ( id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz, display_step_by_step, results_at_the_end ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+    private static final String SQL_QUERY_SELECT = " SELECT id_quiz, label_quiz, introduction, conclusion, status_quiz, activate_captcha, activate_requirement, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz, display_step_by_step, results_at_the_end FROM quiz_quiz WHERE id_quiz = ? ";
+    private static final String SQL_QUERY_SELECT_LAST_QUIZ = " SELECT id_quiz, label_quiz, introduction, conclusion, activate_captcha, activate_requirement, status_quiz, date_begin_disponibility, date_end_disponibility, date_creation, cgu, type_quiz, display_step_by_step, results_at_the_end FROM quiz_quiz WHERE id_quiz = ( SELECT max( id_quiz ) FROM quiz_quiz ) ";
+    private static final String SQL_QUERY_UPDATE = " UPDATE quiz_quiz SET label_quiz = ?, introduction = ?, conclusion = ?, status_quiz = ?, activate_captcha = ?, activate_requirement = ?, date_begin_disponibility = ?, date_end_disponibility = ?, cgu = ?, display_step_by_step = ?, results_at_the_end = ? WHERE id_quiz = ?  ";
+    private static final String SQL_QUERY_SELECTALL_ENABLED = "SELECT id_quiz FROM quiz_quiz WHERE status_quiz = 1";
 
     /**
      * Calculate a new primary key to add a new Quiz
@@ -106,6 +106,8 @@ public class QuizDAO implements IQuizDAO
         daoUtil.setTimestamp( 10, quiz.getDateCreation( ) );
         daoUtil.setString( 11, quiz.getCgu( ) );
         daoUtil.setString( 12, quiz.getTypeQuiz( ) );
+        daoUtil.setBoolean( 13, quiz.getDisplayStepByStep( ) );
+        daoUtil.setBoolean( 14, quiz.getDisplayResultAfterEachStep( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -119,7 +121,7 @@ public class QuizDAO implements IQuizDAO
     public Collection<Quiz> selectQuizList( Plugin plugin )
     {
         Collection<Quiz> quizList = new ArrayList<Quiz>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin );
         daoUtil.executeQuery( );
 
         while ( daoUtil.next( ) )
@@ -197,6 +199,8 @@ public class QuizDAO implements IQuizDAO
             quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
             quiz.setCgu( daoUtil.getString( 11 ) );
             quiz.setTypeQuiz( daoUtil.getString( 12 ) );
+            quiz.setDisplayStepByStep( daoUtil.getBoolean( 13 ) );
+            quiz.setDisplayResultAfterEachStep( daoUtil.getBoolean( 14 ) );
         }
 
         daoUtil.free( );
@@ -232,6 +236,8 @@ public class QuizDAO implements IQuizDAO
             quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
             quiz.setCgu( daoUtil.getString( 11 ) );
             quiz.setTypeQuiz( daoUtil.getString( 12 ) );
+            quiz.setDisplayStepByStep( daoUtil.getBoolean( 13 ) );
+            quiz.setDisplayResultAfterEachStep( daoUtil.getBoolean( 14 ) );
         }
 
         daoUtil.free( );
@@ -259,7 +265,9 @@ public class QuizDAO implements IQuizDAO
         daoUtil.setDate( 8, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( )
                 .getTime( ) ) : null );
         daoUtil.setString( 9, quiz.getCgu( ) );
-        daoUtil.setInt( 10, quiz.getIdQuiz( ) );
+        daoUtil.setBoolean( 10, quiz.getDisplayStepByStep( ) );
+        daoUtil.setBoolean( 11, quiz.getDisplayResultAfterEachStep( ) );
+        daoUtil.setInt( 12, quiz.getIdQuiz( ) );
 
         daoUtil.executeUpdate( );
 

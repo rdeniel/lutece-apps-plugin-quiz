@@ -10,3 +10,7 @@ CREATE TABLE quiz_profil (
   id_quiz INT default NULL,
   PRIMARY KEY  (id_profil)
 );
+
+ALTER TABLE quiz_quiz ADD COLUMN display_step_by_step SMALLINT DEFAULT 0;
+ALTER TABLE quiz_quiz ADD COLUMN results_at_the_end SMALLINT DEFAULT 0;
+

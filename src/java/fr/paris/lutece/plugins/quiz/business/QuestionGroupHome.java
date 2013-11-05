@@ -41,27 +41,29 @@ import java.util.List;
 
 
 /**
- * This class provides instances management methods (create, find, ...) for QuestionGroup objects
+ * This class provides instances management methods (create, find, ...) for
+ * QuestionGroup objects
  */
 public final class QuestionGroupHome
 {
     // Static variable pointed at the DAO instance
-    private static IQuestionGroupDAO _dao = (IQuestionGroupDAO) SpringContextService.getPluginBean( "quiz",
-            "quiz.questionGroupDAO" );
+    private static IQuestionGroupDAO _dao = SpringContextService.getBean( "quiz.questionGroupDAO" );
 
     /**
      * Private constructor - this class need not be instantiated
      */
-    private QuestionGroupHome(  )
+    private QuestionGroupHome( )
     {
     }
 
     /**
      * Create an instance of the group class
      * @param nIdQuiz The quiz ID
-     * @param group The instance of the QuestionGroup which contains the informations to store
+     * @param group The instance of the QuestionGroup which contains the
+     *            informations to store
      * @param plugin the Plugin
-     * @return The  instance of group which has been created with its primary key.
+     * @return The instance of group which has been created with its primary
+     *         key.
      */
     public static QuestionGroup create( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
@@ -72,9 +74,10 @@ public final class QuestionGroupHome
 
     /**
      * Update of the group which is specified in parameter
-     * @param group The instance of the QuestionGroup which contains the data to store
+     * @param group The instance of the QuestionGroup which contains the data to
+     *            store
      * @param plugin the Plugin
-     * @return The instance of the  group which has been updated
+     * @return The instance of the group which has been updated
      */
     public static QuestionGroup update( QuestionGroup group, Plugin plugin )
     {
@@ -109,7 +112,8 @@ public final class QuestionGroupHome
     }
 
     /**
-     * Load the data of all the group objects and returns them in form of a list
+     * Load the data of every group objects attached to a given quiz and returns
+     * them in a list
      * @param nIdQuiz The quiz ID
      * @param plugin the Plugin
      * @return the list which contains the data of all the group objects
@@ -117,6 +121,18 @@ public final class QuestionGroupHome
     public static List<QuestionGroup> getGroupsList( int nIdQuiz, Plugin plugin )
     {
         return _dao.selectQuestionGroupsList( nIdQuiz, plugin );
+    }
+
+    /**
+     * Find a group by its quiz and position
+     * @param nIdQuiz The quiz ID
+     * @param nPosition The position of the required group
+     * @param plugin the Plugin
+     * @return The requested group, or null if no group has the given position
+     */
+    public static QuestionGroup getGroupByPosition( int nIdQuiz, int nPosition, Plugin plugin )
+    {
+        return _dao.selectQuestionGroupByPosition( nIdQuiz, nPosition, plugin );
     }
 
     /**

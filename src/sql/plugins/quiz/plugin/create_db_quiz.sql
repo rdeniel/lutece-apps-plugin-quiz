@@ -41,6 +41,8 @@ CREATE TABLE quiz_quiz (
   activate_requirement int default NULL,
   cgu varchar(255) default NULL,
   type_quiz  VARCHAR(25) DEFAULT 'REPONSE',
+  display_step_by_step SMALLINT DEFAULT 0,
+  results_at_the_end SMALLINT DEFAULT 0,
   PRIMARY KEY  (id_quiz)
 );
 

@@ -40,8 +40,8 @@ import fr.paris.lutece.plugins.quiz.business.QuestionGroup;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroupHome;
 import fr.paris.lutece.plugins.quiz.business.Quiz;
 import fr.paris.lutece.plugins.quiz.business.QuizHome;
-import fr.paris.lutece.plugins.quiz.business.QuizProfil;
-import fr.paris.lutece.plugins.quiz.business.QuizProfilHome;
+import fr.paris.lutece.plugins.quiz.business.QuizProfile;
+import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
 import fr.paris.lutece.portal.service.i18n.I18nService;
@@ -59,7 +59,6 @@ import java.util.Map;
 
 /**
  * Quiz Service
- * 
  */
 public class QuizService
 {
@@ -68,7 +67,7 @@ public class QuizService
     private static final String PROPERTY_MSG_MANY_GOOD_ANSWERS = "quiz.message.results.manyGoodAnswers";
     private static final String PROPERTY_MSG_ONE_GOOD_ANSWER = "quiz.message.results.oneGoodAnswer";
     private static final String PROPERTY_MSG_NO_GOOD_ANSWER = "quiz.message.results.noGoodAnswer";
-    private static final String PROPERTY_MSG_PROFIL = "quiz.message.results.profils";
+    private static final String PROPERTY_MSG_PROFILE = "quiz.message.results.profils";
     private static final String PROPERTY_NO_ANSWER_FOR_QUESTION = "quiz.message.error.noAnswerForQuestion";
     private static final String MARK_SCORE = "score";
     private static final String MARK_QUESTIONS_COUNT = "questions_count";
@@ -76,8 +75,9 @@ public class QuizService
     private static final String MARK_MESSAGE = "message";
     private static final String MARK_INVALID_ANSWERS_LIST = "invalid_answers_list";
     private static final String MARK_QUIZ_LIST = "quiz_list";
+    private static final String MARK_GROUP = "group";
     private static final String MARK_GROUPS_LIST = "groups_list";
-    private static final String MARK_PROFILS_LIST = "profils_list";
+    private static final String MARK_PROFILES_LIST = "profils_list";
     private static final String PLUGIN_NAME = "quiz";
     private static Plugin _plugin;
 
@@ -85,14 +85,24 @@ public class QuizService
      * Gets the list of quiz
      * @return The model
      */
-    public Map getQuizList( )
+    public Map<String, Object> getQuizList( )
     {
         Collection<Quiz> quizList = QuizHome.findAllEnabled( getPlugin( ) );
 
-        HashMap model = new HashMap( );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ_LIST, quizList );
 
         return model;
+    }
+
+    /**
+     * Find a quiz by its primary key
+     * @param nQuizId The id of the quiz
+     * @return The quiz with the given id, or null if no quiz was found
+     */
+    public Quiz findQuizById( int nQuizId )
+    {
+        return QuizHome.findByPrimaryKey( nQuizId, getPlugin( ) );
     }
 
     /**
@@ -100,7 +110,7 @@ public class QuizService
      * @param nId The quiz Id
      * @return The model
      */
-    public Map getQuiz( int nId )
+    public Map<String, Object> getQuiz( int nId )
     {
         Quiz quiz = QuizHome.findByPrimaryKey( nId, getPlugin( ) );
 
@@ -115,9 +125,43 @@ public class QuizService
             question.setAnswers( answerListByQuestion );
         }
 
-        HashMap model = new HashMap( );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( KEY_QUIZ, quiz );
         model.put( MARK_GROUPS_LIST, listGroups );
+
+        return model;
+    }
+
+    /**
+     * Gets a quiz step as a model map
+     * @param quiz The quiz
+     * @param nOldStepId The id of the last displayed step, or 0 to display the
+     *            first step
+     * @return The model
+     */
+    public Map<String, Object> getQuizNextStep( Quiz quiz, int nOldStepId )
+    {
+        Plugin plugin = getPlugin( );
+        QuestionGroup group = QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nOldStepId + 1, plugin );
+        // If there is no more group
+        if ( group == null )
+        {
+            return null;
+        }
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
+                group.getIdGroup( ), plugin );
+
+        for ( QuizQuestion question : questionsList )
+        {
+            List<Answer> answerListByQuestion = AnswerHome.getAnswersList( question.getIdQuestion( ), getPlugin( ) );
+            question.setAnswers( answerListByQuestion );
+        }
+
+        quiz.setQuestions( questionsList );
+
+        HashMap<String, Object> model = new HashMap<String, Object>( );
+        model.put( KEY_QUIZ, quiz );
+        model.put( MARK_GROUP, group );
 
         return model;
     }
@@ -137,15 +181,39 @@ public class QuizService
     }
 
     /**
+     * Get the answers of a user to questions of a quiz
+     * @param nIdQuiz The id of the quiz to get answers of
+     * @param parameterMap The map of HTTP parameters
+     * @return A map containing question ids as keys and user answers as values
+     */
+    public Map<String, String> getUserAnswers( int nIdQuiz, Map<String, String[]> parameterMap )
+    {
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
+        Map<String, String> mapUserAnswers = new HashMap<String, String>( questionsList.size( ) );
+        for ( QuizQuestion question : questionsList )
+        {
+            String strQuestionId = String.valueOf( question.getIdQuestion( ) );
+            String[] values = parameterMap.get( strQuestionId );
+
+            if ( values != null )
+            {
+                String strUserAnswer = values[0];
+                mapUserAnswers.put( strQuestionId, strUserAnswer );
+            }
+        }
+        return mapUserAnswers;
+    }
+
+    /**
      * Get results
      * @param nIdQuiz The quiz Id
      * @param parameterMap The parameters map
      * @param locale The current locale
      * @return a model as a map
      */
-    public Map getResults( int nIdQuiz, Map<String, String[]> parameterMap, Locale locale )
+    public Map<String, Object> getResults( int nIdQuiz, Map<String, String[]> parameterMap, Locale locale )
     {
-        Map model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         int nScore = 0;
@@ -217,9 +285,16 @@ public class QuizService
         return model;
     }
 
-    public Map calculateQuizProfil( int nIdQuiz, Map<String, String[]> parameterMap, Locale locale )
+    /**
+     * Compute the profile of a user from his answers
+     * @param nIdQuiz The id of the answered quiz
+     * @param parameterMap The map containing answers
+     * @param locale The locale
+     * @return The model
+     */
+    public Map<String, Object> calculateQuizProfile( int nIdQuiz, Map<String, String[]> parameterMap, Locale locale )
     {
-        Map model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         Map<Integer, Integer> profilMap = new HashMap<Integer, Integer>( );
@@ -252,40 +327,40 @@ public class QuizService
                 }
                 else
                 {
-                    profilMap.put( new Integer( answer.getIdProfil( ) ), new Integer( 1 ) );
+                    profilMap.put( new Integer( answer.getIdProfil( ) ), Integer.valueOf( 1 ) );
                 }
             }
         }
 
-        Integer mainProfil = -1;
-        List<Integer> profilsId = new ArrayList<Integer>( );
-        List<QuizProfil> profilsList = new ArrayList<QuizProfil>( );
+        Integer mainProfile = -1;
+        List<Integer> profilesId = new ArrayList<Integer>( );
+        List<QuizProfile> profilesList = new ArrayList<QuizProfile>( );
 
         for ( Map.Entry<Integer, Integer> entry : profilMap.entrySet( ) )
         {
-            if ( entry.getValue( ).compareTo( mainProfil ) > 0 )
+            if ( entry.getValue( ).compareTo( mainProfile ) > 0 )
             {
-                mainProfil = entry.getValue( );
-                profilsId = new ArrayList<Integer>( );
-                profilsId.add( entry.getKey( ) );
+                mainProfile = entry.getValue( );
+                profilesId = new ArrayList<Integer>( );
+                profilesId.add( entry.getKey( ) );
             }
-            else if ( entry.getValue( ).compareTo( mainProfil ) == 0 )
+            else if ( entry.getValue( ).compareTo( mainProfile ) == 0 )
             {
-                profilsId.add( entry.getKey( ) );
+                profilesId.add( entry.getKey( ) );
             }
         }
 
-        for ( Integer profilId : profilsId )
+        for ( Integer profileId : profilesId )
         {
-            QuizProfil profil = QuizProfilHome.findByPrimaryKey( profilId, getPlugin( ) );
-            profilsList.add( profil );
+            QuizProfile profile = QuizProfileHome.findByPrimaryKey( profileId, getPlugin( ) );
+            profilesList.add( profile );
         }
 
-        String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_PROFIL, locale );
+        String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_PROFILE, locale );
 
         model.put( MARK_MESSAGE, strMessage );
         model.put( KEY_QUIZ, quiz );
-        model.put( MARK_PROFILS_LIST, profilsList );
+        model.put( MARK_PROFILES_LIST, profilesList );
 
         return model;
     }

@@ -19,6 +19,28 @@
             </label>
             <br />
             <br />
+            <label >#i18n{quiz.create_quiz.labelDisplay} :</label>
+            <label class="radio inline" for="display_step_by_step">
+            	<input type="radio" name="display_step_by_step" value="true">
+            	#i18n{quiz.create_quiz.labelDisplayStepByStep}
+            </label>
+            <label class="radio inline" for="display_step_by_step">
+            	<input type="radio" name="display_step_by_step" value="false" checked="checked">
+            	#i18n{quiz.create_quiz.labelDisplayAll}
+            </label>
+            <br />
+            <br />
+	        <label >#i18n{quiz.create_quiz.labelDisplayResults} :</label>
+	        <label class="radio inline" for="display_results_after_each_step">
+	        	<input type="radio" name="display_results_after_each_step" value="true">
+	        	#i18n{quiz.create_quiz.labelDisplayResultsAfterEachStep}
+	        </label>
+	        <label class="radio inline" for="display_results_after_each_step">
+	        	<input type="radio" name="display_results_after_each_step" value="false" checked="checked">
+	        	#i18n{quiz.create_quiz.labelDisplayResultsAtTheEnd}
+	        </label>
+            <br />
+            <br />
             <label  for="quiz_introduction" >#i18n{quiz.create_quiz.introduction} :</label>
             <textarea class="richtext" name="quiz_introduction" id="quiz_introduction" rows="5" style="width:60%;"></textarea>
             <br />

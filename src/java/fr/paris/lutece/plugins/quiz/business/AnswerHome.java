@@ -47,7 +47,7 @@ import java.util.List;
 public final class AnswerHome
 {
     // Static variable pointed at the DAO instance
-    private static IAnswerDAO _dao = (IAnswerDAO) SpringContextService.getPluginBean( "quiz", "quiz.answerDAO" );
+    private static IAnswerDAO _dao = SpringContextService.getBean( "quiz.answerDAO" );
 
     /**
      * Private constructor - this class need not be instantiated

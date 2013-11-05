@@ -18,14 +18,36 @@
                     #i18n{quiz.create_quiz.labelProfilType}
                 </label>
                 <br />
+            	<br />
+                <label >#i18n{quiz.create_quiz.labelDisplay} * :</label>
+	            <label class="radio inline" for="display_step_by_step">
+	            	<input type="radio" name="display_step_by_step" value="true" <#if quiz.displayStepByStep>checked="checked"</#if>>
+	            	#i18n{quiz.create_quiz.labelDisplayStepByStep}
+	            </label>
+	            <label class="radio inline" for="display_step_by_step">
+	            	<input type="radio" name="display_step_by_step" value="false" <#if !quiz.displayStepByStep>checked="checked"</#if>>
+	            	#i18n{quiz.create_quiz.labelDisplayAll}
+	            </label>
+		        <br />
+            	<br />
+		        <label >#i18n{quiz.create_quiz.labelDisplayResults} :</label>
+		        <label class="radio inline" for="display_results_after_each_step">
+		        	<input type="radio" name="display_results_after_each_step" value="true" <#if quiz.displayResultAfterEachStep>checked="checked"</#if>>
+		        	#i18n{quiz.create_quiz.labelDisplayResultsAfterEachStep}
+		        </label>
+		        <label class="radio inline" for="display_results_after_each_step">
+		        	<input type="radio" name="display_results_after_each_step" value="false" <#if !quiz.displayResultAfterEachStep>checked="checked"</#if>>
+		        	#i18n{quiz.create_quiz.labelDisplayResultsAtTheEnd}
+		        </label>
+                <br />
                 <br />
                 <label  for="quiz_introduction" >#i18n{quiz.modify_quiz.introduction} :</label>
                 <textarea class="richtext" name="quiz_introduction" id="quiz_introduction" rows="5"  style="width:60%;">${quiz.introduction}</textarea>
                 <label  for="quiz_conclusion" >#i18n{quiz.modify_quiz.conclusion} :</label>
                 <textarea class="richtext" name="quiz_conclusion" id="quiz_conclusion" rows="5"  style="width:60%;">${quiz.conclusion}</textarea>
                 <div class="form-actions">
-                    <button class="btn btn-primary btn-small" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonSave}</button>
-                    <button class="btn btn-primary btn-small" type="submit" name="apply"><i class="icon-ok-circle icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonApply}</button>
+                    <button class="btn btn-primary btn-small" type="submit" name="save" value="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonSave}</button>
+                    <button class="btn btn-primary btn-small" type="submit" name="apply" value="apply"><i class="icon-ok-circle icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonApply}</button>
                     <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuiz.jsp">
                         <i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
                     </a>

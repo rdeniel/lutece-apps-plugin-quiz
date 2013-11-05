@@ -56,6 +56,6 @@ INSERT INTO quiz_question VALUES
 -- Dumping data for table `quiz_quiz`
 --
 
-INSERT INTO quiz_quiz VALUES  (1,'Connaissances générales sur Lutèce','Bienvenue sur ce petit quiz pour tester vos connaissances générales de Lutèce.\r\n<br />','Découvrez maintenant vos résultats',1,NULL,NULL,'2010-12-10',1,0,'', 'REPONSE');
-INSERT INTO quiz_quiz VALUES  (2,'Votre profil utilisateur','Bienvenue sur ce petit quiz pour analyser votre profil Lutèce.','Découvrez maintenant vos résultats',1,NULL,NULL,'2013-09-30',0,0,'', 'PROFIL');
+INSERT INTO quiz_quiz VALUES  (1,'Connaissances générales sur Lutèce','Bienvenue sur ce petit quiz pour tester vos connaissances générales de Lutèce.\r\n<br />','Découvrez maintenant vos résultats',1,NULL,NULL,'2010-12-10',1,0,'', 'REPONSE', 0, 0);
+INSERT INTO quiz_quiz VALUES  (2,'Votre profil utilisateur','Bienvenue sur ce petit quiz pour analyser votre profil Lutèce.','Découvrez maintenant vos résultats',1,NULL,NULL,'2013-09-30',0,0,'', 'PROFIL', 0, 0);
 

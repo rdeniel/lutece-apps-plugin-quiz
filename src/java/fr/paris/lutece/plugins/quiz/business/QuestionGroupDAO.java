@@ -59,6 +59,8 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
     private static final String SQL_QUERY_SELECT_UPPER_GROUP = "SELECT id_group, label_group, subject, id_quiz, pos_group FROM quiz_group WHERE pos_group = ? AND id_quiz = ?";
     private static final String SQL_QUERY_SELECT_DOWNER_GROUP = "SELECT id_group, label_group, subject, id_quiz, pos_group FROM quiz_group WHERE pos_group = ? AND id_quiz = ?";
 
+    private static final String SQL_QUERY_SELECT_BY_ID_QUIZ_AND_POSITION = SQL_QUERY_SELECTALL + " AND pos_group = ?";
+
     //private static final String SQL_QUERY_UPDATE_BY_POSITION = "UPDATE quiz_group SET id_group = ?, label_group = ?, subject = ?, id_quiz = ?, pos_group = ? WHERE pos_group = ?";
     private static final String SQL_QUERY_SELECT_BY_POSITION = "SELECT id_group, label_group, subject, id_quiz, pos_group FROM quiz_group WHERE pos_group > ? AND id_quiz = ?";
     private static final String SQL_QUERY_NEW_POSITION_GROUP = "SELECT max( pos_group ) FROM quiz_group WHERE id_quiz = ?";
@@ -68,21 +70,21 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
      * @param plugin The Plugin
      * @return The new primary key
      */
-    public int newPrimaryKey( Plugin plugin )
+    private int newPrimaryKey( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         int nKey;
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // if the table is empty
             nKey = 1;
         }
 
         nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
@@ -93,32 +95,30 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
      * @param plugin The plugin
      * @return The new position
      */
-    public int newPositionGroup( int nIdQuiz, Plugin plugin )
+    private int newPositionGroup( int nIdQuiz, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_POSITION_GROUP, plugin );
         daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         int nKey;
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // if the table is empty
             nKey = 1;
         }
 
         nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
 
     /**
-     * Insert a new record in the table.
-     * @param nIdQuiz The quiz Id
-     * @param group instance of the QuestionGroup object to insert
-     * @param plugin The plugin
+     * {@inheritDoc}
      */
+    @Override
     public void insert( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
@@ -126,33 +126,31 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
         group.setIdGroup( newPrimaryKey( plugin ) );
         group.setPositionGroup( newPositionGroup( nIdQuiz, plugin ) );
 
-        daoUtil.setInt( 1, group.getIdGroup(  ) );
-        daoUtil.setString( 2, group.getLabelGroup(  ) );
-        daoUtil.setString( 3, group.getSubject(  ) );
-        daoUtil.setInt( 4, group.getIdQuiz(  ) );
-        daoUtil.setInt( 5, group.getPositionGroup(  ) );
+        daoUtil.setInt( 1, group.getIdGroup( ) );
+        daoUtil.setString( 2, group.getLabelGroup( ) );
+        daoUtil.setString( 3, group.getSubject( ) );
+        daoUtil.setInt( 4, group.getIdQuiz( ) );
+        daoUtil.setInt( 5, group.getPositionGroup( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
-     * Load the data of the group from the table
-     * @param nId The identifier of the group
-     * @param plugin The plugin
-     * @return the instance of the QuestionGroup
+     * {@inheritDoc}
      */
+    @Override
     public QuestionGroup load( int nId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         QuestionGroup group = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            group = new QuestionGroup(  );
+            group = new QuestionGroup( );
 
             group.setIdGroup( daoUtil.getInt( 1 ) );
             group.setLabelGroup( daoUtil.getString( 2 ) );
@@ -161,7 +159,7 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
             group.setPositionGroup( daoUtil.getInt( 5 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return group;
     }
@@ -175,15 +173,15 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
      */
     private List<QuestionGroup> loadGroupByPosition( int nPosition, int nIdQuiz, Plugin plugin )
     {
-        List<QuestionGroup> groupList = new ArrayList<QuestionGroup>(  );
+        List<QuestionGroup> groupList = new ArrayList<QuestionGroup>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_POSITION, plugin );
         daoUtil.setInt( 1, nPosition );
         daoUtil.setInt( 2, nIdQuiz );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            QuestionGroup group = new QuestionGroup(  );
+            QuestionGroup group = new QuestionGroup( );
 
             group.setIdGroup( daoUtil.getInt( 1 ) );
             group.setLabelGroup( daoUtil.getString( 2 ) );
@@ -194,17 +192,15 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
             groupList.add( group );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return groupList;
     }
 
     /**
-     * Delete a record from the table
-     * @param nIdQuiz The quiz Id
-     * @param nGroupId The identifier of the group
-     * @param plugin The plugin
+     * {@inheritDoc}
      */
+    @Override
     public void delete( int nIdQuiz, int nGroupId, Plugin plugin )
     {
         QuestionGroup groupToDelete = load( nGroupId, plugin );
@@ -212,10 +208,10 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
         daoUtil.setInt( 1, nGroupId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
 
-        int nPosition = groupToDelete.getPositionGroup(  );
+        int nPosition = groupToDelete.getPositionGroup( );
 
         List<QuestionGroup> groupList = loadGroupByPosition( nPosition, nIdQuiz, plugin );
 
@@ -223,56 +219,53 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
         {
             daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
 
-            daoUtil.setInt( 1, group.getIdGroup(  ) );
-            daoUtil.setString( 2, group.getLabelGroup(  ) );
-            daoUtil.setString( 3, group.getSubject(  ) );
-            daoUtil.setInt( 4, group.getIdQuiz(  ) );
+            daoUtil.setInt( 1, group.getIdGroup( ) );
+            daoUtil.setString( 2, group.getLabelGroup( ) );
+            daoUtil.setString( 3, group.getSubject( ) );
+            daoUtil.setInt( 4, group.getIdQuiz( ) );
             daoUtil.setInt( 5, nPosition );
-            daoUtil.setInt( 6, group.getIdGroup(  ) );
+            daoUtil.setInt( 6, group.getIdGroup( ) );
 
-            daoUtil.executeUpdate(  );
-            daoUtil.free(  );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
 
             nPosition++;
         }
     }
 
     /**
-     * Update the record in the table
-     * @param group The reference of the group
-     * @param plugin The plugin
+     * {@inheritDoc}
      */
+    @Override
     public void store( QuestionGroup group, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
 
-        daoUtil.setInt( 1, group.getIdGroup(  ) );
-        daoUtil.setString( 2, group.getLabelGroup(  ) );
-        daoUtil.setString( 3, group.getSubject(  ) );
-        daoUtil.setInt( 4, group.getIdQuiz(  ) );
-        daoUtil.setInt( 5, group.getPositionGroup(  ) );
-        daoUtil.setInt( 6, group.getIdGroup(  ) );
+        daoUtil.setInt( 1, group.getIdGroup( ) );
+        daoUtil.setString( 2, group.getLabelGroup( ) );
+        daoUtil.setString( 3, group.getSubject( ) );
+        daoUtil.setInt( 4, group.getIdQuiz( ) );
+        daoUtil.setInt( 5, group.getPositionGroup( ) );
+        daoUtil.setInt( 6, group.getIdGroup( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
-     * Load the data of all the groups and returns them as a List
-     * @param nIdQuiz The quiz Id
-     * @param plugin The plugin
-     * @return The List which contains the data of all the groups
+     * {@inheritDoc}
      */
+    @Override
     public List<QuestionGroup> selectQuestionGroupsList( int nIdQuiz, Plugin plugin )
     {
-        List<QuestionGroup> groupList = new ArrayList<QuestionGroup>(  );
+        List<QuestionGroup> groupList = new ArrayList<QuestionGroup>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
         daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            QuestionGroup group = new QuestionGroup(  );
+            QuestionGroup group = new QuestionGroup( );
 
             group.setIdGroup( daoUtil.getInt( 1 ) );
             group.setLabelGroup( daoUtil.getString( 2 ) );
@@ -283,21 +276,19 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
             groupList.add( group );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return groupList;
     }
 
     /**
-     * Gets a group list
-     * @param nIdQuiz The quiz Id
-     * @param plugin The plugin
-     * @return The list
+     * {@inheritDoc}
      */
+    @Override
     public ReferenceList selectQuestionGroupsReferenceList( int nIdQuiz, Plugin plugin )
     {
-        ReferenceList groupsReferenceList = new ReferenceList(  );
-        ReferenceItem itemInit = new ReferenceItem(  );
+        ReferenceList groupsReferenceList = new ReferenceList( );
+        ReferenceItem itemInit = new ReferenceItem( );
         itemInit.setCode( "0" );
         itemInit.setName( " " );
         groupsReferenceList.add( itemInit );
@@ -305,51 +296,79 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_GROUPS, plugin );
         daoUtil.setInt( 1, nIdQuiz );
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            ReferenceItem item = new ReferenceItem(  );
+            ReferenceItem item = new ReferenceItem( );
             item.setCode( daoUtil.getString( 1 ) );
             item.setName( daoUtil.getString( 2 ) );
             groupsReferenceList.add( item );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return groupsReferenceList;
     }
 
     /**
-     * Delete a record from the table
-     * @param nIdQuiz The identifier of the group
-     * @param plugin The plugin
+     * {@inheritDoc}
      */
+    @Override
+    public QuestionGroup selectQuestionGroupByPosition( int nIdQuiz, int nPosition, Plugin plugin )
+    {
+        QuestionGroup group = null;
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_QUIZ_AND_POSITION, plugin );
+        daoUtil.setInt( 1, nIdQuiz );
+        daoUtil.setInt( 2, nPosition );
+        daoUtil.executeQuery( );
+
+        while ( daoUtil.next( ) )
+        {
+            group = new QuestionGroup( );
+
+            group.setIdGroup( daoUtil.getInt( 1 ) );
+            group.setLabelGroup( daoUtil.getString( 2 ) );
+            group.setSubject( daoUtil.getString( 3 ) );
+            group.setIdQuiz( daoUtil.getInt( 4 ) );
+            group.setPositionGroup( daoUtil.getInt( 5 ) );
+        }
+
+        daoUtil.free( );
+
+        return group;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void deleteByQuiz( int nIdQuiz, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_QUIZ, plugin );
         daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * {@inheritDoc }
      */
+    @Override
     public void changePositionUp( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
-        int nPositionGroup = group.getPositionGroup(  );
+        int nPositionGroup = group.getPositionGroup( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_UPPER_GROUP, plugin );
         daoUtil.setInt( 1, nPositionGroup - 1 );
         daoUtil.setInt( 2, nIdQuiz );
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         QuestionGroup groupUpper = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            groupUpper = new QuestionGroup(  );
+            groupUpper = new QuestionGroup( );
 
             groupUpper.setIdGroup( daoUtil.getInt( 1 ) );
             groupUpper.setLabelGroup( daoUtil.getString( 2 ) );
@@ -358,55 +377,58 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
             groupUpper.setPositionGroup( daoUtil.getInt( 5 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
+        if ( groupUpper != null )
+        {
+            int nNewPosition = groupUpper.getPositionGroup( );
 
-        int nNewPosition = groupUpper.getPositionGroup(  );
+            groupUpper.setPositionGroup( nPositionGroup );
 
-        groupUpper.setPositionGroup( nPositionGroup );
+            daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+            daoUtil.setInt( 1, groupUpper.getIdGroup( ) );
+            daoUtil.setString( 2, groupUpper.getLabelGroup( ) );
+            daoUtil.setString( 3, groupUpper.getSubject( ) );
+            daoUtil.setInt( 4, groupUpper.getIdQuiz( ) );
+            daoUtil.setInt( 5, groupUpper.getPositionGroup( ) );
+            daoUtil.setInt( 6, groupUpper.getIdGroup( ) );
+
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+
+            group.setPositionGroup( nNewPosition );
+        }
 
         daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setInt( 1, groupUpper.getIdGroup(  ) );
-        daoUtil.setString( 2, groupUpper.getLabelGroup(  ) );
-        daoUtil.setString( 3, groupUpper.getSubject(  ) );
-        daoUtil.setInt( 4, groupUpper.getIdQuiz(  ) );
-        daoUtil.setInt( 5, groupUpper.getPositionGroup(  ) );
-        daoUtil.setInt( 6, groupUpper.getIdGroup(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.setInt( 1, group.getIdGroup( ) );
+        daoUtil.setString( 2, group.getLabelGroup( ) );
+        daoUtil.setString( 3, group.getSubject( ) );
+        daoUtil.setInt( 4, group.getIdQuiz( ) );
+        daoUtil.setInt( 5, group.getPositionGroup( ) );
+        daoUtil.setInt( 6, group.getIdGroup( ) );
 
-        group.setPositionGroup( nNewPosition );
-
-        daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-
-        daoUtil.setInt( 1, group.getIdGroup(  ) );
-        daoUtil.setString( 2, group.getLabelGroup(  ) );
-        daoUtil.setString( 3, group.getSubject(  ) );
-        daoUtil.setInt( 4, group.getIdQuiz(  ) );
-        daoUtil.setInt( 5, group.getPositionGroup(  ) );
-        daoUtil.setInt( 6, group.getIdGroup(  ) );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * {@inheritDoc }
      */
+    @Override
     public void changePositionDown( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
-        int nPositionGroup = group.getPositionGroup(  );
+        int nPositionGroup = group.getPositionGroup( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_DOWNER_GROUP, plugin );
         daoUtil.setInt( 1, nPositionGroup + 1 );
         daoUtil.setInt( 2, nIdQuiz );
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         QuestionGroup groupDowner = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            groupDowner = new QuestionGroup(  );
+            groupDowner = new QuestionGroup( );
 
             groupDowner.setIdGroup( daoUtil.getInt( 1 ) );
             groupDowner.setLabelGroup( daoUtil.getString( 2 ) );
@@ -415,34 +437,35 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
             groupDowner.setPositionGroup( daoUtil.getInt( 5 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
+        if ( groupDowner != null )
+        {
+            int nNewPosition = groupDowner.getPositionGroup( );
 
-        int nNewPosition = groupDowner.getPositionGroup(  );
+            groupDowner.setPositionGroup( nPositionGroup );
+            daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+            daoUtil.setInt( 1, groupDowner.getIdGroup( ) );
+            daoUtil.setString( 2, groupDowner.getLabelGroup( ) );
+            daoUtil.setString( 3, groupDowner.getSubject( ) );
+            daoUtil.setInt( 4, groupDowner.getIdQuiz( ) );
+            daoUtil.setInt( 5, groupDowner.getPositionGroup( ) );
+            daoUtil.setInt( 6, groupDowner.getIdGroup( ) );
 
-        groupDowner.setPositionGroup( nPositionGroup );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+            group.setPositionGroup( nNewPosition );
+        }
+
         daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setInt( 1, groupDowner.getIdGroup(  ) );
-        daoUtil.setString( 2, groupDowner.getLabelGroup(  ) );
-        daoUtil.setString( 3, groupDowner.getSubject(  ) );
-        daoUtil.setInt( 4, groupDowner.getIdQuiz(  ) );
-        daoUtil.setInt( 5, groupDowner.getPositionGroup(  ) );
-        daoUtil.setInt( 6, groupDowner.getIdGroup(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.setInt( 1, group.getIdGroup( ) );
+        daoUtil.setString( 2, group.getLabelGroup( ) );
+        daoUtil.setString( 3, group.getSubject( ) );
+        daoUtil.setInt( 4, group.getIdQuiz( ) );
+        daoUtil.setInt( 5, group.getPositionGroup( ) );
+        daoUtil.setInt( 6, group.getIdGroup( ) );
 
-        group.setPositionGroup( nNewPosition );
-
-        daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-
-        daoUtil.setInt( 1, group.getIdGroup(  ) );
-        daoUtil.setString( 2, group.getLabelGroup(  ) );
-        daoUtil.setString( 3, group.getSubject(  ) );
-        daoUtil.setInt( 4, group.getIdQuiz(  ) );
-        daoUtil.setInt( 5, nNewPosition );
-        daoUtil.setInt( 6, group.getIdGroup(  ) );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 }

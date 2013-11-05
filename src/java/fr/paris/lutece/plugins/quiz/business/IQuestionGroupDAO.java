@@ -40,8 +40,8 @@ import java.util.List;
 
 
 /**
-* IQuestionGroupDAO Interface
-*/
+ * IQuestionGroupDAO Interface
+ */
 public interface IQuestionGroupDAO
 {
     /**
@@ -53,10 +53,10 @@ public interface IQuestionGroupDAO
     void insert( int nIdQuiz, QuestionGroup group, Plugin plugin );
 
     /**
-    * Update the record in the table
-    * @param group the reference of the QuestionGroup
-    * @param plugin the Plugin
-    */
+     * Update the record in the table
+     * @param group the reference of the QuestionGroup
+     * @param plugin the Plugin
+     */
     void store( QuestionGroup group, Plugin plugin );
 
     /**
@@ -79,11 +79,11 @@ public interface IQuestionGroupDAO
     QuestionGroup load( int nKey, Plugin plugin );
 
     /**
-    * Load the data of all the group objects and returns them as a List
-    * @param nIdQuiz The Quiz Id
-    * @param plugin the Plugin
-    * @return The List which contains the data of all the group objects
-    */
+     * Load the data of all the group objects and returns them as a List
+     * @param nIdQuiz The Quiz Id
+     * @param plugin the Plugin
+     * @return The List which contains the data of all the group objects
+     */
     List<QuestionGroup> selectQuestionGroupsList( int nIdQuiz, Plugin plugin );
 
     /**
@@ -116,4 +116,13 @@ public interface IQuestionGroupDAO
      * @param plugin The plugin
      */
     void changePositionDown( int nIdQuiz, QuestionGroup group, Plugin plugin );
+
+    /**
+     * Find a group by its quiz and position
+     * @param nIdQuiz The quiz ID
+     * @param nPosition The position of the required group
+     * @param plugin the Plugin
+     * @return The requested group, or null if no group has the given position
+     */
+    QuestionGroup selectQuestionGroupByPosition( int nIdQuiz, int nPosition, Plugin plugin );
 }

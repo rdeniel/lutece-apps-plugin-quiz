@@ -1,9 +1,9 @@
 package fr.paris.lutece.plugins.quiz.business;
 
 /**
- * This class represents business object Quiz profil
+ * This class represents business object Quiz profile
  */
-public class QuizProfil
+public class QuizProfile
 {
     private int _nIdProfil;
 

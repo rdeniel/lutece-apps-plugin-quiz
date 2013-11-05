@@ -44,31 +44,34 @@ import java.util.Collection;
 
 
 /**
- *
+ * 
  * @author coudercx
  */
 interface IQuizQuestionDAO
 {
     /**
      * Delete an instance of a question by Quiz
-     *
-     * @param nQuiz An instance of the Quiz which contains the informations to store
+     * 
+     * @param nQuiz An instance of the Quiz which contains the informations to
+     *            store
      * @param plugin the plugin
      */
     void deleteQuestionsByQuiz( int nQuiz, Plugin plugin );
 
     /**
      * Creation o of an article Quiz
-     *
-     * @param quizQuestion An if an instancenstance of the Quiz which contains the informations to store
+     * 
+     * @param quizQuestion An if an instancenstance of the Quiz which contains
+     *            the informations to store
      * @param plugin the plugin
      */
     void insert( QuizQuestion quizQuestion, Plugin plugin );
 
     /**
      * Updates of the Quiz instance specified in parameter
-     *
-     * @param quizQuestion An instance of the Quiz which contains the informations to store
+     * 
+     * @param quizQuestion An instance of the Quiz which contains the
+     *            informations to store
      * @param plugin the plugin
      */
     void store( QuizQuestion quizQuestion, Plugin plugin );
@@ -76,13 +79,15 @@ interface IQuizQuestionDAO
     /**
      * Deletes the Quiz instance whose identifier is specified in parameter
      * @param plugin the plugin
-     * @param nIdQuizQuestion The identifier of the article Quiz to delete in the database
+     * @param nIdQuizQuestion The identifier of the article Quiz to delete in
+     *            the database
      */
     void delete( int nIdQuizQuestion, Plugin plugin );
 
     /**
-     * Returns an instance of the article Quiz whose identifier is specified in parameter
-     *
+     * Returns an instance of the article Quiz whose identifier is specified in
+     * parameter
+     * 
      * @param nKey The primary key of the article to find in the database
      * @param plugin the plugin
      * @return An instance of the Quiz which corresponds to the key
@@ -90,8 +95,9 @@ interface IQuizQuestionDAO
     QuizQuestion load( int nKey, Plugin plugin );
 
     /**
-     * Returns an instance of the article Quiz whose identifier is specified in parameter
-     *
+     * Returns an instance of the article Quiz whose identifier is specified in
+     * parameter
+     * 
      * @param nIdQuiz The primary key of the article to find in the database
      * @param plugin the plugin
      * @return An instance of the Quiz which corresponds to the key
@@ -99,26 +105,29 @@ interface IQuizQuestionDAO
     Collection<QuizQuestion> selectQuestionsList( int nIdQuiz, Plugin plugin );
 
     /**
-     * Returns an instance of the article Quiz whose identifier is specified in parameter
-     *
+     * Returns an instance of the article Quiz whose identifier is specified in
+     * parameter
+     * 
      * @param nIdQuiz The primary key of the article to find in the database
      * @param nIdGroup The primary key of the group
      * @param plugin the plugin
-     * @return An instance of the Quiz which corresponds to the key
+     * @return The list of ids of questions
      */
-    Collection getVerifyQuestionsByGroup( int nIdQuiz, int nIdGroup, Plugin plugin );
+    Collection<Integer> getVerifyQuestionsByGroup( int nIdQuiz, int nIdGroup, Plugin plugin );
 
     /**
-     * Deletes the Quiz instances whose identifier is specified in parameter by group
+     * Deletes the Quiz instances whose identifier is specified in parameter by
+     * group
      * @param nIdGroup the id of a group
-     * @param nIdQuiz The identifier of the article Quiz to delete in the database
+     * @param nIdQuiz The identifier of the article Quiz to delete in the
+     *            database
      * @param plugin the plugin
      */
     void deleteQuestionsByGroup( int nIdQuiz, int nIdGroup, Plugin plugin );
 
     /**
      * Returns an instance of the question which just created
-     *
+     * 
      * @param plugin the plugin
      * @return An instance of the Quiz which corresponds to the key
      */
@@ -140,4 +149,14 @@ interface IQuizQuestionDAO
      * @return The list
      */
     Collection<QuizQuestion> selectQuestionsListWithAnswer( int nIdQuiz, Plugin plugin );
+
+    /**
+     * Gets a list of questions that has at least one answer and re associated
+     * with a given group
+     * @param nIdQuiz the Quiz Id
+     * @param nIdGroup The id of the group
+     * @param plugin The plugin
+     * @return a list of questions
+     */
+    Collection<QuizQuestion> selectQuestionsListWithAnswerByIdGroup( int nIdQuiz, int nIdGroup, Plugin plugin );
 }
