@@ -77,3 +77,11 @@ CREATE TABLE quiz_profil (
   id_quiz INT default NULL,
   PRIMARY KEY  (id_profil)
 );
+
+DROP TABLE IF EXISTS quiz_question_image;
+CREATE TABLE quiz_question_image (
+  id_question INT NOT NULL,
+  image_content LONG VARBINARY NOT NULL,
+  PRIMARY KEY  (id_question)
+);
+

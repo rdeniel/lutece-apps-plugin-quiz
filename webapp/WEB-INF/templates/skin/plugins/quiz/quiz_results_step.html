@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="span12">
+        <#if profils_list?has_content>
+            <div class="well well-small">${message}</div>
+            <#list profils_list as profil>
+	            <div class="alert alert-success">
+	               <strong>${profil.name}</strong>
+	               <br/>
+	                    ${profil.description}            
+	            </div>
+            </#list>
+        <#else>
+            <div class="well well-small">${score_message}</div>
+            <ul>
+	            <#list answers_list as answer>
+		            <li class="error">
+		                <div class="">#i18n{quiz.view_result.Question} ${answer.questionId}: ${answer.question}</div>
+		                <#if !answer.isValid>
+		                	<div class="alert alert-error">#i18n{quiz.view_result.yourAnswer}: ${answer.answer}</div>
+		                	<div class="alert alert-success">#i18n{quiz.view_result.goodAnswerWas}: ${answer.explaination}</div>
+		                <#else>
+		                	<div class="alert alert-success">${answer.explaination}</div>
+		                </#if>
+		            </li>
+		           	<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${answer.questionId}" />
+	            </#list>
+            </ul>
+            <#if hasNextStep?? && hasNextStep>
+				<a class="btn btn-primary btn-small" href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}&old_step=${old_step}&action=nextStep">
+					<i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelNext}
+				</a>
+            </#if>
+        </#if>
+    </div>
+</div>

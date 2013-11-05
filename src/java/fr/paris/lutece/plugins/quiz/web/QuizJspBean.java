@@ -43,6 +43,8 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfile;
 import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
+import fr.paris.lutece.plugins.quiz.business.QuizQuestionImage;
+import fr.paris.lutece.plugins.quiz.business.QuizQuestionImageHome;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
@@ -52,6 +54,7 @@ import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.portal.web.constants.Messages;
+import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -67,6 +70,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -146,6 +150,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_PROFIL_ID = "profil_id";
     private static final String PARAMETER_PROFIL_DESCRIPTION = "profil_description";
     private static final String PARAMETER_APPLY = "apply";
+    private static final String PARAMETER_QUESTION_IMAGE = "question_image";
 
     // Templates
     private static final String TEMPLATE_MANAGE_QUIZ = "admin/plugins/quiz/manage_quiz.html";
@@ -597,6 +602,18 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         QuizQuestion questionCreated = QuizQuestionHome.findLastQuestion( getPlugin( ) );
 
+        if ( request instanceof MultipartHttpServletRequest )
+        {
+            MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
+            FileItem fileItem = multiPartRequest.getFile( PARAMETER_QUESTION_IMAGE );
+            if ( fileItem != null )
+            {
+                QuizQuestionImage questionImage = new QuizQuestionImage( questionCreated.getIdQuestion( ),
+                        fileItem.get( ), fileItem.getContentType( ) );
+                QuizQuestionImageHome.insertQuestionImage( questionImage, getPlugin( ) );
+            }
+        }
+
         // if the operation occurred well, redirects towards the view of the Quiz
         UrlItem url = new UrlItem( JSP_URL_MODIFY_QUESTION );
         url.addParameter( PARAMETER_QUIZ_ID, questionCreated.getIdQuiz( ) );
@@ -670,6 +687,27 @@ public class QuizJspBean extends PluginAdminPageJspBean
         quizQuestion.setIdGroup( nIdGroup );
         quizQuestion.setExplaination( strExplaination );
         QuizQuestionHome.update( quizQuestion, getPlugin( ) );
+
+        if ( request instanceof MultipartHttpServletRequest )
+        {
+            MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
+            FileItem fileItem = multiPartRequest.getFile( PARAMETER_QUESTION_IMAGE );
+            if ( fileItem != null )
+            {
+                QuizQuestionImage questionImage = new QuizQuestionImage( nQuestionId, fileItem.get( ),
+                        fileItem.getContentType( ) );
+                // if there is no image associated with the given question, we create one
+                if ( QuizQuestionImageHome.getQuestionImage( nQuestionId, getPlugin( ) ) == null )
+                {
+                    QuizQuestionImageHome.insertQuestionImage( questionImage, getPlugin( ) );
+                }
+                // otherwise, we update the existing image
+                else
+                {
+                    QuizQuestionImageHome.updateQuestionImage( questionImage, getPlugin( ) );
+                }
+            }
+        }
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );

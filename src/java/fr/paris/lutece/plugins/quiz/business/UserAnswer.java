@@ -33,22 +33,22 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-
 /**
  * InvalidAnswer
  */
-public class InvalidAnswer
+public class UserAnswer
 {
     private int _nQuestionId;
     private String _strquestion;
     private String _strExplaination;
-    private String _strInvalidAnswer;
+    private String _strAnswer;
     private String _strValidAnswer;
+    private boolean _bIsValid;
 
     /**
      * @return the questionId
      */
-    public int getQuestionId(  )
+    public int getQuestionId( )
     {
         return _nQuestionId;
     }
@@ -64,7 +64,7 @@ public class InvalidAnswer
     /**
      * @return the question
      */
-    public String getQuestion(  )
+    public String getQuestion( )
     {
         return _strquestion;
     }
@@ -80,7 +80,7 @@ public class InvalidAnswer
     /**
      * @return the Explaination
      */
-    public String getExplaination(  )
+    public String getExplaination( )
     {
         return _strExplaination;
     }
@@ -96,23 +96,23 @@ public class InvalidAnswer
     /**
      * @return the invalidAnswer
      */
-    public String getInvalidAnswer(  )
+    public String getAnswer( )
     {
-        return _strInvalidAnswer;
+        return _strAnswer;
     }
 
     /**
-     * @param strInvalidAnswer the invalidAnswer to set
+     * @param strAnswer the answer to set
      */
-    public void setInvalidAnswer( String strInvalidAnswer )
+    public void setAnswer( String strAnswer )
     {
-        _strInvalidAnswer = strInvalidAnswer;
+        _strAnswer = strAnswer;
     }
 
     /**
      * @return the validAnswer
      */
-    public String getValidAnswer(  )
+    public String getValidAnswer( )
     {
         return _strValidAnswer;
     }
@@ -123,5 +123,23 @@ public class InvalidAnswer
     public void setValidAnswer( String strValidAnswer )
     {
         _strValidAnswer = strValidAnswer;
+    }
+
+    /**
+     * Check if this answer is a valid answer
+     * @return True if this answer is valid, false otherwise
+     */
+    public boolean getIsValid( )
+    {
+        return _bIsValid;
+    }
+
+    /**
+     * Set this answer valid or invalid
+     * @param bIsValid True if this answer is valid, false otherwise
+     */
+    public void setIsValid( boolean bIsValid )
+    {
+        this._bIsValid = bIsValid;
     }
 }

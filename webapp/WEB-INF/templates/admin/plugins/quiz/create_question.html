@@ -23,6 +23,12 @@
 				<textarea class="richtext" name="explaination" id="explaination" rows="10" cols="60"></textarea>
             </div>
         </div>
+        <div class="control-group">
+		<label class="label-group" for="question_image">#i18n{quiz.create_question.questionImageLabel}</label>
+			<div class="controls">					
+				<input type="file" name="question_image" >
+			</div>
+		</div>
         <div class="form-actions">
             <button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_question.buttonValidate}</button>
 	    <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">

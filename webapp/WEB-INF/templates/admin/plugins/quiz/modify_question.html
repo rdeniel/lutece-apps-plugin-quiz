@@ -3,7 +3,7 @@
 	<div class="span4">
 		<fieldset>
 		<legend>#i18n{quiz.create_question.pageTitle}</legend>
-			<form class="form" name="modify_question" action="jsp/admin/plugins/quiz/DoModifyQuestion.jsp"  method="post">
+			<form class="form" name="modify_question" action="jsp/admin/plugins/quiz/DoModifyQuestion.jsp" enctype="multipart/form-data" method="post">
 				<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
 				<input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}"/>
 				<div class="control-group">
@@ -22,6 +22,13 @@
 					<label class="label-group" for="question_label">#i18n{quiz.create_question.titleExplication}</label>
 					<div class="controls">					
 						<textarea class="input-xlarge" name="explaination" id="explaination" rows="10">${question.explaination}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="label-group" for="question_image">#i18n{quiz.create_question.questionImageLabel}</label>
+					<div class="controls">
+						<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${question.idQuestion}" class="span" />			
+						<input type="file" name="question_image" >
 					</div>
 				</div>
 				<div class="form-actions">

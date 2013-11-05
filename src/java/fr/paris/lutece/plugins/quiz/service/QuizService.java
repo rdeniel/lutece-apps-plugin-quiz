@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.quiz.service;
 
 import fr.paris.lutece.plugins.quiz.business.Answer;
 import fr.paris.lutece.plugins.quiz.business.AnswerHome;
-import fr.paris.lutece.plugins.quiz.business.InvalidAnswer;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroup;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroupHome;
 import fr.paris.lutece.plugins.quiz.business.Quiz;
@@ -44,6 +43,7 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfile;
 import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
+import fr.paris.lutece.plugins.quiz.business.UserAnswer;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
@@ -64,21 +64,25 @@ public class QuizService
 {
     public static final String KEY_QUIZ = "quiz";
     public static final String KEY_ERROR = "error";
+    public static final String PLUGIN_NAME = "quiz";
+    public static final String PARAMETER_ACTION = "action";
+
     private static final String PROPERTY_MSG_MANY_GOOD_ANSWERS = "quiz.message.results.manyGoodAnswers";
     private static final String PROPERTY_MSG_ONE_GOOD_ANSWER = "quiz.message.results.oneGoodAnswer";
     private static final String PROPERTY_MSG_NO_GOOD_ANSWER = "quiz.message.results.noGoodAnswer";
     private static final String PROPERTY_MSG_PROFILE = "quiz.message.results.profils";
     private static final String PROPERTY_NO_ANSWER_FOR_QUESTION = "quiz.message.error.noAnswerForQuestion";
+
     private static final String MARK_SCORE = "score";
     private static final String MARK_QUESTIONS_COUNT = "questions_count";
     private static final String MARK_SCORE_MESSAGE = "score_message";
     private static final String MARK_MESSAGE = "message";
-    private static final String MARK_INVALID_ANSWERS_LIST = "invalid_answers_list";
+    private static final String MARK_ANSWERS_LIST = "answers_list";
     private static final String MARK_QUIZ_LIST = "quiz_list";
     private static final String MARK_GROUP = "group";
     private static final String MARK_GROUPS_LIST = "groups_list";
     private static final String MARK_PROFILES_LIST = "profils_list";
-    private static final String PLUGIN_NAME = "quiz";
+
     private static Plugin _plugin;
 
     /**
@@ -190,8 +194,7 @@ public class QuizService
      * @return A map containing question ids as keys and user answers as values
      */
     public Map<String, String[]> getUserAnswersForGroup( int nIdQuiz, int nIdOldStep,
-            Map<String, String[]> parameterMap,
-            Locale locale, Plugin plugin )
+            Map<String, String[]> parameterMap, Locale locale, Plugin plugin )
     {
         //        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         QuestionGroup group = QuestionGroupHome.getGroupByPosition( nIdQuiz, nIdOldStep, plugin );
@@ -235,7 +238,7 @@ public class QuizService
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         int nScore = 0;
-        List<InvalidAnswer> listInvalidAnswers = new ArrayList<InvalidAnswer>( );
+        List<UserAnswer> listInvalidAnswers = new ArrayList<UserAnswer>( );
 
         for ( QuizQuestion question : questionsList )
         {
@@ -264,11 +267,11 @@ public class QuizService
                 }
                 else
                 {
-                    InvalidAnswer ia = new InvalidAnswer( );
+                    UserAnswer ia = new UserAnswer( );
                     ia.setQuestionId( question.getIdQuestion( ) );
                     ia.setQuestion( question.getQuestionLabel( ) );
                     ia.setExplaination( question.getExplaination( ) );
-                    ia.setInvalidAnswer( answer.getLabelAnswer( ) );
+                    ia.setAnswer( answer.getLabelAnswer( ) );
                     listInvalidAnswers.add( ia );
                 }
             }
@@ -298,7 +301,88 @@ public class QuizService
         model.put( MARK_SCORE, nScore );
         model.put( MARK_QUESTIONS_COUNT, questionsList.size( ) );
         model.put( KEY_QUIZ, quiz );
-        model.put( MARK_INVALID_ANSWERS_LIST, listInvalidAnswers );
+        model.put( MARK_ANSWERS_LIST, listInvalidAnswers );
+
+        return model;
+    }
+
+    /**
+     * Get results for the current step
+     * @param quiz The quiz
+     * @param nIdCurrentStep The id of the step
+     * @param mapResponsesCurrentStep The parameters map
+     * @param locale The current locale
+     * @param plugin The plugin
+     * @return a model as a map
+     */
+    public Map<String, Object> getStepResults( Quiz quiz, int nIdCurrentStep,
+            Map<String, String[]> mapResponsesCurrentStep, Locale locale, Plugin plugin )
+    {
+        Map<String, Object> model = new HashMap<String, Object>( );
+        QuestionGroup group = QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nIdCurrentStep, plugin );
+        // If the group was not found
+        if ( group == null )
+        {
+            return null;
+        }
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
+                group.getIdGroup( ), plugin );
+        int nScore = 0;
+        List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( );
+
+        for ( QuizQuestion question : questionsList )
+        {
+            String strQuestionId = String.valueOf( question.getIdQuestion( ) );
+            String[] values = mapResponsesCurrentStep.get( strQuestionId );
+            String strUserAnswer = values[0];
+
+            if ( strUserAnswer != null )
+            {
+                int nUserAnswer = Integer.parseInt( strUserAnswer );
+                Answer answer = AnswerHome.findByPrimaryKey( nUserAnswer, getPlugin( ) );
+
+                // We add every answers to the map, whether they are correct or not.
+                UserAnswer userAnswer = new UserAnswer( );
+                userAnswer.setQuestionId( question.getIdQuestion( ) );
+                userAnswer.setQuestion( question.getQuestionLabel( ) );
+                userAnswer.setExplaination( question.getExplaination( ) );
+                userAnswer.setAnswer( answer.getLabelAnswer( ) );
+                listUserAnswers.add( userAnswer );
+
+                if ( answer.isCorrect( ) )
+                {
+                    userAnswer.setIsValid( true );
+                    nScore++;
+                }
+            }
+        }
+
+        String strMessage;
+
+        switch ( nScore )
+        {
+        case 0:
+            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, locale );
+
+            break;
+
+        case 1:
+            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, locale );
+
+            break;
+
+        default:
+            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, locale );
+            break;
+        }
+
+        Object[] args = { nScore, questionsList.size( ) };
+        String strScoreMessage = MessageFormat.format( strMessage, args );
+        model.put( MARK_SCORE_MESSAGE, strScoreMessage );
+        model.put( MARK_SCORE, nScore );
+        model.put( MARK_QUESTIONS_COUNT, questionsList.size( ) );
+        model.put( KEY_QUIZ, quiz );
+        model.put( MARK_ANSWERS_LIST, listUserAnswers );
 
         return model;
     }
@@ -381,5 +465,93 @@ public class QuizService
         model.put( MARK_PROFILES_LIST, profilesList );
 
         return model;
+    }
+
+    /**
+     * Compute the profile of a user from his answers
+     * @param quiz The quiz
+     * @param nIdCurrentStep The id of the current step
+     * @param mapResponsesCurrentStep The map containing answers
+     * @param locale The locale
+     * @param plugin The plugin
+     * @return The model
+     */
+    public Map<String, Object> calculateQuizStepProfile( Quiz quiz, int nIdCurrentStep,
+            Map<String, String[]> mapResponsesCurrentStep, Locale locale, Plugin plugin )
+    {
+        Map<String, Object> model = new HashMap<String, Object>( );
+        QuestionGroup group = QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nIdCurrentStep, plugin );
+        // If the group was not found
+        if ( group == null )
+        {
+            return null;
+        }
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
+                group.getIdGroup( ), plugin );
+        Map<Integer, Integer> profilMap = new HashMap<Integer, Integer>( );
+
+        for ( QuizQuestion question : questionsList )
+        {
+            String strQuestionId = String.valueOf( question.getIdQuestion( ) );
+            String[] values = mapResponsesCurrentStep.get( strQuestionId );
+
+            String strUserAnswer = values[0];
+            if ( strUserAnswer != null )
+            {
+                int nUserAnswer = Integer.parseInt( strUserAnswer );
+                Answer answer = AnswerHome.findByPrimaryKey( nUserAnswer, getPlugin( ) );
+
+                Integer profil = profilMap.get( answer.getIdProfil( ) );
+
+                if ( profil != null )
+                {
+                    profilMap.put( answer.getIdProfil( ), profil + 1 );
+                }
+                else
+                {
+                    profilMap.put( Integer.valueOf( answer.getIdProfil( ) ), Integer.valueOf( 1 ) );
+                }
+            }
+        }
+
+        Integer mainProfile = -1;
+        List<Integer> profilesId = new ArrayList<Integer>( );
+        List<QuizProfile> profilesList = new ArrayList<QuizProfile>( );
+
+        for ( Map.Entry<Integer, Integer> entry : profilMap.entrySet( ) )
+        {
+            if ( entry.getValue( ).compareTo( mainProfile ) > 0 )
+            {
+                mainProfile = entry.getValue( );
+                profilesId = new ArrayList<Integer>( );
+                profilesId.add( entry.getKey( ) );
+            }
+            else if ( entry.getValue( ).compareTo( mainProfile ) == 0 )
+            {
+                profilesId.add( entry.getKey( ) );
+            }
+        }
+
+        for ( Integer profileId : profilesId )
+        {
+            QuizProfile profile = QuizProfileHome.findByPrimaryKey( profileId, getPlugin( ) );
+            profilesList.add( profile );
+        }
+
+        String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_PROFILE, locale );
+
+        model.put( MARK_MESSAGE, strMessage );
+        model.put( KEY_QUIZ, quiz );
+        model.put( MARK_PROFILES_LIST, profilesList );
+
+        return model;
+    }
+
+    public void processEndOfQuiz( Quiz quiz, Map<String, String[]> userAnswers )
+    {
+        userAnswers.remove( PARAMETER_ACTION );
+
+        // TODO Auto-generated method stub
+
     }
 }
