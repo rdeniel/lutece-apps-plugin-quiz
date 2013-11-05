@@ -2,6 +2,9 @@
 	<div class="span12">
 		<fieldset>
 			<legend>${quiz.name}</legend>
+			<#if group.positionGroup == 1 && quiz.introduction?has_content>
+                <pre>${quiz.introduction}</pre>
+            </#if>
 			<form class="form" name="answers" id="answers" method="post" action="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}&action=correction">
 				<input type="hidden" name="page" value="quiz"/>
 				<input type="hidden" name="quiz_id" value="${quiz.idQuiz}"/>

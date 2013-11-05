@@ -127,11 +127,18 @@ public class QuizApp implements XPageApplication
                 }
 
                 // We get responses of the user, and save them into the session
-                Map<String, String> mapResponsesCurrentStep = null;
+                Map<String, String[]> mapResponsesCurrentStep = null;
                 if ( nOldStepId > 0 )
                 {
-                    mapResponsesCurrentStep = saveQuizResponses( quiz, nOldStepId, request.getParameterMap( ),
-                            request.getSession( true ) );
+                    mapResponsesCurrentStep = saveAndValidateQuizAnswers( quiz, nOldStepId, request.getParameterMap( ),
+                            request.getLocale( ), plugin, request.getSession( true ) );
+                    // We check that the map does not contain errors
+                    String[] strError = mapResponsesCurrentStep.get( QuizService.KEY_ERROR );
+
+                    if ( strError != null && strError.length > 0 )
+                    {
+                        return getErrorPage( quiz.getIdQuiz( ), strError[0], request.getLocale( ) );
+                    }
                 }
 
                 // If we must display the result of the current step
@@ -145,7 +152,8 @@ public class QuizApp implements XPageApplication
                     page = getQuizNextStep( quiz, nOldStepId, request.getLocale( ) );
                     if ( page == null )
                     {
-                        page = getQuizResults( quiz, request.getLocale( ), request.getParameterMap( ), plugin );
+                        page = getQuizResults( quiz, request.getLocale( ), getUserAnswers( request.getSession( ) ),
+                                plugin );
                     }
                 }
             }
@@ -247,7 +255,7 @@ public class QuizApp implements XPageApplication
 
     /**
      * Return The Answers list
-     * @param nQuizId The quiz id
+     * @param quiz The quiz
      * @param locale The current locale
      * @param mapParameters request parameters as a map
      * @param plugin the plugin
@@ -288,17 +296,29 @@ public class QuizApp implements XPageApplication
         return page;
     }
 
-    private Map<String, String> saveQuizResponses( Quiz quiz, int nIdStep, Map<String, String[]> mapParameters,
-            HttpSession session )
+    /**
+     * Save answers of a given step of a quiz into the session. If an answer is
+     * missing, then return an error message in the result map
+     * @param quiz The quiz
+     * @param nIdStep The id of the step to validate
+     * @param mapParameters The map of HTTP parameters
+     * @param locale The locale
+     * @param plugin The plugin
+     * @param session the session
+     * @return A map containing associations between question keys and answers
+     */
+    private Map<String, String[]> saveAndValidateQuizAnswers( Quiz quiz, int nIdStep,
+            Map<String, String[]> mapParameters, Locale locale, Plugin plugin, HttpSession session )
     {
-        Map<String, String> mapUserAnswers = _serviceQuiz.getUserAnswers( quiz.getIdQuiz( ), mapParameters );
+        Map<String, String[]> mapUserAnswers = _serviceQuiz.getUserAnswersForGroup( quiz.getIdQuiz( ), nIdStep,
+                mapParameters, locale, plugin );
         if ( nIdStep == 0 )
         {
             session.setAttribute( SESSION_KEY_QUIZ_STEP, mapUserAnswers );
         }
         else
         {
-            Map<String, String> mapOldAnswers = (Map<String, String>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
+            Map<String, String[]> mapOldAnswers = (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
             if ( mapOldAnswers != null )
             {
                 mapOldAnswers.putAll( mapUserAnswers );
@@ -312,8 +332,18 @@ public class QuizApp implements XPageApplication
     }
 
     /**
+     * Get the answers of a user stored in session
+     * @param session The session
+     * @return A map containing answers to questions of a quiz
+     */
+    private Map<String, String[]> getUserAnswers( HttpSession session )
+    {
+        return (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
+    }
+
+    /**
      * Return The Answers list for the given step
-     * @param nQuizId The quiz id
+     * @param quiz The quiz
      * @param nIdStep The id of the submitted step
      * @param locale The current locale
      * @param mapResponsesCurrentStep Responses of the current step
@@ -321,7 +351,7 @@ public class QuizApp implements XPageApplication
      * @return The XPage
      */
     private XPage getQuizStepResults( Quiz quiz, int nIdStep, Locale locale,
-            Map<String, String> mapResponsesCurrentStep, Plugin plugin )
+            Map<String, String[]> mapResponsesCurrentStep, Plugin plugin )
     {
         XPage page = new XPage( );
         //        Map<String, String> mapUserAnswers = _serviceQuiz.getUserAnswers( quiz.getIdQuiz( ), mapParameters );
@@ -376,6 +406,7 @@ public class QuizApp implements XPageApplication
 
     /**
      * Returns an error page
+     * @param nIdQuiz The id of the quiz
      * @param strError The error message
      * @param locale The current locale
      * @return The XPage

@@ -183,23 +183,41 @@ public class QuizService
     /**
      * Get the answers of a user to questions of a quiz
      * @param nIdQuiz The id of the quiz to get answers of
+     * @param nIdOldStep The last validated step
      * @param parameterMap The map of HTTP parameters
+     * @param locale The locale to use to display error messages
+     * @param plugin The plugin
      * @return A map containing question ids as keys and user answers as values
      */
-    public Map<String, String> getUserAnswers( int nIdQuiz, Map<String, String[]> parameterMap )
+    public Map<String, String[]> getUserAnswersForGroup( int nIdQuiz, int nIdOldStep,
+            Map<String, String[]> parameterMap,
+            Locale locale, Plugin plugin )
     {
-        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
-        Map<String, String> mapUserAnswers = new HashMap<String, String>( questionsList.size( ) );
+        //        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
+        QuestionGroup group = QuestionGroupHome.getGroupByPosition( nIdQuiz, nIdOldStep, plugin );
+        // If the group was not found
+        if ( group == null )
+        {
+            return null;
+        }
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( nIdQuiz,
+                group.getIdGroup( ), plugin );
+
+        Map<String, String[]> mapUserAnswers = new HashMap<String, String[]>( questionsList.size( ) );
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
             String[] values = parameterMap.get( strQuestionId );
-
-            if ( values != null )
+            if ( values == null )
             {
-                String strUserAnswer = values[0];
-                mapUserAnswers.put( strQuestionId, strUserAnswer );
+                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION,
+                        locale );
+                String[] strArray = { strMsgNoAnswserForQuestion + question.getQuestionLabel( ) };
+                mapUserAnswers.put( KEY_ERROR, strArray );
+
+                return mapUserAnswers;
             }
+            mapUserAnswers.put( strQuestionId, values );
         }
         return mapUserAnswers;
     }
@@ -327,7 +345,7 @@ public class QuizService
                 }
                 else
                 {
-                    profilMap.put( new Integer( answer.getIdProfil( ) ), Integer.valueOf( 1 ) );
+                    profilMap.put( Integer.valueOf( answer.getIdProfil( ) ), Integer.valueOf( 1 ) );
                 }
             }
         }
