@@ -353,6 +353,7 @@ public class QuizApp implements XPageApplication
      * @param nIdStep The id of the submitted step
      * @param locale The current locale
      * @param mapResponsesCurrentStep Responses of the current step
+     * @param session The session
      * @param plugin the plugin
      * @return The XPage
      */
@@ -430,6 +431,7 @@ public class QuizApp implements XPageApplication
      * @param session the session
      * @return A map containing associations between question keys and answers
      */
+    @SuppressWarnings( "unchecked" )
     private Map<String, String[]> saveAndValidateQuizAnswers( Quiz quiz, int nIdStep,
             Map<String, String[]> mapParameters, Locale locale, Plugin plugin, HttpSession session )
     {
@@ -459,6 +461,7 @@ public class QuizApp implements XPageApplication
      * @param session The session
      * @return A map containing answers to questions of a quiz
      */
+    @SuppressWarnings( "unchecked" )
     private Map<String, String[]> getUserAnswers( HttpSession session )
     {
         return (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
