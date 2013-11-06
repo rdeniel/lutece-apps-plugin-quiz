@@ -14,20 +14,28 @@
             <ul>
 	            <#list answers_list as answer>
 		            <li class="error">
-		                <div class="">#i18n{quiz.view_result.Question} ${answer.questionId}: ${answer.question}</div>
+		                <div class="">${answer.question}</div>
 		                <#if !answer.isValid>
-		                	<div class="alert alert-error">#i18n{quiz.view_result.yourAnswer}: ${answer.answer}</div>
+		                	<div class="alert alert-error">
+		                		<span class="badge badge-important"><i class="icon-remove">&nbsp;</i>&nbsp;#i18n{quiz.view_result.labelFalse}</span>&nbsp;
+		                		#i18n{quiz.view_result.yourAnswer}: ${answer.answer}
+		                	</div>
 		                	<div class="alert alert-success">#i18n{quiz.view_result.goodAnswerWas}: ${answer.explaination}</div>
 		                <#else>
-		                	<div class="alert alert-success">${answer.explaination}</div>
+		                	<div class="alert alert-success">
+		                		<span class="badge badge-success"><i class="icon-ok">&nbsp;</i>&nbsp;#i18n{quiz.view_result.labelTrue}</span>&nbsp;
+		                		${answer.explaination}
+		                	</div>
 		                </#if>
 		            </li>
-		           	<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${answer.questionId}" />
+		            <#if question_image?? && question_image[answer.questionId?string]>
+		           		<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${answer.questionId}" />
+		           	</#if>
 	            </#list>
             </ul>
             <#if hasNextStep?? && hasNextStep>
 				<a class="btn btn-primary btn-small" href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}&old_step=${old_step}&action=nextStep">
-					<i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelNext}
+					<i class="icon-arrow-right icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelNext}
 				</a>
             </#if>
         </#if>

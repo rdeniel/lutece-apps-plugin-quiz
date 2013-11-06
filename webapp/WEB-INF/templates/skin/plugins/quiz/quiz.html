@@ -10,30 +10,34 @@
                 <input type="hidden" name="quiz_id" value="${quiz.idQuiz}"/>
                 <input type="hidden" name="action" value="results"/>
                 <#list groups_list as group>
-                <fieldset>
-                <legend>${group.labelGroup}</legend>
-                <#if quiz.questions?has_content>
-                        <div class="well">
-                    <#list quiz.questions as question>
-                    <#if question.idGroup == group.idGroup>
-                    <div class="control-group">
-                        <label class="control-label" for="">
-                            <i class="icon-circle-arrow-right"></i>&nbsp;${question.questionLabel}
-                        </label>
-                            <div class="controls">
-                            <#list question.answers as answer>
-                                <#if question.idQuestion == answer.idQuestion>
-                                    <label class="radio inline" for="${answer.idAnswer}">&nbsp;${answer.labelAnswer}</label>
-                                    <input type="radio" name="${question.idQuestion}" id="${answer.idAnswer}" value="${answer.idAnswer}">
-                                </#if>
-                            </#list>
-                            </div>
-                    </div>
-                    </#if>
-                    </#list>
-                        </div>
-                 </#if>
-                 </fieldset>
+                	<fieldset>
+	                	<legend>${group.labelGroup}</legend>
+	                	<#if group.isFreeHtml>
+	                		${group.htmlContent}
+	                	<#else>
+			            	<#if quiz.questions?has_content>
+			                        <div class="well">
+			                    <#list quiz.questions as question>
+			                    <#if question.idGroup == group.idGroup>
+			                    <div class="control-group">
+			                        <label class="control-label" for="">
+			                            <i class="icon-circle-arrow-right"></i>&nbsp;${question.questionLabel}
+			                        </label>
+			                            <div class="controls">
+			                            <#list question.answers as answer>
+			                                <#if question.idQuestion == answer.idQuestion>
+			                                    <label class="radio inline" for="${answer.idAnswer}">&nbsp;${answer.labelAnswer}</label>
+			                                    <input type="radio" name="${question.idQuestion}" id="${answer.idAnswer}" value="${answer.idAnswer}">
+			                                </#if>
+			                            </#list>
+			                            </div>
+			                    </div>
+			                    </#if>
+			                    </#list>
+			                        </div>
+			                 </#if>
+		                 </#if>
+	                 </fieldset>
                  </#list>
                  <#if quiz.conclusion?has_content>
                     <pre>${quiz.conclusion}</pre>

@@ -81,16 +81,31 @@ public final class QuizProfileHome
         return _dao.findAll( nIdQuiz, plugin );
     }
 
+    /**
+     * Remove a profile
+     * @param nIdProfile The id of the profile to remove
+     * @param plugin The plugin
+     */
     public static void remove( int nIdProfile, Plugin plugin )
     {
         _dao.delete( nIdProfile, plugin );
     }
 
+    /**
+     * Update a profile
+     * @param quizProfile The profile to update
+     * @param plugin The plugin
+     */
     public static void update( QuizProfile quizProfile, Plugin plugin )
     {
         _dao.store( quizProfile, plugin );
     }
 
+    /**
+     * Remove every profiles associated with a given quiz
+     * @param nIdQuiz The id of the quiz
+     * @param plugin The plugin
+     */
     public static void removeProfilesByQuiz( int nIdQuiz, Plugin plugin )
     {
         _dao.deleteByQuiz( nIdQuiz, plugin );

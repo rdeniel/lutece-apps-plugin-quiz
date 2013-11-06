@@ -8,6 +8,8 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Quiz profile DAO
@@ -48,13 +50,16 @@ public class QuizProfileDAO implements IQuizProfileDAO
         return nKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void insert( QuizProfile profil, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_PROFIL, plugin );
-        profil.setIdProfil( newPrimaryKey( plugin ) );
+        profil.setIdProfile( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, profil.getIdProfil( ) );
+        daoUtil.setInt( 1, profil.getIdProfile( ) );
         daoUtil.setString( 2, profil.getName( ) );
         daoUtil.setString( 3, profil.getDescription( ) );
         daoUtil.setInt( 4, profil.getIdQuiz( ) );
@@ -63,6 +68,9 @@ public class QuizProfileDAO implements IQuizProfileDAO
         daoUtil.free( );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReferenceList selectQuizProfilsReferenceList( int nIdQuiz, Plugin plugin )
     {
@@ -86,10 +94,13 @@ public class QuizProfileDAO implements IQuizProfileDAO
         return profilsReferenceList;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName( int nIdProfil, Plugin plugin )
     {
-        String name = "";
+        String name = StringUtils.EMPTY;
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_LOAD_PROFIL_BY_ID, plugin );
         daoUtil.setInt( 1, nIdProfil );
@@ -106,6 +117,9 @@ public class QuizProfileDAO implements IQuizProfileDAO
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public QuizProfile load( int nKey, Plugin plugin )
     {
@@ -118,7 +132,7 @@ public class QuizProfileDAO implements IQuizProfileDAO
         if ( daoUtil.next( ) )
         {
             quizProfil = new QuizProfile( );
-            quizProfil.setIdProfil( daoUtil.getInt( 1 ) );
+            quizProfil.setIdProfile( daoUtil.getInt( 1 ) );
             quizProfil.setName( daoUtil.getString( 2 ) );
             quizProfil.setDescription( daoUtil.getString( 3 ) );
         }
@@ -128,6 +142,9 @@ public class QuizProfileDAO implements IQuizProfileDAO
         return quizProfil;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<QuizProfile> findAll( int nIdQuiz, Plugin plugin )
     {
@@ -141,7 +158,7 @@ public class QuizProfileDAO implements IQuizProfileDAO
         while ( daoUtil.next( ) )
         {
             QuizProfile profil = new QuizProfile( );
-            profil.setIdProfil( daoUtil.getInt( 1 ) );
+            profil.setIdProfile( daoUtil.getInt( 1 ) );
             profil.setName( daoUtil.getString( 2 ) );
             profil.setDescription( daoUtil.getString( 3 ) );
             result.add( profil );
@@ -152,6 +169,9 @@ public class QuizProfileDAO implements IQuizProfileDAO
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete( int nIdProfil, Plugin plugin )
     {
@@ -161,19 +181,25 @@ public class QuizProfileDAO implements IQuizProfileDAO
         daoUtil.free( );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void store( QuizProfile quizProfil, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
         daoUtil.setString( 1, quizProfil.getName( ) );
         daoUtil.setString( 2, quizProfil.getDescription( ) );
-        daoUtil.setInt( 3, quizProfil.getIdProfil( ) );
+        daoUtil.setInt( 3, quizProfil.getIdProfile( ) );
 
         daoUtil.executeUpdate( );
 
         daoUtil.free( );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteByQuiz( int nIdQuiz, Plugin plugin )
     {

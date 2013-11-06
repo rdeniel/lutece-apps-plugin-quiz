@@ -27,8 +27,16 @@
 				<div class="control-group">
 					<label class="label-group" for="question_image">#i18n{quiz.create_question.questionImageLabel}</label>
 					<div class="controls">
-						<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${question.idQuestion}" class="span" />			
+						<#if hasImage?? && hasImage>
+							<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${question.idQuestion}" class="span" />
+						</#if>			
 						<input type="file" name="question_image" >
+						<#if hasImage?? && hasImage>
+							<label class="checkbox inline">
+								<input type="checkbox" name="remove_image" value="true">
+								#i18n{quiz.modify_question.labelRemoveImage}
+							</label>
+						</#if>
 					</div>
 				</div>
 				<div class="form-actions">

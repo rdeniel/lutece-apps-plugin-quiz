@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-
 /**
  * This is the business class for the object QuestionGroup
  */
@@ -45,12 +44,14 @@ public class QuestionGroup
     private String _strSubject;
     private int _nIdQuiz;
     private int _nPositionGroup;
+    private boolean _bIsFreeHtml;
+    private String _strHtmlContent;
 
     /**
      * Returns the IdGroup
      * @return The IdGroup
      */
-    public int getIdGroup(  )
+    public int getIdGroup( )
     {
         return _nIdGroup;
     }
@@ -68,7 +69,7 @@ public class QuestionGroup
      * Returns the LabelGroup
      * @return The LabelGroup
      */
-    public String getLabelGroup(  )
+    public String getLabelGroup( )
     {
         return _strLabelGroup;
     }
@@ -86,7 +87,7 @@ public class QuestionGroup
      * Returns the Subject
      * @return The Subject
      */
-    public String getSubject(  )
+    public String getSubject( )
     {
         return _strSubject;
     }
@@ -104,7 +105,7 @@ public class QuestionGroup
      * Returns the identifier of this Quiz.
      * @return _nIdQuiz The Quiz identifier
      */
-    public int getIdQuiz(  )
+    public int getIdQuiz( )
     {
         return _nIdQuiz;
     }
@@ -122,7 +123,7 @@ public class QuestionGroup
      * Returns the identifier of this Quiz.
      * @return _nIdQuiz The Quiz identifier
      */
-    public int getPositionGroup(  )
+    public int getPositionGroup( )
     {
         return _nPositionGroup;
     }
@@ -134,5 +135,47 @@ public class QuestionGroup
     public void setPositionGroup( int nPositionGroup )
     {
         _nPositionGroup = nPositionGroup;
+    }
+
+    /**
+     * Check if this group is a group with free HTML
+     * @return True if this group is a group with free HTML, false if it has
+     *         questions
+     */
+    public boolean getIsFreeHtml( )
+    {
+        return _bIsFreeHtml;
+    }
+
+    /**
+     * Set this group free HTML group or a question group
+     * @param bIsFreeHtml True if this group is a group with free HTML, false if
+     *            it has questions
+     */
+    public void setIsFreeHtml( boolean bIsFreeHtml )
+    {
+        this._bIsFreeHtml = bIsFreeHtml;
+    }
+
+    /**
+     * Get the HTMl content of this group, or null if this group is not a free
+     * HTML group
+     * @return the HTMl content of this group, or null if this group is not a
+     *         free HTML group
+     */
+    public String getHtmlContent( )
+    {
+        return _strHtmlContent;
+    }
+
+    /**
+     * Set the HTMl content of this group, or null if this group is not a free
+     * HTML group
+     * @param strHtmlContent the HTMl content of this group, or null if this
+     *            group is not a free HTML group
+     */
+    public void setHtmlContent( String strHtmlContent )
+    {
+        this._strHtmlContent = strHtmlContent;
     }
 }

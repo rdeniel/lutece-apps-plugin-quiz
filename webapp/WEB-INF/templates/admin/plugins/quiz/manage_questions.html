@@ -4,16 +4,21 @@
     <legend>
         ${quiz.name}
         <form class="form-inline pull-right" action="jsp/admin/plugins/quiz/CreateQuestion.jsp">
-        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+        	<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
             <button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{quiz.manage_questions.buttonValueCreateQuestion}</button>
         </form>
         <form class="form-inline pull-right spaced" action="jsp/admin/plugins/quiz/CreateGroup.jsp">
-        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+            <input type="hidden" id="freehtml" name="freehtml" value="true"> 
+        	<button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{quiz.manage_questions.buttonValueCreateFreeHtmlGroup}</button>
+        </form>
+        <form class="form-inline pull-right" action="jsp/admin/plugins/quiz/CreateGroup.jsp">
+        	<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
             <button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{quiz.manage_questions.buttonValueCreateGroup}</button>
         </form>
         <#if isTypeProfil?has_content && isTypeProfil>
             <form class="form-inline pull-right" action="jsp/admin/plugins/quiz/CreateProfil.jsp">
-            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+            	<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
                 <button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{quiz.manage_questions.buttonValueCreateProfil}</button>
             </form>
         </#if>
@@ -31,10 +36,10 @@
                 <tr>
                     <td>${profil.name}</td>
                 <td>
-                    <a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyProfil.jsp?quiz_id=${quiz.idQuiz}&profil_id=${profil.idProfil}"  title="Modifier" >
+                    <a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyProfil.jsp?quiz_id=${quiz.idQuiz}&profil_id=${profil.idProfile}"  title="Modifier" >
                         <i class="icon-edit icon-white"></i>
                 </a>
-                <a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveProfil.jsp?quiz_id=${quiz.idQuiz}&profil_id=${profil.idProfil}"  title="#i18n{quiz.manage_question.linkTitleDeleteProfil}" >
+                <a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveProfil.jsp?quiz_id=${quiz.idQuiz}&profil_id=${profil.idProfile}"  title="#i18n{quiz.manage_question.linkTitleDeleteProfil}" >
                     <i class="icon-trash icon-white"></i>
                 </a>
                 </td>

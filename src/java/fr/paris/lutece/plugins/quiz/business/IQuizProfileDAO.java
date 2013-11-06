@@ -12,9 +12,9 @@ import java.util.Collection;
 public interface IQuizProfileDAO
 {
     /**
-     * Creation of an instance of an article Quiz profil
+     * Creation of an instance of an article Quiz profile
      * 
-     * @param profil An instance of the Quiz profil which contains the
+     * @param profil An instance of the Quiz profile which contains the
      *            informations to store
      * @param plugin the plugin
      */
@@ -29,32 +29,32 @@ public interface IQuizProfileDAO
     ReferenceList selectQuizProfilsReferenceList( int nIdQuiz, Plugin plugin );
 
     /**
-     * Return the name of a profil
-     * @param nIdProfil The profil ID
+     * Return the name of a profile
+     * @param nIdProfil The profile ID
      * @param plugin plugin Quiz
-     * @return name of the corresponding profil
+     * @return name of the corresponding profile
      */
     String getName( int nIdProfil, Plugin plugin );
 
     /**
-     * Load a profil with its id
+     * Load a profile with its id
      * @param nKey the id to load
      * @param plugin plugin Quiz
-     * @return corresponding profil
+     * @return corresponding profile
      */
     QuizProfile load( int nKey, Plugin plugin );
 
     /**
-     * Find all profils for a quiz
+     * Find all profiles for a quiz
      * @param nIdQuiz the id quiz
      * @param plugin plugin Quiz
-     * @return profils list
+     * @return profile list
      */
     Collection<QuizProfile> findAll( int nIdQuiz, Plugin plugin );
 
     /**
-     * Delete a profil
-     * @param nIdProfil the profil id
+     * Delete a profile
+     * @param nIdProfil the profile id
      * @param plugin plugin Quiz
      */
     void delete( int nIdProfil, Plugin plugin );
@@ -68,7 +68,7 @@ public interface IQuizProfileDAO
     void store( QuizProfile quizProfil, Plugin plugin );
 
     /**
-     * Delete profils linked to a quiz
+     * Delete profiles linked to a quiz
      * @param nIdQuiz the quiz id
      * @param plugin plugin Quiz
      */

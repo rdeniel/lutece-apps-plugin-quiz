@@ -124,7 +124,6 @@ public class QuizApp implements XPageApplication
                     bArrayResult = questionImage.getContent( );
                     strContentType = questionImage.getContentType( );
                 }
-
                 // Add Cache Control HTTP header
                 response.setHeader( "Cache-Control", "no-cache" ); // HTTP 1.1
                 response.setDateHeader( "Expires", 0 ); // HTTP 1.0
@@ -145,6 +144,7 @@ public class QuizApp implements XPageApplication
                 {
                     try
                     {
+                        out.flush( );
                         out.close( );
                     }
                     catch ( IOException e )
@@ -154,7 +154,6 @@ public class QuizApp implements XPageApplication
                 }
             }
         }
-        Thread.currentThread( ).stop( );
     }
 
     /**
@@ -172,7 +171,7 @@ public class QuizApp implements XPageApplication
     {
         String strIdQuiz = request.getParameter( PARAMETER_ID_QUIZ );
         String strAction = request.getParameter( QuizService.PARAMETER_ACTION );
-        XPage page;
+        XPage page = null;
 
         if ( StringUtils.isNotEmpty( strIdQuiz ) && StringUtils.isNumeric( strIdQuiz ) )
         {
@@ -194,28 +193,37 @@ public class QuizApp implements XPageApplication
                     nOldStepId = 0;
                 }
 
-                // We get responses of the user, and save them into the session
-                Map<String, String[]> mapResponsesCurrentStep = null;
-                if ( nOldStepId > 0 && !StringUtils.equals( ACTION_NEXT_STEP, strAction ) )
+                if ( nOldStepId > 0 )
                 {
-                    mapResponsesCurrentStep = saveAndValidateQuizAnswers( quiz, nOldStepId, request.getParameterMap( ),
-                            request.getLocale( ), plugin, request.getSession( true ) );
-                    // We check that the map does not contain errors
-                    String[] strError = mapResponsesCurrentStep.get( QuizService.KEY_ERROR );
-
-                    if ( strError != null && strError.length > 0 )
+                    // We get responses of the user, and save them into the session
+                    Map<String, String[]> mapResponsesCurrentStep = null;
+                    if ( !StringUtils.equals( ACTION_NEXT_STEP, strAction ) )
                     {
-                        return getErrorPage( quiz.getIdQuiz( ), strError[0], request.getLocale( ) );
+                        mapResponsesCurrentStep = saveAndValidateQuizAnswers( quiz, nOldStepId,
+                                request.getParameterMap( ), request.getLocale( ), plugin, request.getSession( true ) );
+                        // We check that the map does not contain errors
+                        String[] strError = mapResponsesCurrentStep.get( QuizService.KEY_ERROR );
+
+                        if ( strError != null && strError.length > 0 )
+                        {
+                            return getErrorPage( quiz.getIdQuiz( ), strError[0], request.getLocale( ) );
+                        }
+                    }
+
+                    // If we must display the result of the current step
+                    if ( quiz.getDisplayResultAfterEachStep( ) && StringUtils.equals( strAction, PARAMETER_RESULTS ) )
+                    {
+                        page = getQuizStepResults( quiz, nOldStepId, request.getLocale( ), mapResponsesCurrentStep,
+                                request.getSession( ), plugin );
                     }
                 }
-
-                // If we must display the result of the current step
-                if ( nOldStepId > 0 && strAction != null && strAction.equals( PARAMETER_RESULTS ) )
-                {
-                    page = getQuizStepResults( quiz, nOldStepId, request.getLocale( ), mapResponsesCurrentStep,
-                            request.getSession( ), plugin );
-                }
                 else
+                {
+                    // this is the first step of the quiz, so we remove any answers to quiz made by the user
+                    resetUserAnswers( request.getSession( ) );
+                }
+
+                if ( page == null )
                 {
                     // Otherwise, we display the next step
                     page = getQuizNextStep( quiz, nOldStepId, request.getLocale( ) );
@@ -372,6 +380,11 @@ public class QuizApp implements XPageApplication
             model = _serviceQuiz.getStepResults( quiz, nIdStep, mapResponsesCurrentStep, locale, plugin );
         }
 
+        if ( model == null )
+        {
+            return null;
+        }
+
         model.put( PARAMETER_OLD_STEP, nIdStep );
 
         // If there is no next step
@@ -437,21 +450,14 @@ public class QuizApp implements XPageApplication
     {
         Map<String, String[]> mapUserAnswers = _serviceQuiz.getUserAnswersForGroup( quiz.getIdQuiz( ), nIdStep,
                 mapParameters, locale, plugin );
-        if ( nIdStep == 0 )
+        Map<String, String[]> mapOldAnswers = (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
+        if ( mapOldAnswers != null )
         {
-            session.setAttribute( SESSION_KEY_QUIZ_STEP, mapUserAnswers );
+            mapOldAnswers.putAll( mapUserAnswers );
         }
         else
         {
-            Map<String, String[]> mapOldAnswers = (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
-            if ( mapOldAnswers != null )
-            {
-                mapOldAnswers.putAll( mapUserAnswers );
-            }
-            else
-            {
-                session.setAttribute( SESSION_KEY_QUIZ_STEP, mapUserAnswers );
-            }
+            session.setAttribute( SESSION_KEY_QUIZ_STEP, mapUserAnswers );
         }
         return mapUserAnswers;
     }
@@ -465,6 +471,15 @@ public class QuizApp implements XPageApplication
     private Map<String, String[]> getUserAnswers( HttpSession session )
     {
         return (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
+    }
+
+    /**
+     * Remove any answers of quiz made by the user
+     * @param session The session
+     */
+    private void resetUserAnswers( HttpSession session )
+    {
+        session.setAttribute( SESSION_KEY_QUIZ_STEP, null );
     }
 
     /**

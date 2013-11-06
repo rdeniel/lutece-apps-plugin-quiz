@@ -95,7 +95,7 @@ public final class AnswerDAO implements IAnswerDAO
         daoUtil.setInt( 2, answer.getIdQuestion( ) );
         daoUtil.setString( 3, answer.getLabelAnswer( ) );
         daoUtil.setInt( 4, answer.getValid( ) );
-        daoUtil.setInt( 5, answer.getIdProfil( ) );
+        daoUtil.setInt( 5, answer.getIdProfile( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -123,7 +123,7 @@ public final class AnswerDAO implements IAnswerDAO
             answer.setIdQuestion( daoUtil.getInt( 2 ) );
             answer.setLabelAnswer( daoUtil.getString( 3 ) );
             answer.setValid( daoUtil.getInt( 4 ) );
-            answer.setIdProfil( daoUtil.getInt( 5 ) );
+            answer.setIdProfile( daoUtil.getInt( 5 ) );
         }
 
         daoUtil.free( );
@@ -157,7 +157,7 @@ public final class AnswerDAO implements IAnswerDAO
         daoUtil.setInt( 2, answer.getIdQuestion( ) );
         daoUtil.setString( 3, answer.getLabelAnswer( ) );
         daoUtil.setInt( 4, answer.getValid( ) );
-        daoUtil.setInt( 5, answer.getIdProfil( ) );
+        daoUtil.setInt( 5, answer.getIdProfile( ) );
         daoUtil.setInt( 6, answer.getIdAnswer( ) );
 
         daoUtil.executeUpdate( );
@@ -185,7 +185,7 @@ public final class AnswerDAO implements IAnswerDAO
             answer.setIdQuestion( daoUtil.getInt( 2 ) );
             answer.setLabelAnswer( daoUtil.getString( 3 ) );
             answer.setValid( daoUtil.getInt( 4 ) );
-            answer.setIdProfil( daoUtil.getInt( 5 ) );
+            answer.setIdProfile( daoUtil.getInt( 5 ) );
 
             answerList.add( answer );
         }

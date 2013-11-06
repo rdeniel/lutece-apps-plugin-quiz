@@ -1,28 +1,46 @@
 <div class="row-fluid">
 	<div class="span12" >
-	<fieldset>
-    <legend>#i18n{quiz.create_group.pageTitle}</legend>
-		<form class="form-horizontal" name="create_group" action="jsp/admin/plugins/quiz/DoCreateGroup.jsp"  method="post">
-		<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
-        <div class="control-group">
-		<label class="control-label" for="group_name" >#i18n{quiz.create_group.name} * :</label>
-            <div class="controls">
-				<input type="text" id="group_name" name="group_name" size="50" maxlength="50" tabindex="1" />
-			</div>
-		</div>
-        <div class="control-group">
-		<label class="control-label" for="group_name" >#i18n{quiz.create_group.subject} :</label>
-		<div class="controls">
-			<textarea id="group_subject" name="group_subject" rows="5" cols="60"></textarea>
-			</div>
-		</div>
-        <div class="form-actions">
-		    <button class="btn btn-primary btn-small" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_group.buttonValidate}</button>
-	        <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
-				<i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
-			</a>
-		</div>
-		</form>
-    </fieldset>
+		<fieldset>
+		    <legend>
+		    	<#if freehtml>
+		    		#i18n{quiz.create_group.pageTitleFreeHtml}
+		    	<#else>
+		    		#i18n{quiz.create_group.pageTitle}
+		    	</#if>
+		    </legend>
+			<form class="form-horizontal" name="create_group" action="jsp/admin/plugins/quiz/DoCreateGroup.jsp"  method="post">
+				<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
+		        <input type="hidden" id="freehtml" name="freehtml" value="<#if freehtml>true<#else>false</#if>"/>
+		        <div class="control-group">
+					<label class="control-label" for="group_name" >#i18n{quiz.create_group.name} * :</label>
+		            <div class="controls">
+						<input type="text" id="group_name" name="group_name" size="50" maxlength="50" tabindex="1" />
+					</div>
+				</div>
+		        <div class="control-group">
+					<label class="control-label" for="group_name" >#i18n{quiz.create_group.subject} :</label>
+					<div class="controls">
+						<textarea id="group_subject" name="group_subject" rows="5" cols="60"></textarea>
+					</div>
+				</div>
+				<#if freehtml>
+					<div class="control-group">
+						<label class="control-label" for="html_content" >#i18n{quiz.create_group.htmlContent} :</label>
+						<div class="controls">
+							<textarea id="html_content" name="html_content" class="richtext"></textarea>
+							<span class="help-block">#i18n{quiz.create_group.htmlContentHelp} <i>${input_prefix}</i></span>
+						</div>
+					</div>
+				</#if>
+		        <div class="form-actions">
+				    <button class="btn btn-primary btn-small" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_group.buttonValidate}</button>
+			        <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
+						<i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
+					</a>
+				</div>
+			</form>
+	    </fieldset>
 	</div>
 </div>
+<#include "/admin/util/editor/editor.html" />
+<@initEditor />

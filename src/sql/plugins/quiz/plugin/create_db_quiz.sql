@@ -56,6 +56,8 @@ CREATE TABLE quiz_group (
   subject varchar(255) default NULL,
   id_quiz INT NOT NULL,
   pos_group INT NOT NULL,
+  is_free_html SMALLINT DEFAULT 0,
+  html_content TEXT default NULL,
   PRIMARY KEY  (id_group)
 );
 

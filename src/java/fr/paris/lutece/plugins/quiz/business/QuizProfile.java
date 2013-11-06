@@ -5,7 +5,7 @@ package fr.paris.lutece.plugins.quiz.business;
  */
 public class QuizProfile
 {
-    private int _nIdProfil;
+    private int _nIdProfile;
 
     private String _strName;
 
@@ -14,19 +14,21 @@ public class QuizProfile
     private int _nIdQuiz;
 
     /**
-     * @return the _nIdProfil
+     * Get the id of the profile
+     * @return The id of the profile
      */
-    public int getIdProfil( )
+    public int getIdProfile( )
     {
-        return _nIdProfil;
+        return _nIdProfile;
     }
 
     /**
-     * @param nIdProfil the _nIdProfil to set
+     * Set the id of the profile
+     * @param nIdProfile The id of the profile
      */
-    public void setIdProfil( int nIdProfil )
+    public void setIdProfile( int nIdProfile )
     {
-        this._nIdProfil = nIdProfil;
+        this._nIdProfile = nIdProfile;
     }
 
     /**

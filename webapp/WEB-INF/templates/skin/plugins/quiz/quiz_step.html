@@ -12,25 +12,29 @@
 				<input type="hidden" name="action" value="results"/>
 				<fieldset>
 					<legend>${group.labelGroup}</legend>
-					<#if quiz.questions?has_content>
-						<div class="well">
-							<#list quiz.questions as question>
-								<div class="control-group">
-								<label class="control-label" for="">
-									<i class="icon-circle-arrow-right"></i>&nbsp;${question.questionLabel}
-								</label>
-								<div class="controls">
-									<#list question.answers as answer>
-										<#if question.idQuestion == answer.idQuestion>
-											<label class="radio inline" for="${answer.idAnswer}">&nbsp;${answer.labelAnswer}</label>
-											<input type="radio" name="${question.idQuestion}" id="${answer.idAnswer}" value="${answer.idAnswer}">
-										</#if>
-									</#list>
+					<#if group.isFreeHtml>
+	                	${group.htmlContent}
+	                <#else>
+						<#if quiz.questions?has_content>
+							<div class="well">
+								<#list quiz.questions as question>
+									<div class="control-group">
+									<label class="control-label" for="">
+										<i class="icon-circle-arrow-right"></i>&nbsp;${question.questionLabel}
+									</label>
+									<div class="controls">
+										<#list question.answers as answer>
+											<#if question.idQuestion == answer.idQuestion>
+												<label class="radio inline" for="${answer.idAnswer}">&nbsp;${answer.labelAnswer}</label>
+												<input type="radio" name="${question.idQuestion}" id="${answer.idAnswer}" value="${answer.idAnswer}">
+											</#if>
+										</#list>
+									</div>
 								</div>
+								</#list>
 							</div>
-							</#list>
-						</div>
-					 </#if>
+						</#if>
+					</#if>
 				 </fieldset>
 				 <button type="submit" class="btn btn-primary">
 					   <i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.view_questions_by_quiz.buttonValidate}

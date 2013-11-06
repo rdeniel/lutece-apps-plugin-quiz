@@ -43,10 +43,12 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfile;
 import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
+import fr.paris.lutece.plugins.quiz.business.QuizQuestionImageHome;
 import fr.paris.lutece.plugins.quiz.business.UserAnswer;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -55,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**
@@ -66,6 +69,7 @@ public class QuizService
     public static final String KEY_ERROR = "error";
     public static final String PLUGIN_NAME = "quiz";
     public static final String PARAMETER_ACTION = "action";
+    public static final String PROPERTY_INPUT_PREFIX = "quiz.freeHtml.inputPrefix";
 
     private static final String PROPERTY_MSG_MANY_GOOD_ANSWERS = "quiz.message.results.manyGoodAnswers";
     private static final String PROPERTY_MSG_ONE_GOOD_ANSWER = "quiz.message.results.oneGoodAnswer";
@@ -82,6 +86,7 @@ public class QuizService
     private static final String MARK_GROUP = "group";
     private static final String MARK_GROUPS_LIST = "groups_list";
     private static final String MARK_PROFILES_LIST = "profils_list";
+    private static final String MARK_QUESTION_IMAGES = "question_image";
 
     private static Plugin _plugin;
 
@@ -203,6 +208,20 @@ public class QuizService
         {
             return null;
         }
+        if ( group.getIsFreeHtml( ) )
+        {
+            String strPrefix = AppPropertiesService.getProperty( PROPERTY_INPUT_PREFIX );
+            Map<String, String[]> mapUserAnswers = new HashMap<String, String[]>( );
+            for ( Entry<String, String[]> entry : parameterMap.entrySet( ) )
+            {
+                if ( entry.getKey( ).startsWith( strPrefix ) )
+                {
+                    mapUserAnswers.put( entry.getKey( ), entry.getValue( ) );
+                }
+            }
+            return mapUserAnswers;
+        }
+
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( nIdQuiz,
                 group.getIdGroup( ), plugin );
 
@@ -238,7 +257,8 @@ public class QuizService
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         int nScore = 0;
-        List<UserAnswer> listInvalidAnswers = new ArrayList<UserAnswer>( );
+        List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( );
+        Map<String, Boolean> mapQuestionImages = new HashMap<String, Boolean>( questionsList.size( ) );
 
         for ( QuizQuestion question : questionsList )
         {
@@ -261,20 +281,30 @@ public class QuizService
                 int nUserAnswer = Integer.parseInt( strUserAnswer );
                 Answer answer = AnswerHome.findByPrimaryKey( nUserAnswer, getPlugin( ) );
 
+                // We add every answers to the map, whether they are correct or not.
+                UserAnswer userAnswer = new UserAnswer( );
+                userAnswer.setQuestionId( question.getIdQuestion( ) );
+                userAnswer.setQuestion( question.getQuestionLabel( ) );
+                userAnswer.setExplaination( question.getExplaination( ) );
+                userAnswer.setAnswer( answer.getLabelAnswer( ) );
+                listUserAnswers.add( userAnswer );
+
                 if ( answer.isCorrect( ) )
                 {
+                    userAnswer.setIsValid( true );
                     nScore++;
                 }
-                else
-                {
-                    UserAnswer ia = new UserAnswer( );
-                    ia.setQuestionId( question.getIdQuestion( ) );
-                    ia.setQuestion( question.getQuestionLabel( ) );
-                    ia.setExplaination( question.getExplaination( ) );
-                    ia.setAnswer( answer.getLabelAnswer( ) );
-                    listInvalidAnswers.add( ia );
-                }
             }
+            Boolean bHasImage;
+            if ( QuizQuestionImageHome.doesQuestionHasImage( question.getIdQuestion( ), getPlugin( ) ) )
+            {
+                bHasImage = Boolean.TRUE;
+            }
+            else
+            {
+                bHasImage = Boolean.FALSE;
+            }
+            mapQuestionImages.put( strQuestionId, bHasImage );
         }
 
         String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, locale );
@@ -301,7 +331,8 @@ public class QuizService
         model.put( MARK_SCORE, nScore );
         model.put( MARK_QUESTIONS_COUNT, questionsList.size( ) );
         model.put( KEY_QUIZ, quiz );
-        model.put( MARK_ANSWERS_LIST, listInvalidAnswers );
+        model.put( MARK_ANSWERS_LIST, listUserAnswers );
+        model.put( MARK_QUESTION_IMAGES, mapQuestionImages );
 
         return model;
     }
@@ -325,11 +356,16 @@ public class QuizService
         {
             return null;
         }
+        if ( group.getIsFreeHtml( ) )
+        {
+            return null;
+        }
+
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
                 group.getIdGroup( ), plugin );
         int nScore = 0;
-        List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( );
-
+        List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( questionsList.size( ) );
+        Map<String, Boolean> mapQuestionImages = new HashMap<String, Boolean>( questionsList.size( ) );
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
@@ -355,6 +391,16 @@ public class QuizService
                     nScore++;
                 }
             }
+            Boolean bHasImage;
+            if ( QuizQuestionImageHome.doesQuestionHasImage( question.getIdQuestion( ), plugin ) )
+            {
+                bHasImage = Boolean.TRUE;
+            }
+            else
+            {
+                bHasImage = Boolean.FALSE;
+            }
+            mapQuestionImages.put( strQuestionId, bHasImage );
         }
 
         String strMessage;
@@ -383,6 +429,7 @@ public class QuizService
         model.put( MARK_QUESTIONS_COUNT, questionsList.size( ) );
         model.put( KEY_QUIZ, quiz );
         model.put( MARK_ANSWERS_LIST, listUserAnswers );
+        model.put( MARK_QUESTION_IMAGES, mapQuestionImages );
 
         return model;
     }
@@ -399,7 +446,7 @@ public class QuizService
         Map<String, Object> model = new HashMap<String, Object>( );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
-        Map<Integer, Integer> profilMap = new HashMap<Integer, Integer>( );
+        Map<Integer, Integer> profileMap = new HashMap<Integer, Integer>( );
 
         for ( QuizQuestion question : questionsList )
         {
@@ -421,15 +468,15 @@ public class QuizService
                 int nUserAnswer = Integer.parseInt( strUserAnswer );
                 Answer answer = AnswerHome.findByPrimaryKey( nUserAnswer, getPlugin( ) );
 
-                Integer profil = profilMap.get( answer.getIdProfil( ) );
+                Integer nProfile = profileMap.get( answer.getIdProfile( ) );
 
-                if ( profil != null )
+                if ( nProfile != null )
                 {
-                    profilMap.put( answer.getIdProfil( ), profil + 1 );
+                    profileMap.put( answer.getIdProfile( ), nProfile + 1 );
                 }
                 else
                 {
-                    profilMap.put( Integer.valueOf( answer.getIdProfil( ) ), Integer.valueOf( 1 ) );
+                    profileMap.put( Integer.valueOf( answer.getIdProfile( ) ), Integer.valueOf( 1 ) );
                 }
             }
         }
@@ -438,7 +485,7 @@ public class QuizService
         List<Integer> profilesId = new ArrayList<Integer>( );
         List<QuizProfile> profilesList = new ArrayList<QuizProfile>( );
 
-        for ( Map.Entry<Integer, Integer> entry : profilMap.entrySet( ) )
+        for ( Map.Entry<Integer, Integer> entry : profileMap.entrySet( ) )
         {
             if ( entry.getValue( ).compareTo( mainProfile ) > 0 )
             {
@@ -501,15 +548,15 @@ public class QuizService
                 int nUserAnswer = Integer.parseInt( strUserAnswer );
                 Answer answer = AnswerHome.findByPrimaryKey( nUserAnswer, getPlugin( ) );
 
-                Integer profil = profilMap.get( answer.getIdProfil( ) );
+                Integer profil = profilMap.get( answer.getIdProfile( ) );
 
                 if ( profil != null )
                 {
-                    profilMap.put( answer.getIdProfil( ), profil + 1 );
+                    profilMap.put( answer.getIdProfile( ), profil + 1 );
                 }
                 else
                 {
-                    profilMap.put( Integer.valueOf( answer.getIdProfil( ) ), Integer.valueOf( 1 ) );
+                    profilMap.put( Integer.valueOf( answer.getIdProfile( ) ), Integer.valueOf( 1 ) );
                 }
             }
         }

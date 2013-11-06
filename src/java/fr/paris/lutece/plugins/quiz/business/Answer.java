@@ -44,7 +44,7 @@ public class Answer
     private int _nIdQuestion;
     private String _strLabelAnswer;
     private int _nIsValid;
-    private int _nIdProfil;
+    private int _nIdProfile;
     private String _strProfil;
 
     /**
@@ -131,17 +131,17 @@ public class Answer
     /**
      * @return the _nIdProfil
      */
-    public int getIdProfil( )
+    public int getIdProfile( )
     {
-        return _nIdProfil;
+        return _nIdProfile;
     }
 
     /**
-     * @param nIdProfil the _nIdProfil to set
+     * @param nIdProfile the _nIdProfil to set
      */
-    public void setIdProfil( int nIdProfil )
+    public void setIdProfile( int nIdProfile )
     {
-        this._nIdProfil = nIdProfil;
+        this._nIdProfile = nIdProfile;
     }
 
     /**

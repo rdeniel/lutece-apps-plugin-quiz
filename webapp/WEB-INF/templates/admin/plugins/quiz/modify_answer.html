@@ -21,7 +21,7 @@
         <#if listProfils?has_content>
             <label class="label-group">#i18n{quiz.create_answer.profilsList} *</label>
             <div class="controls">
-                <@combo name="profil_id" default_value="${answer.idProfil}" items=listProfils />
+                <@combo name="profil_id" default_value="${answer.idProfile}" items=listProfils />
             </div>
         <#else>
             <div class="control-group">
