@@ -46,6 +46,7 @@ public class QuestionGroup
     private int _nPositionGroup;
     private boolean _bIsFreeHtml;
     private String _strHtmlContent;
+    private int _nIdImage;
 
     /**
      * Returns the IdGroup
@@ -177,5 +178,23 @@ public class QuestionGroup
     public void setHtmlContent( String strHtmlContent )
     {
         this._strHtmlContent = strHtmlContent;
+    }
+
+    /**
+     * Get the id of the image
+     * @return the id of the image
+     */
+    public int getIdImage( )
+    {
+        return _nIdImage;
+    }
+
+    /**
+     * Set the id of the image
+     * @param nIdImage the id of the image
+     */
+    public void setIdImage( int nIdImage )
+    {
+        _nIdImage = nIdImage;
     }
 }

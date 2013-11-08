@@ -21,6 +21,7 @@ CREATE TABLE quiz_question (
   id_quiz INT NOT NULL,
   id_group INT NOT NULL,
   explaination varchar(255) NULL,
+  id_image INT default 0,
   PRIMARY KEY  (id_question)
 );
 
@@ -58,6 +59,7 @@ CREATE TABLE quiz_group (
   pos_group INT NOT NULL,
   is_free_html SMALLINT DEFAULT 0,
   html_content TEXT default NULL,
+  id_image INT default 0,
   PRIMARY KEY  (id_group)
 );
 
@@ -80,10 +82,11 @@ CREATE TABLE quiz_profil (
   PRIMARY KEY  (id_profil)
 );
 
-DROP TABLE IF EXISTS quiz_question_image;
-CREATE TABLE quiz_question_image (
-  id_question INT NOT NULL,
+DROP TABLE IF EXISTS quiz_image;
+CREATE TABLE quiz_image (
+  id_image INT NOT NULL,
   image_content LONG VARBINARY NOT NULL,
-  PRIMARY KEY  (id_question)
+  content_type VARCHAR(255) NOT NULL,
+  PRIMARY KEY  (id_image)
 );
 

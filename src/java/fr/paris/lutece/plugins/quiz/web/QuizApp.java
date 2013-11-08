@@ -35,8 +35,8 @@ package fr.paris.lutece.plugins.quiz.web;
 
 import fr.paris.lutece.plugins.quiz.business.QuestionGroupHome;
 import fr.paris.lutece.plugins.quiz.business.Quiz;
-import fr.paris.lutece.plugins.quiz.business.QuizQuestionImage;
-import fr.paris.lutece.plugins.quiz.business.QuizQuestionImageHome;
+import fr.paris.lutece.plugins.quiz.business.images.QuizImage;
+import fr.paris.lutece.plugins.quiz.business.images.QuizImageHome;
 import fr.paris.lutece.plugins.quiz.service.QuizService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
@@ -87,7 +87,7 @@ public class QuizApp implements XPageApplication
     private static final String PARAMETER_RESULTS = "results";
     private static final String PARAMETER_ID_QUIZ = "quiz_id";
     private static final String PARAMETER_OLD_STEP = "old_step";
-    private static final String PARAMETER_ID_QUESTION = "id_question";
+    private static final String PARAMETER_ID_IMAGE = "id_image";
     private static final String ACTION_NEXT_STEP = "nextStep";
 
     private static final String SESSION_KEY_QUIZ_STEP = "quiz.savedQuizResult";
@@ -99,28 +99,28 @@ public class QuizApp implements XPageApplication
     private QuizService _quizService = SpringContextService.getBean( QuizService.BEAN_QUIZ_SERVICE );
 
     /**
-     * Do download the image associated with a given question
+     * Do download a quiz image
      * @param request The request
      * @param response The response
      */
-    public static void doDownloadQuestionImage( HttpServletRequest request, HttpServletResponse response )
+    public static void doDownloadQuizImage( HttpServletRequest request, HttpServletResponse response )
     {
-        String strIdQuestion = request.getParameter( PARAMETER_ID_QUESTION );
-        if ( StringUtils.isNotEmpty( strIdQuestion ) && StringUtils.isNumeric( strIdQuestion ) )
+        String strIdImage = request.getParameter( PARAMETER_ID_IMAGE );
+        if ( StringUtils.isNotEmpty( strIdImage ) && StringUtils.isNumeric( strIdImage ) )
         {
             OutputStream out = null;
             try
             {
                 Plugin plugin = PluginService.getPlugin( QuizService.PLUGIN_NAME );
-                int nIdQuestion = Integer.parseInt( strIdQuestion );
+                int nIdImage = Integer.parseInt( strIdImage );
                 byte[] bArrayResult = {};
                 String strContentType = StringUtils.EMPTY;
-                QuizQuestionImage questionImage = QuizQuestionImageHome.getQuestionImage( nIdQuestion, plugin );
+                QuizImage quizImage = QuizImageHome.getImage( nIdImage, plugin );
 
-                if ( questionImage != null && questionImage.getContent( ) != null )
+                if ( quizImage != null && quizImage.getContent( ) != null )
                 {
-                    bArrayResult = questionImage.getContent( );
-                    strContentType = questionImage.getContentType( );
+                    bArrayResult = quizImage.getContent( );
+                    strContentType = quizImage.getContentType( );
                 }
                 // Add Cache Control HTTP header
                 response.setHeader( "Cache-Control", "no-cache" ); // HTTP 1.1

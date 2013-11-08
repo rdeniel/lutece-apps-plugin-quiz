@@ -40,25 +40,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-/*  ajouter ici : import fr.paris.lutece.(nom_projet).util.*; */
-
 /**
  * This class provides Data Access methods for QuizQuestion objects
  */
 public final class QuizQuestionDAO implements IQuizQuestionDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_question ) FROM quiz_question ";
-    private static final String SQL_QUERY_INSERT_QUESTION = "INSERT INTO quiz_question ( id_question, label_question, id_quiz, id_group, explaination ) VALUES ( ?, ?, ?, ?, ? )";
-    private static final String SQL_QUERY_SELECT_QUESTION = "SELECT id_question, label_question, id_quiz, id_group, explaination FROM quiz_question WHERE id_question = ?";
-    private static final String SQL_QUERY_SELECT_LAST_QUESTION = "SELECT id_question, label_question, id_quiz, id_group, explaination FROM quiz_question WHERE id_question = ( select max(id_question) from quiz_question )";
-    private static final String SQL_QUERY_SELECT_QUESTIONS = " SELECT id_question, label_question, id_quiz, id_group, explaination FROM quiz_question WHERE id_quiz = ?";
+    private static final String SQL_QUERY_INSERT_QUESTION = "INSERT INTO quiz_question ( id_question, label_question, id_quiz, id_group, explaination, id_image ) VALUES ( ?, ?, ?, ?, ?, ? )";
+    private static final String SQL_QUERY_SELECT_QUESTION = "SELECT id_question, label_question, id_quiz, id_group, explaination, id_image FROM quiz_question WHERE id_question = ?";
+    private static final String SQL_QUERY_SELECT_LAST_QUESTION = "SELECT id_question, label_question, id_quiz, id_group, explaination, id_image FROM quiz_question WHERE id_question = ( select max(id_question) from quiz_question )";
+    private static final String SQL_QUERY_SELECT_QUESTIONS = " SELECT id_question, label_question, id_quiz, id_group, explaination, id_image FROM quiz_question WHERE id_quiz = ?";
     private static final String SQL_QUERY_DELETE_QUESTION = "DELETE FROM quiz_question WHERE id_question = ?";
     private static final String SQL_QUERY_DELETE_QUESTIONS_BY_QUIZ = "DELETE FROM quiz_question WHERE id_quiz = ?";
-    private static final String SQL_QUERY_UPDATE_QUESTION = " UPDATE quiz_question SET label_question = ?, id_quiz = ?, id_group = ?, explaination = ? WHERE id_question = ?";
+    private static final String SQL_QUERY_UPDATE_QUESTION = " UPDATE quiz_question SET label_question = ?, id_quiz = ?, id_group = ?, explaination = ?, id_image = ? WHERE id_question = ?";
     private static final String SQL_QUERY_VERIFY_QUESTIONS_BY_GROUP = "SELECT id_question FROM quiz_question WHERE id_quiz = ? AND id_group = ?";
     private static final String SQL_QUERY_DELETE_QUESTIONS_BY_GROUP = "DELETE FROM quiz_question WHERE id_quiz = ? AND id_group = ?";
-    private static final String SQL_QUERY_SELECT_QUESTIONS_BY_GROUP = "SELECT id_question, label_question, id_quiz, id_group, explaination FROM quiz_question WHERE id_group = ?";
-    private static final String SQL_QUERY_SELECT_QUESTIONS_BY_ANSWER = "SELECT DISTINCT quest.id_question, quest.label_question, quest.id_quiz, quest.id_group, quest.explaination, ans.id_question FROM quiz_question as quest, quiz_answer as ans WHERE quest.id_question = ans.id_question AND id_quiz = ?";
+    private static final String SQL_QUERY_SELECT_QUESTIONS_BY_GROUP = "SELECT id_question, label_question, id_quiz, id_group, explaination, id_image FROM quiz_question WHERE id_group = ?";
+    private static final String SQL_QUERY_SELECT_QUESTIONS_BY_ANSWER = "SELECT DISTINCT quest.id_question, quest.label_question, quest.id_quiz, quest.id_group, quest.explaination, quest.id_image, ans.id_question FROM quiz_question as quest, quiz_answer as ans WHERE quest.id_question = ans.id_question AND id_quiz = ?";
     private static final String SQL_QUERY_SELECT_QUESTIONS_BY_ANSWER_AND_GROUP = SQL_QUERY_SELECT_QUESTIONS_BY_ANSWER
             + " AND quest.id_group = ? ";
 
@@ -73,15 +71,13 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
         daoUtil.executeQuery( );
 
-        int nKey;
+        int nKey = 1;
 
-        if ( !daoUtil.next( ) )
+        if ( daoUtil.next( ) )
         {
-            // if the table is empty
-            nKey = 1;
+            nKey = daoUtil.getInt( 1 ) + 1;
         }
 
-        nKey = daoUtil.getInt( 1 ) + 1;
         daoUtil.free( );
 
         return nKey;
@@ -91,7 +87,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
      * {@inheritDoc}
      */
     @Override
-    public void insert( QuizQuestion quizQuestion, Plugin plugin )
+    public synchronized void insert( QuizQuestion quizQuestion, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_QUESTION, plugin );
         quizQuestion.setIdQuestion( newPrimaryKey( plugin ) );
@@ -101,6 +97,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
         daoUtil.setInt( 3, quizQuestion.getIdQuiz( ) );
         daoUtil.setInt( 4, quizQuestion.getIdGroup( ) );
         daoUtil.setString( 5, quizQuestion.getExplaination( ) );
+        daoUtil.setInt( 6, quizQuestion.getIdImage( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -150,6 +147,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
             quizQuestion.setIdQuiz( daoUtil.getInt( 3 ) );
             quizQuestion.setIdGroup( daoUtil.getInt( 4 ) );
             quizQuestion.setExplaination( daoUtil.getString( 5 ) );
+            quizQuestion.setIdImage( daoUtil.getInt( 6 ) );
         }
 
         daoUtil.free( );
@@ -176,6 +174,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
             quizQuestion.setIdQuiz( daoUtil.getInt( 3 ) );
             quizQuestion.setIdGroup( daoUtil.getInt( 4 ) );
             quizQuestion.setExplaination( daoUtil.getString( 5 ) );
+            quizQuestion.setIdImage( daoUtil.getInt( 6 ) );
         }
 
         daoUtil.free( );
@@ -194,7 +193,8 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
         daoUtil.setInt( 2, quizQuestion.getIdQuiz( ) );
         daoUtil.setInt( 3, quizQuestion.getIdGroup( ) );
         daoUtil.setString( 4, quizQuestion.getExplaination( ) );
-        daoUtil.setInt( 5, quizQuestion.getIdQuestion( ) );
+        daoUtil.setInt( 5, quizQuestion.getIdImage( ) );
+        daoUtil.setInt( 6, quizQuestion.getIdQuestion( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -219,6 +219,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
             quizQuestion.setIdQuiz( daoUtil.getInt( 3 ) );
             quizQuestion.setIdGroup( daoUtil.getInt( 4 ) );
             quizQuestion.setExplaination( daoUtil.getString( 5 ) );
+            quizQuestion.setIdImage( daoUtil.getInt( 6 ) );
 
             questionList.add( quizQuestion );
         }
@@ -270,6 +271,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
             quizQuestion.setIdQuiz( daoUtil.getInt( 3 ) );
             quizQuestion.setIdGroup( daoUtil.getInt( 4 ) );
             quizQuestion.setExplaination( daoUtil.getString( 5 ) );
+            quizQuestion.setIdImage( daoUtil.getInt( 6 ) );
 
             questionList.add( quizQuestion );
         }
@@ -311,6 +313,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
             quizQuestion.setIdQuiz( daoUtil.getInt( 3 ) );
             quizQuestion.setIdGroup( daoUtil.getInt( 4 ) );
             quizQuestion.setExplaination( daoUtil.getString( 5 ) );
+            quizQuestion.setIdImage( daoUtil.getInt( 6 ) );
 
             questionList.add( quizQuestion );
         }
@@ -340,6 +343,7 @@ public final class QuizQuestionDAO implements IQuizQuestionDAO
             quizQuestion.setIdQuiz( daoUtil.getInt( 3 ) );
             quizQuestion.setIdGroup( daoUtil.getInt( 4 ) );
             quizQuestion.setExplaination( daoUtil.getString( 5 ) );
+            quizQuestion.setIdImage( daoUtil.getInt( 6 ) );
 
             questionList.add( quizQuestion );
         }

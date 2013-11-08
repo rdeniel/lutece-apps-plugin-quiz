@@ -28,8 +28,9 @@
 		                	</div>
 		                </#if>
 		            </li>
-		            <#if question_image?? && question_image[answer.questionId?string]>
-		           		<img src="jsp/site/plugins/quiz/DoDownloadQuestionImage.jsp?id_question=${answer.questionId}" />
+		            <#assign questionIdString = answer.questionId?string>
+		            <#if question_image?? && question_image[questionIdString]?? && question_image[questionIdString] &gt; 0>
+		           		<img src="jsp/site/plugins/quiz/DoDownloadQuizImage.jsp?id_image=${question_image[questionIdString]}" />
 		           	</#if>
 	            </#list>
             </ul>

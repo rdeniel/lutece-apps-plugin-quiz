@@ -42,6 +42,8 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfile;
 import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
+import fr.paris.lutece.plugins.quiz.business.images.QuizImage;
+import fr.paris.lutece.plugins.quiz.business.images.QuizImageHome;
 import fr.paris.lutece.plugins.quiz.service.QuizService;
 import fr.paris.lutece.plugins.quiz.service.outputprocessor.QuizOutputProcessorManagementService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
@@ -52,6 +54,7 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.portal.web.constants.Messages;
+import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
@@ -64,6 +67,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -130,6 +134,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_PROFIL_DESCRIPTION = "profil_description";
     private static final String PARAMETER_APPLY = "apply";
     private static final String PARAMETER_HTML_CONTENT = "html_content";
+    private static final String PARAMETER_GROUP_IMAGE = "group_image";
+    private static final String PARAMETER_REMOVE_IMAGE = "remove_image";
 
     // Templates
     private static final String TEMPLATE_MANAGE_QUIZ = "admin/plugins/quiz/manage_quiz.html";
@@ -523,6 +529,19 @@ public class QuizJspBean extends PluginAdminPageJspBean
         {
             group.setHtmlContent( null );
         }
+
+        if ( request instanceof MultipartHttpServletRequest )
+        {
+            MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
+            FileItem fileItem = multiPartRequest.getFile( PARAMETER_GROUP_IMAGE );
+            if ( fileItem != null )
+            {
+                QuizImage quizImage = new QuizImage( fileItem.get( ), fileItem.getContentType( ) );
+                QuizImageHome.insertImage( quizImage, getPlugin( ) );
+                group.setIdImage( quizImage.getIdImage( ) );
+            }
+        }
+
         QuestionGroupHome.create( nIdQuiz, group, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
@@ -592,6 +611,37 @@ public class QuizJspBean extends PluginAdminPageJspBean
         {
             group.setHtmlContent( null );
         }
+
+        if ( request instanceof MultipartHttpServletRequest )
+        {
+            MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
+            if ( Boolean.parseBoolean( request.getParameter( PARAMETER_REMOVE_IMAGE ) ) )
+            {
+                QuizImageHome.removeImage( group.getIdImage( ), getPlugin( ) );
+                group.setIdImage( 0 );
+            }
+            else
+            {
+                FileItem fileItem = multiPartRequest.getFile( PARAMETER_GROUP_IMAGE );
+                if ( fileItem != null )
+                {
+                    QuizImage quizImage = new QuizImage( fileItem.get( ), fileItem.getContentType( ) );
+                    // if there is no image associated with the given group, we create one
+                    if ( group.getIdImage( ) == 0 )
+                    {
+                        QuizImageHome.insertImage( quizImage, getPlugin( ) );
+                        group.setIdImage( quizImage.getIdImage( ) );
+                    }
+                    // otherwise, we update the existing image
+                    else
+                    {
+                        quizImage.setIdImage( group.getIdImage( ) );
+                        QuizImageHome.updateImage( quizImage, getPlugin( ) );
+                    }
+                }
+            }
+        }
+
         QuestionGroupHome.update( group, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );

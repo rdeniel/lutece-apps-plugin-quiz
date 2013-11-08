@@ -43,8 +43,8 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfile;
 import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
-import fr.paris.lutece.plugins.quiz.business.QuizQuestionImage;
-import fr.paris.lutece.plugins.quiz.business.QuizQuestionImageHome;
+import fr.paris.lutece.plugins.quiz.business.images.QuizImage;
+import fr.paris.lutece.plugins.quiz.business.images.QuizImageHome;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
@@ -66,6 +66,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -73,6 +74,9 @@ import org.apache.commons.fileupload.FileItem;
  */
 public class QuizQuestionJspBean extends PluginAdminPageJspBean
 {
+    /**
+     * Right to manage quiz
+     */
     public static final String RIGHT_MANAGE_QUIZ = QuizJspBean.RIGHT_MANAGE_QUIZ;
 
     private static final long serialVersionUID = 1101658075687495248L;
@@ -86,7 +90,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_CONFIRM_DELETE_ANSWER_TURN_RED = "quiz.remove_answer.confirmDeleteAnswerTurnRed";
     private static final String PROPERTY_LABEL_NO = "portal.util.labelNo";
     private static final String PROPERTY_LABEL_YES = "portal.util.labelYes";
+
     private static final String MESSAGE_ONLY_ONE_ANSWER = "quiz.message.noMoreThanOneGoodAnswer";
+    private static final String MESSGAE_ERROR_NO_QUESTION_LABEL = "quiz.message.error.noQuestionLabel";
 
     //Jsps
     private static final String JSP_DO_REMOVE_QUESTION = "jsp/admin/plugins/quiz/DoRemoveQuestion.jsp";
@@ -129,7 +135,6 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     private static final String MARK_ANSWER = "answer";
     private static final String MARK_IS_TYPE_PROFIL = "isTypeProfil";
     private static final String MARK_LIST_PROFILS = "listProfils";
-    private static final String MARK_HAS_IMAGE = "hasImage";
 
     private static final String MARK_YESNO_LIST = "yesno_list";
 
@@ -228,9 +233,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
         String strExplication = request.getParameter( PARAMETER_EXPLAINATION );
 
         // Mandatory fields
-        if ( strQuestion.equals( "" ) )
+        if ( StringUtils.isEmpty( strQuestion ) )
         {
-            return AdminMessageService.getMessageUrl( request, "Vous n'avez pas remplis...", AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, MESSGAE_ERROR_NO_QUESTION_LABEL, AdminMessage.TYPE_STOP );
         }
 
         QuizQuestion quizQuestion = new QuizQuestion( );
@@ -240,21 +245,21 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
         quizQuestion.setExplaination( strExplication );
         QuizQuestionHome.create( quizQuestion, getPlugin( ) );
 
-        QuizQuestion questionCreated = QuizQuestionHome.findLastQuestion( getPlugin( ) );
-
         if ( request instanceof MultipartHttpServletRequest )
         {
             MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
             FileItem fileItem = multiPartRequest.getFile( PARAMETER_QUESTION_IMAGE );
             if ( fileItem != null )
             {
-                QuizQuestionImage questionImage = new QuizQuestionImage( questionCreated.getIdQuestion( ),
-                        fileItem.get( ), fileItem.getContentType( ) );
-                QuizQuestionImageHome.insertQuestionImage( questionImage, getPlugin( ) );
+                QuizImage quizImage = new QuizImage( fileItem.get( ), fileItem.getContentType( ) );
+                QuizImageHome.insertImage( quizImage, getPlugin( ) );
+                quizQuestion.setIdImage( quizImage.getIdImage( ) );
             }
         }
 
-        // if the operation occurred well, redirects towards the view of the Quiz
+        QuizQuestion questionCreated = QuizQuestionHome.findLastQuestion( getPlugin( ) );
+
+        // if the operation occurred well, redirects towards the view of the question
         UrlItem url = new UrlItem( JSP_URL_MODIFY_QUESTION );
         url.addParameter( PARAMETER_QUIZ_ID, questionCreated.getIdQuiz( ) );
         url.addParameter( PARAMETER_QUESTION_ID, questionCreated.getIdQuestion( ) );
@@ -284,7 +289,6 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
         model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
         model.put( MARK_QUESTION, quizQuestion );
         model.put( MARK_ANSWER_LIST, listAnswer );
-        model.put( MARK_HAS_IMAGE, QuizQuestionImageHome.doesQuestionHasImage( nIdQuestion, getPlugin( ) ) );
         if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
         {
             for ( Answer answer : listAnswer )
@@ -316,7 +320,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
         String strExplaination = request.getParameter( PARAMETER_EXPLAINATION );
 
         // Mandatory fields
-        if ( strQuestion.equals( "" ) )
+        if ( strQuestion.equals( StringUtils.EMPTY ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -327,35 +331,37 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
         quizQuestion.setIdQuiz( nIdQuiz );
         quizQuestion.setIdGroup( nIdGroup );
         quizQuestion.setExplaination( strExplaination );
-        QuizQuestionHome.update( quizQuestion, getPlugin( ) );
 
         if ( request instanceof MultipartHttpServletRequest )
         {
             MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
             if ( Boolean.parseBoolean( request.getParameter( PARAMETER_REMOVE_IMAGE ) ) )
             {
-                QuizQuestionImageHome.removeQuestionImage( quizQuestion.getIdQuestion( ), getPlugin( ) );
+                QuizImageHome.removeImage( quizQuestion.getIdImage( ), getPlugin( ) );
+                quizQuestion.setIdImage( 0 );
             }
             else
             {
                 FileItem fileItem = multiPartRequest.getFile( PARAMETER_QUESTION_IMAGE );
                 if ( fileItem != null )
                 {
-                    QuizQuestionImage questionImage = new QuizQuestionImage( nQuestionId, fileItem.get( ),
-                            fileItem.getContentType( ) );
+                    QuizImage quizImage = new QuizImage( fileItem.get( ), fileItem.getContentType( ) );
                     // if there is no image associated with the given question, we create one
-                    if ( QuizQuestionImageHome.getQuestionImage( nQuestionId, getPlugin( ) ) == null )
+                    if ( quizQuestion.getIdImage( ) == 0 )
                     {
-                        QuizQuestionImageHome.insertQuestionImage( questionImage, getPlugin( ) );
+                        QuizImageHome.insertImage( quizImage, getPlugin( ) );
+                        quizQuestion.setIdImage( quizImage.getIdImage( ) );
                     }
                     // otherwise, we update the existing image
                     else
                     {
-                        QuizQuestionImageHome.updateQuestionImage( questionImage, getPlugin( ) );
+                        quizImage.setIdImage( quizQuestion.getIdImage( ) );
+                        QuizImageHome.updateImage( quizImage, getPlugin( ) );
                     }
                 }
             }
         }
+        QuizQuestionHome.update( quizQuestion, getPlugin( ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_QUESTIONS );
         url.addParameter( PARAMETER_QUIZ_ID, nIdQuiz );
@@ -470,7 +476,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
         }
 
-        if ( ( strLabelAnswer == null ) || ( strLabelAnswer.equals( "" ) ) )
+        if ( ( strLabelAnswer == null ) || ( strLabelAnswer.equals( StringUtils.EMPTY ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }

@@ -8,7 +8,7 @@
 		    		#i18n{quiz.create_group.pageTitle}
 		    	</#if>
 		    </legend>
-			<form class="form-horizontal" name="create_group" action="jsp/admin/plugins/quiz/DoCreateGroup.jsp"  method="post">
+			<form class="form-horizontal" name="create_group" enctype="multipart/form-data" action="jsp/admin/plugins/quiz/DoCreateGroup.jsp"  method="post">
 				<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
 		        <input type="hidden" id="freehtml" name="freehtml" value="<#if freehtml>true<#else>false</#if>"/>
 		        <div class="control-group">
@@ -21,6 +21,12 @@
 					<label class="control-label" for="group_name" >#i18n{quiz.create_group.subject} :</label>
 					<div class="controls">
 						<textarea id="group_subject" name="group_subject" rows="5" cols="60"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="group_image">#i18n{quiz.create_group.groupImageLabel}</label>
+					<div class="controls">
+						<input type="file" name="group_image" >
 					</div>
 				</div>
 				<#if freehtml>

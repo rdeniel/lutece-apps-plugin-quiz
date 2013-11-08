@@ -43,7 +43,6 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfile;
 import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
-import fr.paris.lutece.plugins.quiz.business.QuizQuestionImageHome;
 import fr.paris.lutece.plugins.quiz.business.UserAnswer;
 import fr.paris.lutece.plugins.quiz.service.outputprocessor.QuizOutputProcessorManagementService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
@@ -59,6 +58,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -261,7 +262,7 @@ public class QuizService
         Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         int nScore = 0;
         List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( );
-        Map<String, Boolean> mapQuestionImages = new HashMap<String, Boolean>( questionsList.size( ) );
+        Map<String, Integer> mapQuestionImages = new HashMap<String, Integer>( questionsList.size( ) );
 
         for ( QuizQuestion question : questionsList )
         {
@@ -298,16 +299,7 @@ public class QuizService
                     nScore++;
                 }
             }
-            Boolean bHasImage;
-            if ( QuizQuestionImageHome.doesQuestionHasImage( question.getIdQuestion( ), getPlugin( ) ) )
-            {
-                bHasImage = Boolean.TRUE;
-            }
-            else
-            {
-                bHasImage = Boolean.FALSE;
-            }
-            mapQuestionImages.put( strQuestionId, bHasImage );
+            mapQuestionImages.put( strQuestionId, question.getIdImage( ) );
         }
 
         String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, locale );
@@ -368,7 +360,7 @@ public class QuizService
                 group.getIdGroup( ), plugin );
         int nScore = 0;
         List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( questionsList.size( ) );
-        Map<String, Boolean> mapQuestionImages = new HashMap<String, Boolean>( questionsList.size( ) );
+        Map<String, Integer> mapQuestionImages = new HashMap<String, Integer>( questionsList.size( ) );
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
@@ -394,16 +386,7 @@ public class QuizService
                     nScore++;
                 }
             }
-            Boolean bHasImage;
-            if ( QuizQuestionImageHome.doesQuestionHasImage( question.getIdQuestion( ), plugin ) )
-            {
-                bHasImage = Boolean.TRUE;
-            }
-            else
-            {
-                bHasImage = Boolean.FALSE;
-            }
-            mapQuestionImages.put( strQuestionId, bHasImage );
+            mapQuestionImages.put( strQuestionId, question.getIdImage( ) );
         }
 
         String strMessage;
@@ -604,8 +587,31 @@ public class QuizService
      */
     public void processEndOfQuiz( Quiz quiz, Map<String, String[]> userAnswers )
     {
-        userAnswers.remove( PARAMETER_ACTION );
+        Map<String, String[]> mapAnswersModified = new HashMap<String, String[]>( userAnswers.size( ) );
+        mapAnswersModified.putAll( userAnswers );
 
-        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( userAnswers, quiz.getIdQuiz( ) );
+        // We replace every id of answers by the corresponding label
+        Collection<QuizQuestion> listQuestions = QuizQuestionHome.findAll( quiz.getIdQuiz( ), getPlugin( ) );
+        for ( QuizQuestion question : listQuestions )
+        {
+            String strIdQuestion = Integer.toString( question.getIdQuestion( ) );
+            String[] strArrayAnswer = userAnswers.get( strIdQuestion );
+            if ( strArrayAnswer != null && strArrayAnswer.length > 0 )
+            {
+                String strIdAnswer = strArrayAnswer[0];
+                if ( StringUtils.isNotEmpty( strIdAnswer ) && StringUtils.isNumeric( strIdAnswer ) )
+                {
+                    int nIdAnswer = Integer.parseInt( strIdAnswer );
+                    Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin( ) );
+                    String[] strArrayAnswerLabel = { answer.getLabelAnswer( ) };
+                    mapAnswersModified.put( strIdQuestion, strArrayAnswerLabel );
+                }
+            }
+        }
+
+        mapAnswersModified.remove( PARAMETER_ACTION );
+
+        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( mapAnswersModified,
+                quiz.getIdQuiz( ) );
     }
 }

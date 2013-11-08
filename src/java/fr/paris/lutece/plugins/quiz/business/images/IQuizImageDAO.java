@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.quiz.business;
+package fr.paris.lutece.plugins.quiz.business.images;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
@@ -39,43 +39,34 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 /**
  * Interface of DAO for question images
  */
-public interface IQuizQuestionImageDAO
+public interface IQuizImageDAO
 {
     /**
-     * Get the image associated with a given question
-     * @param nIdQuestion The id of the question
+     * Get the image
+     * @param nIdImage The id of the image
      * @param plugin The plugin
-     * @return The byte array of the image, or null if no image is associated
-     *         with this question
+     * @return The byte array of the image, or null if no image was found
      */
-    QuizQuestionImage findQuestionImage( int nIdQuestion, Plugin plugin );
+    QuizImage findQuizImage( int nIdImage, Plugin plugin );
 
     /**
      * Insert an image into the database
-     * @param questionImage The image
+     * @param quizImage The image
      * @param plugin The plugin
      */
-    void insertQuestionImage( QuizQuestionImage questionImage, Plugin plugin );
+    void insertQuizImage( QuizImage quizImage, Plugin plugin );
 
     /**
      * Update an image of a question
-     * @param questionImage The image
+     * @param quizImage The image
      * @param plugin The plugin
      */
-    void updateQuestionImage( QuizQuestionImage questionImage, Plugin plugin );
+    void updateQuizImage( QuizImage quizImage, Plugin plugin );
 
     /**
      * Remove an image associated with a question
-     * @param nIdQuestion The id of the question to remove
+     * @param nIdImage The id of the question to remove
      * @param plugin The plugin
      */
-    void removeQuestionImage( int nIdQuestion, Plugin plugin );
-
-    /**
-     * Check if a question is associated with an image
-     * @param nQuestionId The id of the question
-     * @param plugin The plugin
-     * @return True if the question is associated with an image, false otherwise
-     */
-    boolean doesQuestionHasImage( int nQuestionId, Plugin plugin );
+    void removeQuizImage( int nIdImage, Plugin plugin );
 }

@@ -8,7 +8,7 @@
 		    		#i18n{quiz.modify_group.pageTitle}
 		    	</#if>
 		    </legend>
-			<form class="form-horizontal" name="modify_group" action="jsp/admin/plugins/quiz/DoModifyGroup.jsp"  method="post">
+			<form class="form-horizontal" enctype="multipart/form-data" name="modify_group" action="jsp/admin/plugins/quiz/DoModifyGroup.jsp"  method="post">
 				<input type="hidden" id="group_id" name="group_id" value="${group.idGroup}"/>
 		        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
 		        <div class="control-group">
@@ -21,6 +21,23 @@
 					<label class="control-label" for="group_name" >#i18n{quiz.create_group.subject} :</label>
 					<div class="controls">
 						<textarea id="group_subject" name="group_subject" rows="5" class="span5">${group.subject}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="group_image">#i18n{quiz.create_group.groupImageLabel}</label>
+					<div class="controls">
+						<#if group.idImage &gt; 0>
+							<img src="jsp/site/plugins/quiz/DoDownloadQuizImage.jsp?id_image=${group.idImage}" class="span" style="max-width: 300px;" />
+							<div class="row"></div>
+						</#if>			
+						<input type="file" name="group_image" >
+						<#if group.idImage &gt; 0>
+							<br />
+							<label class="checkbox inline">
+								<input type="checkbox" name="remove_image" value="true">
+								#i18n{quiz.modify_question.labelRemoveImage}
+							</label>
+						</#if>
 					</div>
 				</div>
 				<#if freehtml>

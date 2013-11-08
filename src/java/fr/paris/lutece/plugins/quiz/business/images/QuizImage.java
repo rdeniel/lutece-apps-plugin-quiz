@@ -31,55 +31,65 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.quiz.business;
+package fr.paris.lutece.plugins.quiz.business.images;
 
 /**
- * Image of a question of a quiz
- * @author vbroussard
+ * Image for quiz
  */
-public class QuizQuestionImage
+public class QuizImage
 {
-    private int _nIdQuestion;
+    private int _nIdImage;
     private byte[] _bArrayContent;
     private String _strContentType;
 
     /**
      * Default constructor
      */
-    public QuizQuestionImage( )
+    public QuizImage( )
     {
         // Default contructor
     }
 
     /**
      * Constructor with every parameters initialized
-     * @param nIdQuestion The id of the question
      * @param bArrayContent The content of the image
      * @param strContentType The content type
      */
-    public QuizQuestionImage( int nIdQuestion, byte[] bArrayContent, String strContentType )
+    public QuizImage( byte[] bArrayContent, String strContentType )
     {
-        this._nIdQuestion = nIdQuestion;
         this._bArrayContent = bArrayContent;
         this._strContentType = strContentType;
     }
 
     /**
-     * Get the id of the question
-     * @return The id of the question
+     * Constructor with every parameters initialized
+     * @param nIdImage The id of the image
+     * @param bArrayContent The content of the image
+     * @param strContentType The content type
      */
-    public int getIdQuestion( )
+    public QuizImage( int nIdImage, byte[] bArrayContent, String strContentType )
     {
-        return _nIdQuestion;
+        this._nIdImage = nIdImage;
+        this._bArrayContent = bArrayContent;
+        this._strContentType = strContentType;
     }
 
     /**
-     * Set the id of the question
-     * @param nIdQuestion The id of the question
+     * Get the id of the image
+     * @return The id of the image
      */
-    public void setIdQuestion( int nIdQuestion )
+    public int getIdImage( )
     {
-        this._nIdQuestion = nIdQuestion;
+        return _nIdImage;
+    }
+
+    /**
+     * Set the id of the image
+     * @param nIdImage The id of the image
+     */
+    public void setIdImage( int nIdImage )
+    {
+        this._nIdImage = nIdImage;
     }
 
     /**

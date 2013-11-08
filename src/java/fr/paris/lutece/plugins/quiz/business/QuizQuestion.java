@@ -47,11 +47,12 @@ public class QuizQuestion
     private int _nIdGroup;
     private String _strExplaination;
     private List<Answer> _listAnswers;
+    private int _nIdImage;
 
     /**
      * Creates a new QuizQuestion object.
      */
-    public QuizQuestion(  )
+    public QuizQuestion( )
     {
     }
 
@@ -59,7 +60,7 @@ public class QuizQuestion
      * Returns the identifier of this QuizQuestion.
      * @return _nIdQuestion The Question identifier
      */
-    public int getIdQuestion(  )
+    public int getIdQuestion( )
     {
         return _nIdQuestion;
     }
@@ -77,7 +78,7 @@ public class QuizQuestion
      * Return the identifier of the quiz
      * @return _nIdQuiz The Quiz identifier
      */
-    public int getIdQuiz(  )
+    public int getIdQuiz( )
     {
         return _nIdQuiz;
     }
@@ -95,7 +96,7 @@ public class QuizQuestion
      * Return The Question
      * @return _strQuestion The Question
      */
-    public String getQuestionLabel(  )
+    public String getQuestionLabel( )
     {
         return _strQuestion;
     }
@@ -110,10 +111,10 @@ public class QuizQuestion
     }
 
     /**
-       * Returns the IdGroup
-       * @return The IdGroup
-       */
-    public int getIdGroup(  )
+     * Returns the IdGroup
+     * @return The IdGroup
+     */
+    public int getIdGroup( )
     {
         return _nIdGroup;
     }
@@ -131,7 +132,7 @@ public class QuizQuestion
      * Gets explaination
      * @return The explaination
      */
-    public String getExplaination(  )
+    public String getExplaination( )
     {
         return _strExplaination;
     }
@@ -158,8 +159,26 @@ public class QuizQuestion
      * Gest answer to a question
      * @return The answer list
      */
-    public List<Answer> getAnswers(  )
+    public List<Answer> getAnswers( )
     {
         return _listAnswers;
+    }
+
+    /**
+     * Get the id of the image
+     * @return the id of the image
+     */
+    public int getIdImage( )
+    {
+        return _nIdImage;
+    }
+
+    /**
+     * Set the id of the image
+     * @param nIdImage the id of the image
+     */
+    public void setIdImage( int nIdImage )
+    {
+        _nIdImage = nIdImage;
     }
 }

@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.quiz.business;
+package fr.paris.lutece.plugins.quiz.business.images;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
@@ -41,67 +41,56 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
  * Home for images of quiz's questions
  * 
  */
-public final class QuizQuestionImageHome
+public final class QuizImageHome
 {
-    private static IQuizQuestionImageDAO _dao = SpringContextService.getBean( "quiz.questionImageDAO" );
+    private static IQuizImageDAO _dao = SpringContextService.getBean( "quiz.quizImageDAO" );
 
     /**
      * Private constructor
      */
-    private QuizQuestionImageHome( )
+    private QuizImageHome( )
     {
         // Private constructor
     }
 
     /**
      * Get the image associated with a question
-     * @param nIdQuestion The id of the question
+     * @param nIdImage The id of the image
      * @param plugin The plugin
-     * @return The question image
+     * @return The image
      */
-    public static QuizQuestionImage getQuestionImage( int nIdQuestion, Plugin plugin )
+    public static QuizImage getImage( int nIdImage, Plugin plugin )
     {
-        return _dao.findQuestionImage( nIdQuestion, plugin );
+        return _dao.findQuizImage( nIdImage, plugin );
     }
 
     /**
-     * Insert an image associated with a given question
-     * @param questionImage The image to insert
+     * Insert an image
+     * @param quizImage The image to insert
      * @param plugin The plugin
      */
-    public static void insertQuestionImage( QuizQuestionImage questionImage, Plugin plugin )
+    public static void insertImage( QuizImage quizImage, Plugin plugin )
     {
-        _dao.insertQuestionImage( questionImage, plugin );
+        _dao.insertQuizImage( quizImage, plugin );
     }
 
     /**
-     * Update an image associated with a given question
-     * @param questionImage The image to insert
+     * Update an image
+     * @param quizImage The image to insert
      * @param plugin The plugin
      */
-    public static void updateQuestionImage( QuizQuestionImage questionImage, Plugin plugin )
+    public static void updateImage( QuizImage quizImage, Plugin plugin )
     {
-        _dao.updateQuestionImage( questionImage, plugin );
+        _dao.updateQuizImage( quizImage, plugin );
     }
 
     /**
-     * Remove an image associated with a question
-     * @param nIdQuestion The id of the question to remove
+     * Remove an image
+     * @param nIdImage The id of the image to remove
      * @param plugin The plugin
      */
-    public static void removeQuestionImage( int nIdQuestion, Plugin plugin )
+    public static void removeImage( int nIdImage, Plugin plugin )
     {
-        _dao.removeQuestionImage( nIdQuestion, plugin );
-    }
-
-    /**
-     * Check if a question is associated with an image
-     * @param nQuestionId The id of the question
-     * @param plugin The plugin
-     * @return True if the question is associated with an image, false otherwise
-     */
-    public static boolean doesQuestionHasImage( int nQuestionId, Plugin plugin )
-    {
-        return _dao.doesQuestionHasImage( nQuestionId, plugin );
+        _dao.removeQuizImage( nIdImage, plugin );
     }
 }

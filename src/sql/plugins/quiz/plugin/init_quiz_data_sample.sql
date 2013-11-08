@@ -36,21 +36,21 @@ INSERT INTO quiz_answer VALUES
 --
 
 INSERT INTO quiz_group VALUES  
-    (2,'Lutece et le Libre','Default',1,1,0,null),
-    (3,'Socle technique','',1,2,0,null),
-    (4,'Utilisation','Votre utilisateur de Lutèce',2,1,0,null);
+    (2,'Lutece et le Libre','Default',1,1,0,null,null),
+    (3,'Socle technique','',1,2,0,null,null),
+    (4,'Utilisation','Votre utilisateur de Lutèce',2,1,0,null,null);
 
 --
 -- Dumping data for table `quiz_question`
 --
 
 INSERT INTO quiz_question VALUES  
-    (1,'Sous quelle licence Lutece est-il diffusé ?\r\n<br />',1,2,'Lutece est diffusé sous licence BSD'),
-    (2,'En quelle année le code source de Lutèce a été diffusé sous licence Open Source ?',1,2,'Le Conseil de Paris a voté la diffusion du code source de Lutèce en Open Source lors de la séance du 20 septembre 2002.'),
-    (3,'En quel langage est écrit Lutèce ?',1,3,'Lutèce est majoritairement écrit en Java. Il contient également du HTML, XML et du javascript.'),
-    (4,'Quelle est la fonction de Lutèce ?',1,3,'Lutèce est à la fois un outil de gestion de contenu permettant la production de documents et la gestion de leur cycle de vie. Il assure également la fonction de portail, permettant ainsi l\'intégration d\'applications au sein de contenus éditoriaux.'),
-    (5,'Comment utilisez-vous Lutèce ?',2,4,''),
-    (6,'Qu\'attendez-vous de Lutèce ?',2,4,'');
+    (1,'Sous quelle licence Lutece est-il diffusé ?\r\n<br />',1,2,'Lutece est diffusé sous licence BSD',null),
+    (2,'En quelle année le code source de Lutèce a été diffusé sous licence Open Source ?',1,2,'Le Conseil de Paris a voté la diffusion du code source de Lutèce en Open Source lors de la séance du 20 septembre 2002.',null),
+    (3,'En quel langage est écrit Lutèce ?',1,3,'Lutèce est majoritairement écrit en Java. Il contient également du HTML, XML et du javascript.',null),
+    (4,'Quelle est la fonction de Lutèce ?',1,3,'Lutèce est à la fois un outil de gestion de contenu permettant la production de documents et la gestion de leur cycle de vie. Il assure également la fonction de portail, permettant ainsi l\'intégration d\'applications au sein de contenus éditoriaux.',null),
+    (5,'Comment utilisez-vous Lutèce ?',2,4,'',null),
+    (6,'Qu\'attendez-vous de Lutèce ?',2,4,'',null);
 
 --
 -- Dumping data for table `quiz_quiz`

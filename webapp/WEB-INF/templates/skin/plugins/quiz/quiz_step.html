@@ -35,6 +35,9 @@
 							</div>
 						</#if>
 					</#if>
+					<#if group.idImage &gt; 0>
+		            	<img src="jsp/site/plugins/quiz/DoDownloadQuizImage.jsp?id_image=${group.idImage}" class="span" />
+		         	</#if>
 				 </fieldset>
 				 <button type="submit" class="btn btn-primary">
 					   <i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.view_questions_by_quiz.buttonValidate}
