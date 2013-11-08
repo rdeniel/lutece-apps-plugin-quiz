@@ -189,6 +189,10 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
             {
                 processor.doUpdateConfiguration( request, nIdQuiz );
             }
+            UrlItem urlItem = new UrlItem( AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_OUTPUT_PROCESSORS );
+            urlItem.addParameter( PARAMETER_QUIZ_ID, strIdQuiz );
+            urlItem.setAnchor( strIdProcessor );
+            return urlItem.getUrl( );
         }
         return AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_QUIZ;
     }
