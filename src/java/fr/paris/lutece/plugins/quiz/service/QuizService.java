@@ -45,6 +45,7 @@ import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionImageHome;
 import fr.paris.lutece.plugins.quiz.business.UserAnswer;
+import fr.paris.lutece.plugins.quiz.service.outputprocessor.QuizOutputProcessorManagementService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
@@ -65,6 +66,8 @@ import java.util.Map.Entry;
  */
 public class QuizService
 {
+    public static final String BEAN_QUIZ_SERVICE = "quiz.quizService";
+
     public static final String KEY_QUIZ = "quiz";
     public static final String KEY_ERROR = "error";
     public static final String PLUGIN_NAME = "quiz";
@@ -594,11 +597,15 @@ public class QuizService
         return model;
     }
 
+    /**
+     * Process the end of the quiz
+     * @param quiz The quiz
+     * @param userAnswers The answers made by the use
+     */
     public void processEndOfQuiz( Quiz quiz, Map<String, String[]> userAnswers )
     {
         userAnswers.remove( PARAMETER_ACTION );
 
-        // TODO Auto-generated method stub
-
+        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( userAnswers, quiz.getIdQuiz( ) );
     }
 }

@@ -68,8 +68,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class QuizApp implements XPageApplication
 {
-    private static final String BEAN_QUIZ_SERVICE = "quiz.quizService";
-
     private static final String TEMPLATE_QUIZ_LIST = "skin/plugins/quiz/quiz_list.html";
     private static final String TEMPLATE_QUIZ_RESULTS = "skin/plugins/quiz/quiz_results.html";
     private static final String TEMPLATE_QUIZ_RESULTS_STEP = "skin/plugins/quiz/quiz_results_step.html";
@@ -98,7 +96,7 @@ public class QuizApp implements XPageApplication
     private static final String MARK_ID_QUIZ = "quiz_id";
     private static final String MARK_HAS_NEXT_STEP = "hasNextStep";
 
-    private QuizService _serviceQuiz = SpringContextService.getBean( BEAN_QUIZ_SERVICE );
+    private QuizService _quizService = SpringContextService.getBean( QuizService.BEAN_QUIZ_SERVICE );
 
     /**
      * Do download the image associated with a given question
@@ -177,7 +175,7 @@ public class QuizApp implements XPageApplication
         {
             int nIdQuiz = Integer.parseInt( strIdQuiz );
 
-            Quiz quiz = _serviceQuiz.findQuizById( nIdQuiz );
+            Quiz quiz = _quizService.findQuizById( nIdQuiz );
 
             if ( quiz.getDisplayStepByStep( ) )
             {
@@ -262,7 +260,7 @@ public class QuizApp implements XPageApplication
     protected XPage getQuizList( Locale locale )
     {
         XPage page = new XPage( );
-        Map<String, Object> model = _serviceQuiz.getQuizList( );
+        Map<String, Object> model = _quizService.getQuizList( );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_LIST, locale, model );
         page.setContent( template.getHtml( ) );
         page.setTitle( I18nService.getLocalizedString( PROPERTY_QUIZ_LIST_PAGE_TITLE, locale ) );
@@ -280,7 +278,7 @@ public class QuizApp implements XPageApplication
     protected XPage getQuizPage( int nQuizId, Locale locale )
     {
         XPage page = new XPage( );
-        Map<String, Object> model = _serviceQuiz.getQuiz( nQuizId );
+        Map<String, Object> model = _quizService.getQuiz( nQuizId );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST, locale, model );
         page.setContent( template.getHtml( ) );
 
@@ -300,7 +298,7 @@ public class QuizApp implements XPageApplication
     protected XPage getQuizNextStep( Quiz quiz, int nOldStepId, Locale locale )
     {
         XPage page = new XPage( );
-        Map<String, Object> model = _serviceQuiz.getQuizNextStep( quiz, nOldStepId );
+        Map<String, Object> model = _quizService.getQuizNextStep( quiz, nOldStepId );
         // If the model is null, then there is no more step to display
         if ( model == null )
         {
@@ -330,11 +328,11 @@ public class QuizApp implements XPageApplication
 
         if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
         {
-            model = _serviceQuiz.calculateQuizProfile( quiz.getIdQuiz( ), mapParameters, locale );
+            model = _quizService.calculateQuizProfile( quiz.getIdQuiz( ), mapParameters, locale );
         }
         else
         {
-            model = _serviceQuiz.getResults( quiz.getIdQuiz( ), mapParameters, locale );
+            model = _quizService.getResults( quiz.getIdQuiz( ), mapParameters, locale );
         }
 
         String strError = (String) model.get( QuizService.KEY_ERROR );
@@ -344,7 +342,7 @@ public class QuizApp implements XPageApplication
             return getErrorPage( quiz.getIdQuiz( ), strError, locale );
         }
 
-        _serviceQuiz.processEndOfQuiz( quiz, mapParameters );
+        _quizService.processEndOfQuiz( quiz, mapParameters );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_RESULTS, locale, model );
 
@@ -373,11 +371,11 @@ public class QuizApp implements XPageApplication
         Map<String, Object> model;
         if ( "PROFIL".equals( quiz.getTypeQuiz( ) ) )
         {
-            model = _serviceQuiz.calculateQuizStepProfile( quiz, nIdStep, mapResponsesCurrentStep, locale, plugin );
+            model = _quizService.calculateQuizStepProfile( quiz, nIdStep, mapResponsesCurrentStep, locale, plugin );
         }
         else
         {
-            model = _serviceQuiz.getStepResults( quiz, nIdStep, mapResponsesCurrentStep, locale, plugin );
+            model = _quizService.getStepResults( quiz, nIdStep, mapResponsesCurrentStep, locale, plugin );
         }
 
         if ( model == null )
@@ -391,7 +389,7 @@ public class QuizApp implements XPageApplication
         if ( QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nIdStep + 1, plugin ) == null )
         {
             model.put( MARK_HAS_NEXT_STEP, Boolean.FALSE );
-            _serviceQuiz.processEndOfQuiz( quiz, getUserAnswers( session ) );
+            _quizService.processEndOfQuiz( quiz, getUserAnswers( session ) );
         }
         else
         {
@@ -448,7 +446,7 @@ public class QuizApp implements XPageApplication
     private Map<String, String[]> saveAndValidateQuizAnswers( Quiz quiz, int nIdStep,
             Map<String, String[]> mapParameters, Locale locale, Plugin plugin, HttpSession session )
     {
-        Map<String, String[]> mapUserAnswers = _serviceQuiz.getUserAnswersForGroup( quiz.getIdQuiz( ), nIdStep,
+        Map<String, String[]> mapUserAnswers = _quizService.getUserAnswersForGroup( quiz.getIdQuiz( ), nIdStep,
                 mapParameters, locale, plugin );
         Map<String, String[]> mapOldAnswers = (Map<String, String[]>) session.getAttribute( SESSION_KEY_QUIZ_STEP );
         if ( mapOldAnswers != null )
@@ -474,15 +472,6 @@ public class QuizApp implements XPageApplication
     }
 
     /**
-     * Remove any answers of quiz made by the user
-     * @param session The session
-     */
-    private void resetUserAnswers( HttpSession session )
-    {
-        session.setAttribute( SESSION_KEY_QUIZ_STEP, null );
-    }
-
-    /**
      * Set the properties of the XPage to display a quiz
      * @param quiz The quiz displayed by the XPage
      * @param page The XPage to display
@@ -496,6 +485,15 @@ public class QuizApp implements XPageApplication
         Object[] args = { quiz.getName( ) };
         page.setPathLabel( MessageFormat.format( strPath, args ) );
         page.setTitle( MessageFormat.format( strTitle, args ) );
+    }
+
+    /**
+     * Remove any answers of quiz made by the user
+     * @param session The session
+     */
+    private void resetUserAnswers( HttpSession session )
+    {
+        session.setAttribute( SESSION_KEY_QUIZ_STEP, null );
     }
 
     /**

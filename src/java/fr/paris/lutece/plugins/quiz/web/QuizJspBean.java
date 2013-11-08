@@ -43,7 +43,7 @@ import fr.paris.lutece.plugins.quiz.business.QuizProfileHome;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestion;
 import fr.paris.lutece.plugins.quiz.business.QuizQuestionHome;
 import fr.paris.lutece.plugins.quiz.service.QuizService;
-import fr.paris.lutece.portal.service.admin.AdminUserService;
+import fr.paris.lutece.plugins.quiz.service.outputprocessor.QuizOutputProcessorManagementService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.PluginService;
@@ -185,7 +185,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+        model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
         model.put( MARK_IS_ACTIVE_CAPTCHA, PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_QUIZ, getLocale( ), model );
@@ -285,7 +285,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+        model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_QUIZ, getLocale( ), model );
 
@@ -429,6 +429,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
         AnswerHome.removeAnswersByQuestionList( questions, getPlugin( ) );
         QuizProfileHome.removeProfilesByQuiz( nIdQuiz, getPlugin( ) );
 
+        QuizOutputProcessorManagementService.getInstance( ).disableProcessors( nIdQuiz );
+
         // Go to the parent page
         return getHomeUrl( request );
     }
@@ -486,7 +488,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         model.put( MARK_FREE_HTML, bIsFreeHtml );
         model.put( MARK_INPUT_PREFIX, AppPropertiesService.getProperty( QuizService.PROPERTY_INPUT_PREFIX ) );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ) );
+        model.put( MARK_LOCALE, getLocale( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_GROUP, getLocale( ), model );
 
@@ -555,7 +557,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         model.put( MARK_GROUP, group );
         model.put( MARK_FREE_HTML, group.getIsFreeHtml( ) );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ) );
+        model.put( MARK_LOCALE, getLocale( ) );
         if ( group.getIsFreeHtml( ) )
         {
             model.put( MARK_INPUT_PREFIX, AppPropertiesService.getProperty( QuizService.PROPERTY_INPUT_PREFIX ) );
@@ -710,7 +712,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+        model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
         model.put( MARK_QUIZ, quiz );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_PROFIL, getLocale( ), model );
@@ -813,7 +815,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         model.put( MARK_QUIZ, quiz );
         model.put( MARK_PROFIL, profil );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
-        model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage( ) );
+        model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_PROFIL, getLocale( ), model );
 
