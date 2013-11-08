@@ -102,7 +102,7 @@ public final class QuizOutputProcessorManagementService
      */
     public boolean isProcessorEnabled( String strProcessorId, int nIdQuiz )
     {
-        String strDatastoreKey = getProcessorEnablementDatastoreKey( strProcessorId, nIdQuiz );
+        String strDatastoreKey = getProcessorEnablingDatastoreKey( strProcessorId, nIdQuiz );
         String strEnabled = DatastoreService.getDataValue( strDatastoreKey, null );
         if ( strEnabled == null )
         {
@@ -122,7 +122,7 @@ public final class QuizOutputProcessorManagementService
     {
         boolean isEnabled = isProcessorEnabled( strProcessorId, nIdQuiz );
         IQuizOutputProcessor processor = getProcessor( strProcessorId );
-        DatastoreService.setDataValue( getProcessorEnablementDatastoreKey( strProcessorId, nIdQuiz ),
+        DatastoreService.setDataValue( getProcessorEnablingDatastoreKey( strProcessorId, nIdQuiz ),
                 Boolean.toString( !isEnabled ) );
         if ( isEnabled )
         {
@@ -167,12 +167,12 @@ public final class QuizOutputProcessorManagementService
     }
 
     /**
-     * Get the datastore key to save
-     * @param strProcessorId
-     * @param nIdQuiz
-     * @return
+     * Get the datastore key to save the enabling of a processor for a quiz
+     * @param strProcessorId The id of the processor
+     * @param nIdQuiz The id of the quiz
+     * @return The datastore key
      */
-    private String getProcessorEnablementDatastoreKey( String strProcessorId, int nIdQuiz )
+    private String getProcessorEnablingDatastoreKey( String strProcessorId, int nIdQuiz )
     {
         return DATASTORE_KEY_QUIZ_OUTPUT_PROCESSOR_ENABLED + strProcessorId
                 + DATASTORE_KEY_QUIZ_OUTPUT_PROCESSOR_ENABLED_QUIZ + nIdQuiz;
