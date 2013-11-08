@@ -67,12 +67,30 @@ import org.apache.commons.lang.StringUtils;
  */
 public class QuizService
 {
+    /**
+     * Name of the bean of QuizService
+     */
     public static final String BEAN_QUIZ_SERVICE = "quiz.quizService";
 
+    /**
+     * Quiz key
+     */
     public static final String KEY_QUIZ = "quiz";
+    /**
+     * Error key
+     */
     public static final String KEY_ERROR = "error";
+    /**
+     * Name of the quiz plugin
+     */
     public static final String PLUGIN_NAME = "quiz";
+    /**
+     * Action parameter
+     */
     public static final String PARAMETER_ACTION = "action";
+    /**
+     * Input prefix property
+     */
     public static final String PROPERTY_INPUT_PREFIX = "quiz.freeHtml.inputPrefix";
 
     private static final String PROPERTY_MSG_MANY_GOOD_ANSWERS = "quiz.message.results.manyGoodAnswers";

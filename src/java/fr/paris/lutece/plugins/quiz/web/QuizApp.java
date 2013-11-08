@@ -165,6 +165,7 @@ public class QuizApp implements XPageApplication
      *             Message displayed if an exception occures
      * @return The page content.
      */
+    @SuppressWarnings( "unchecked" )
     public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin ) throws SiteMessageException
     {
         String strIdQuiz = request.getParameter( PARAMETER_ID_QUIZ );
