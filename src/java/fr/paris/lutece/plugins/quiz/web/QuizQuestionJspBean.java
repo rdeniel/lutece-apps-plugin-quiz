@@ -249,7 +249,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
         {
             MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) request;
             FileItem fileItem = multiPartRequest.getFile( PARAMETER_QUESTION_IMAGE );
-            if ( fileItem != null )
+            if ( fileItem != null && fileItem.get( ) != null && fileItem.get( ).length > 0 )
             {
                 QuizImage quizImage = new QuizImage( fileItem.get( ), fileItem.getContentType( ) );
                 QuizImageHome.insertImage( quizImage, getPlugin( ) );
@@ -343,7 +343,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             else
             {
                 FileItem fileItem = multiPartRequest.getFile( PARAMETER_QUESTION_IMAGE );
-                if ( fileItem != null )
+                if ( fileItem != null && fileItem.get( ) != null && fileItem.get( ).length > 0 )
                 {
                     QuizImage quizImage = new QuizImage( fileItem.get( ), fileItem.getContentType( ) );
                     // if there is no image associated with the given question, we create one
