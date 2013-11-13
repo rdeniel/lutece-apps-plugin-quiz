@@ -177,6 +177,10 @@ public class QuizApp implements XPageApplication
             int nIdQuiz = Integer.parseInt( strIdQuiz );
 
             Quiz quiz = _quizService.findQuizById( nIdQuiz );
+            if ( !quiz.isEnabled( ) )
+            {
+                return getQuizList( request.getLocale( ) );
+            }
 
             if ( quiz.getDisplayStepByStep( ) )
             {
