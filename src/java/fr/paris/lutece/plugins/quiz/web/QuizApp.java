@@ -89,6 +89,7 @@ public class QuizApp implements XPageApplication
     private static final String PARAMETER_OLD_STEP = "old_step";
     private static final String PARAMETER_ID_IMAGE = "id_image";
     private static final String ACTION_NEXT_STEP = "nextStep";
+    private static final String ACTION_BACK_FROM_ERROR = "backFromError";
 
     private static final String SESSION_KEY_QUIZ_STEP = "quiz.savedQuizResult";
 
@@ -196,34 +197,37 @@ public class QuizApp implements XPageApplication
                     nOldStepId = 0;
                 }
 
-                if ( nOldStepId > 0 )
+                if ( !StringUtils.equals( ACTION_BACK_FROM_ERROR, strAction ) )
                 {
-                    // We get responses of the user, and save them into the session
-                    Map<String, String[]> mapResponsesCurrentStep = null;
-                    if ( !StringUtils.equals( ACTION_NEXT_STEP, strAction ) )
+                    if ( nOldStepId > 0 )
                     {
-                        mapResponsesCurrentStep = saveAndValidateQuizAnswers( quiz, nOldStepId,
-                                request.getParameterMap( ), request.getLocale( ), plugin, request.getSession( true ) );
-                        // We check that the map does not contain errors
-                        String[] strError = mapResponsesCurrentStep.get( QuizService.KEY_ERROR );
-
-                        if ( strError != null && strError.length > 0 )
+                        // We get responses of the user, and save them into the session
+                        Map<String, String[]> mapResponsesCurrentStep = null;
+                        if ( !StringUtils.equals( ACTION_NEXT_STEP, strAction ) )
                         {
-                            return getErrorPage( quiz.getIdQuiz( ), strError[0], nOldStepId, request.getLocale( ) );
+                            mapResponsesCurrentStep = saveAndValidateQuizAnswers( quiz, nOldStepId,
+                                    request.getParameterMap( ), request.getLocale( ), plugin, request.getSession( true ) );
+                            // We check that the map does not contain errors
+                            String[] strError = mapResponsesCurrentStep.get( QuizService.KEY_ERROR );
+
+                            if ( strError != null && strError.length > 0 )
+                            {
+                                return getErrorPage( quiz.getIdQuiz( ), strError[0], nOldStepId, request.getLocale( ) );
+                            }
+                        }
+
+                        // If we must display the result of the current step
+                        if ( quiz.getDisplayResultAfterEachStep( ) && StringUtils.equals( strAction, PARAMETER_RESULTS ) )
+                        {
+                            page = getQuizStepResults( quiz, nOldStepId, request.getLocale( ), mapResponsesCurrentStep,
+                                    request.getSession( ), plugin );
                         }
                     }
-
-                    // If we must display the result of the current step
-                    if ( quiz.getDisplayResultAfterEachStep( ) && StringUtils.equals( strAction, PARAMETER_RESULTS ) )
+                    else
                     {
-                        page = getQuizStepResults( quiz, nOldStepId, request.getLocale( ), mapResponsesCurrentStep,
-                                request.getSession( ), plugin );
+                        // this is the first step of the quiz, so we remove any answers to quiz made by the user
+                        resetUserAnswers( request.getSession( ) );
                     }
-                }
-                else
-                {
-                    // this is the first step of the quiz, so we remove any answers to quiz made by the user
-                    resetUserAnswers( request.getSession( ) );
                 }
 
                 if ( page == null )
@@ -425,9 +429,9 @@ public class QuizApp implements XPageApplication
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_ERROR, strError );
         model.put( MARK_ID_QUIZ, Integer.toString( nIdQuiz ) );
-        if ( nStepToRedirect > 0 )
+        if ( nStepToRedirect > 1 )
         {
-            model.put( PARAMETER_OLD_STEP, nStepToRedirect );
+            model.put( PARAMETER_OLD_STEP, nStepToRedirect - 1 );
         }
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_ERROR, locale, model );

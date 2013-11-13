@@ -3,8 +3,8 @@
         <div class="alert alert-error">
 			${error}
 		</div>
-		<a href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz_id}<#if old_step?? && old_step &gt; 0>&old_step=${old_step}&action=backFromError</#if>" class="btn" onclick="javascript:history.go(-1);" >
-			<i class="icon-ok"></i>&nbsp;#i18n{quiz.quiz_error.buttonReturn}
+		<a href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz_id}<#if old_step?? && old_step &gt; 0>&old_step=${old_step}&action=backFromError</#if>" class="btn btn-small btn-primary" onclick="javascript:history.go(-1);" >
+			<i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.quiz_error.buttonReturn}
 		</a>
     </div>
 </div>
