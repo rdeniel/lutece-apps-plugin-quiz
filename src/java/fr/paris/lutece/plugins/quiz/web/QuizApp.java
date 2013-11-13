@@ -209,7 +209,7 @@ public class QuizApp implements XPageApplication
 
                         if ( strError != null && strError.length > 0 )
                         {
-                            return getErrorPage( quiz.getIdQuiz( ), strError[0], request.getLocale( ) );
+                            return getErrorPage( quiz.getIdQuiz( ), strError[0], nOldStepId, request.getLocale( ) );
                         }
                     }
 
@@ -344,7 +344,7 @@ public class QuizApp implements XPageApplication
 
         if ( strError != null )
         {
-            return getErrorPage( quiz.getIdQuiz( ), strError, locale );
+            return getErrorPage( quiz.getIdQuiz( ), strError, 0, locale );
         }
 
         _quizService.processEndOfQuiz( quiz, mapParameters );
@@ -414,15 +414,21 @@ public class QuizApp implements XPageApplication
      * Returns an error page
      * @param nIdQuiz The id of the quiz
      * @param strError The error message
+     * @param nStepToRedirect The id of the step to redirect the user to, or 0
+     *            to redirect the user to the start of the quiz
      * @param locale The current locale
      * @return The XPage
      */
-    protected XPage getErrorPage( int nIdQuiz, String strError, Locale locale )
+    protected XPage getErrorPage( int nIdQuiz, String strError, int nStepToRedirect, Locale locale )
     {
         XPage page = new XPage( );
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_ERROR, strError );
         model.put( MARK_ID_QUIZ, Integer.toString( nIdQuiz ) );
+        if ( nStepToRedirect > 0 )
+        {
+            model.put( PARAMETER_OLD_STEP, nStepToRedirect );
+        }
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_ERROR, locale, model );
 
