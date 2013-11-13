@@ -17,10 +17,10 @@ DROP TABLE IF EXISTS quiz_question;
 
 CREATE TABLE quiz_question (
   id_question INT NOT NULL,
-  label_question varchar(255) NOT NULL,
+  label_question TEXT NOT NULL,
   id_quiz INT NOT NULL,
   id_group INT NOT NULL,
-  explaination varchar(255) NULL,
+  explaination TEXT NULL,
   id_image INT default 0,
   PRIMARY KEY  (id_question)
 );
@@ -32,8 +32,8 @@ DROP TABLE IF EXISTS quiz_quiz;
 CREATE TABLE quiz_quiz (
   id_quiz INT NOT NULL,
   label_quiz varchar(50) NOT NULL,
-  introduction varchar(255) default NULL,
-  conclusion varchar(255) default NULL,
+  introduction TEXT default NULL,
+  conclusion TEXT default NULL,
   status_quiz INT default '0',
   date_begin_disponibility date default NULL,
   date_end_disponibility date default NULL,
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS quiz_group;
 CREATE TABLE quiz_group (
   id_group INT NOT NULL,
   label_group varchar(50) NOT NULL,
-  subject varchar(255) default NULL,
+  subject TEXT default NULL,
   id_quiz INT NOT NULL,
   pos_group INT NOT NULL,
   is_free_html SMALLINT DEFAULT 0,
