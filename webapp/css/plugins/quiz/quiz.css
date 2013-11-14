@@ -17,3 +17,9 @@
     width: 30%;
 }
 
+.quiz-img-question 
+{
+    height: 60px;
+    width: 60px;
+    margin-bottom: 20px;
+}
