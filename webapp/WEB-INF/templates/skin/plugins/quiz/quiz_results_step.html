@@ -34,6 +34,10 @@
                     </#if>
                 </#list>
             </ul>
+              <#if group.idImage &gt; 0>
+                  <img src="jsp/site/plugins/quiz/DoDownloadQuizImage.jsp?id_image=${group.idImage}" class="span pull-right quiz-img-question"/>
+                  <br /><br /><br /><br />
+              </#if>
             <#if hasNextStep?? && hasNextStep>
                 <a class="btn btn-primary btn-small pull-right" href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}&old_step=${old_step}&action=nextStep">
                     <i class="icon-arrow-right icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelNext}

@@ -407,31 +407,10 @@ public class QuizService
             mapQuestionImages.put( strQuestionId, question.getIdImage( ) );
         }
 
-        String strMessage;
-
-        switch ( nScore )
-        {
-        case 0:
-            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, locale );
-
-            break;
-
-        case 1:
-            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, locale );
-
-            break;
-
-        default:
-            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, locale );
-            break;
-        }
-
-        Object[] args = { nScore, questionsList.size( ) };
-        String strScoreMessage = MessageFormat.format( strMessage, args );
-        model.put( MARK_SCORE_MESSAGE, strScoreMessage );
         model.put( MARK_SCORE, nScore );
         model.put( MARK_QUESTIONS_COUNT, questionsList.size( ) );
         model.put( KEY_QUIZ, quiz );
+        model.put( MARK_GROUP, group );
         model.put( MARK_ANSWERS_LIST, listUserAnswers );
         model.put( MARK_QUESTION_IMAGES, mapQuestionImages );
 
