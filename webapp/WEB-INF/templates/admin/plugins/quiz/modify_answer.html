@@ -27,7 +27,7 @@
             <div class="control-group">
             <label class="label-group" for="answer_label">#i18n{quiz.create_answer.titleValidity} *</label>
                 <div class="controls">
-                    <@combo name="validity_id" default_value="" items=yesno_list  />
+                    <@combo name="validity_id" default_value="${answer.valid}" items=yesno_list  />
                 </div>
             </div>
         </#if>
