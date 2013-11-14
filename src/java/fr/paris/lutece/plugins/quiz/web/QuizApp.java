@@ -83,6 +83,9 @@ public class QuizApp implements XPageApplication
     private static final String PROPERTY_QUIZ_RESULTS_PAGE_TITLE = "quiz.xpage.pageQuizResultsTitle";
     private static final String PROPERTY_QUIZ_ERROR_PAGE_PATH = "quiz.xpage.pageQuizErrorPath";
     private static final String PROPERTY_QUIZ_ERROR_PAGE_TITLE = "quiz.xpage.pageQuizErrorTitle";
+    private static final String PROPERTY_MSG_MANY_GOOD_ANSWERS = "quiz.message.results.manyGoodAnswers";
+    private static final String PROPERTY_MSG_ONE_GOOD_ANSWER = "quiz.message.results.oneGoodAnswer";
+    private static final String PROPERTY_MSG_NO_GOOD_ANSWER = "quiz.message.results.noGoodAnswer";
 
     private static final String PARAMETER_RESULTS = "results";
     private static final String PARAMETER_ID_QUIZ = "quiz_id";
@@ -96,6 +99,9 @@ public class QuizApp implements XPageApplication
     private static final String MARK_ERROR = "error";
     private static final String MARK_ID_QUIZ = "quiz_id";
     private static final String MARK_HAS_NEXT_STEP = "hasNextStep";
+    private static final String MARK_SCORE = "score";
+    private static final String MARK_QUESTIONS_COUNT = "questions_count";
+    private static final String MARK_SCORE_MESSAGE = "score_message";
 
     private QuizService _quizService = SpringContextService.getBean( QuizService.BEAN_QUIZ_SERVICE );
 
@@ -194,6 +200,9 @@ public class QuizApp implements XPageApplication
                 }
                 else
                 {
+                    request.getSession( ).setAttribute( MARK_SCORE, 0 );
+                    request.getSession( ).setAttribute( MARK_QUESTIONS_COUNT, 0 );
+
                     nOldStepId = 0;
                 }
 
@@ -233,7 +242,7 @@ public class QuizApp implements XPageApplication
                 if ( page == null )
                 {
                     // Otherwise, we display the next step
-                    page = getQuizNextStep( quiz, nOldStepId, request.getLocale( ) );
+                    page = getQuizNextStep( quiz, nOldStepId, request );
                     if ( page == null )
                     {
                         page = getQuizResults( quiz, request.getLocale( ), getUserAnswers( request.getSession( ) ),
@@ -304,7 +313,7 @@ public class QuizApp implements XPageApplication
      * @param locale The locale
      * @return The XPage to display
      */
-    protected XPage getQuizNextStep( Quiz quiz, int nOldStepId, Locale locale )
+    protected XPage getQuizNextStep( Quiz quiz, int nOldStepId, HttpServletRequest request )
     {
         XPage page = new XPage( );
         Map<String, Object> model = _quizService.getQuizNextStep( quiz, nOldStepId );
@@ -313,10 +322,46 @@ public class QuizApp implements XPageApplication
         {
             return null;
         }
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST_STEP, locale, model );
+
+        Quiz quizModel = (Quiz) ( _quizService.getQuiz( quiz.getIdQuiz( ) ).get( QuizService.KEY_QUIZ ) );
+
+        int nSizeQuiz = quizModel.getQuestions( ).size( );
+        int nTotalQuestion = (Integer) request.getSession( ).getAttribute( MARK_QUESTIONS_COUNT );
+
+        if ( nTotalQuestion == nSizeQuiz )
+        {
+            // The quiz is over
+
+            int nScore = (Integer) request.getSession( ).getAttribute( MARK_SCORE );
+
+            String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, request.getLocale( ) );
+
+            switch ( nScore )
+            {
+            case 0:
+                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, request.getLocale( ) );
+
+                break;
+
+            case 1:
+                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, request.getLocale( ) );
+
+                break;
+
+            default:
+                break;
+            }
+
+            Object[] args = { nScore, nTotalQuestion };
+            String strScoreMessage = MessageFormat.format( strMessage, args );
+            model.put( MARK_SCORE_MESSAGE, strScoreMessage );
+        }
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST_STEP, request.getLocale( ),
+                model );
         page.setContent( template.getHtml( ) );
 
-        setQuizProperties( quiz, page, model, locale );
+        setQuizProperties( quiz, page, model, request.getLocale( ) );
 
         return page;
     }
@@ -385,6 +430,43 @@ public class QuizApp implements XPageApplication
         else
         {
             model = _quizService.getStepResults( quiz, nIdStep, mapResponsesCurrentStep, locale, plugin );
+
+            if ( model != null )
+            {
+                int nNewScore = (Integer) model.get( MARK_SCORE );
+                int nOldScore = (Integer) session.getAttribute( MARK_SCORE );
+                int nScore = nNewScore + nOldScore;
+
+                int nTotalNewQuestion = (Integer) model.get( MARK_QUESTIONS_COUNT );
+                int nTotalOldQuestion = (Integer) session.getAttribute( MARK_QUESTIONS_COUNT );
+                int nTotalQuestion = nTotalNewQuestion + nTotalOldQuestion;
+
+                session.setAttribute( MARK_SCORE, nScore );
+                session.setAttribute( MARK_QUESTIONS_COUNT, nTotalQuestion );
+
+                String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, locale );
+
+                switch ( nScore )
+                {
+                case 0:
+                    strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, locale );
+
+                    break;
+
+                case 1:
+                    strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, locale );
+
+                    break;
+
+                default:
+                    break;
+                }
+
+                Object[] args = { nScore, nTotalQuestion };
+                String strScoreMessage = MessageFormat.format( strMessage, args );
+                model.put( MARK_SCORE_MESSAGE, strScoreMessage );
+
+            }
         }
 
         if ( model == null )

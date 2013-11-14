@@ -14,7 +14,7 @@
             <ul>
 	            <#list answers_list as answer>
 		            <li class="error">
-		                <div class="">#i18n{quiz.view_result.question} ${answer.questionId}: ${answer.question}</div>
+		                <div class="">${answer.question}</div>
 		                <#if !answer.isValid>
 		                	<div class="alert alert-error">
 		                		<span class="badge badge-important"><i class="icon-remove">&nbsp;</i>&nbsp;#i18n{quiz.view_result.labelFalse}</span>&nbsp;
