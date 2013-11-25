@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.quiz.web;
 
+import fr.paris.lutece.plugins.quiz.business.QuestionGroup;
 import fr.paris.lutece.plugins.quiz.business.QuestionGroupHome;
 import fr.paris.lutece.plugins.quiz.business.Quiz;
 import fr.paris.lutece.plugins.quiz.business.images.QuizImage;
@@ -102,6 +103,7 @@ public class QuizApp implements XPageApplication
     private static final String MARK_SCORE = "score";
     private static final String MARK_QUESTIONS_COUNT = "questions_count";
     private static final String MARK_SCORE_MESSAGE = "score_message";
+    private static final String MARK_GROUP = "group";
 
     private QuizService _quizService = SpringContextService.getBean( QuizService.BEAN_QUIZ_SERVICE );
 
@@ -325,10 +327,13 @@ public class QuizApp implements XPageApplication
 
         Quiz quizModel = (Quiz) ( _quizService.getQuiz( quiz.getIdQuiz( ) ).get( QuizService.KEY_QUIZ ) );
 
+        int nIdLastQuizGroup = QuestionGroupHome.findLastByQuiz( quiz.getIdQuiz( ),
+                PluginService.getPlugin( QuizService.PLUGIN_NAME ) );
         int nSizeQuiz = quizModel.getQuestions( ).size( );
         int nTotalQuestion = (Integer) request.getSession( ).getAttribute( MARK_QUESTIONS_COUNT );
 
-        if ( nTotalQuestion == nSizeQuiz )
+        if ( nTotalQuestion == nSizeQuiz
+                && nIdLastQuizGroup == ( (QuestionGroup) ( model.get( MARK_GROUP ) ) ).getIdGroup( ) )
         {
             // The quiz is over
 

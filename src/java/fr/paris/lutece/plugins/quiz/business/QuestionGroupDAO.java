@@ -65,6 +65,9 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
     private static final String SQL_QUERY_SELECT_BY_POSITION = "SELECT id_group, label_group, subject, id_quiz, pos_group, is_free_html, html_content, id_image FROM quiz_group WHERE pos_group > ? AND id_quiz = ?";
     private static final String SQL_QUERY_NEW_POSITION_GROUP = "SELECT max( pos_group ) FROM quiz_group WHERE id_quiz = ?";
 
+    private static final String SQL_FIND_LAST_ID = "SELECT g.id_group FROM quiz_group g WHERE g.pos_group = "
+            + "(SELECT MAX(g2.pos_group) FROM quiz_group g2 WHERE g2.id_quiz = ?);";
+
     /**
      * Generates a new primary key
      * @param plugin The Plugin
@@ -440,5 +443,25 @@ public final class QuestionGroupDAO implements IQuestionGroupDAO
             group.setPositionGroup( nNewPosition );
             store( group, plugin );
         }
+    }
+
+    @Override
+    public int findLastByQuiz( int nIdQuiz, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_FIND_LAST_ID, plugin );
+        daoUtil.setInt( 1, nIdQuiz );
+
+        daoUtil.executeQuery( );
+
+        int nKey = 0;
+
+        if ( daoUtil.next( ) )
+        {
+            nKey = daoUtil.getInt( 1 );
+        }
+
+        daoUtil.free( );
+
+        return nKey;
     }
 }

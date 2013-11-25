@@ -177,4 +177,15 @@ public final class QuestionGroupHome
     {
         _dao.changePositionDown( nIdQuiz, group, plugin );
     }
+
+    /**
+     * Find the id of last group in quiz
+     * @param nIdQuiz the quiz id
+     * @param plugin the plugin
+     * @return the id of corresponding group
+     */
+    public static int findLastByQuiz( int nIdQuiz, Plugin plugin )
+    {
+        return _dao.findLastByQuiz( nIdQuiz, plugin );
+    }
 }

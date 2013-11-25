@@ -27,7 +27,8 @@
 													<#list question.answers as answer>
 														<#if question.idQuestion == answer.idQuestion>
 															<label class="radio inline" for="${answer.idAnswer}">&nbsp;${answer.labelAnswer}</label>
-															<input type="radio" name="${question.idQuestion}" id="${answer.idAnswer}" value="${answer.idAnswer}">
+                                                            <input class="pull-left" type="radio" name="${question.idQuestion}" id="${answer.idAnswer}" value="${answer.idAnswer}">
+                                                            <br />
 														</#if>
 													</#list>
 												</div>

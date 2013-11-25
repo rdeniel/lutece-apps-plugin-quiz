@@ -125,4 +125,12 @@ public interface IQuestionGroupDAO
      * @return The requested group, or null if no group has the given position
      */
     QuestionGroup selectQuestionGroupByPosition( int nIdQuiz, int nPosition, Plugin plugin );
+
+    /**
+     * Find the id of last group in quiz
+     * @param nIdQuiz the quiz id
+     * @param plugin the plugin
+     * @return the id of corresponding group
+     */
+    int findLastByQuiz( int nIdQuiz, Plugin plugin );
 }
