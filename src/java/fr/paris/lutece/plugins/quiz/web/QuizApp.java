@@ -312,7 +312,7 @@ public class QuizApp implements XPageApplication
      * @param quiz The quiz to display
      * @param nOldStepId The id of the last displayed step of the quiz, or 0 if
      *            no step was displayed
-     * @param locale The locale
+     * @param request The request
      * @return The XPage to display
      */
     protected XPage getQuizNextStep( Quiz quiz, int nOldStepId, HttpServletRequest request )
@@ -360,6 +360,8 @@ public class QuizApp implements XPageApplication
             Object[] args = { nScore, nTotalQuestion };
             String strScoreMessage = MessageFormat.format( strMessage, args );
             model.put( MARK_SCORE_MESSAGE, strScoreMessage );
+            _quizService.processEndOfQuiz( quiz, getUserAnswers( request.getSession( ) ) );
+            resetUserAnswers( request.getSession( ) );
         }
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST_STEP, request.getLocale( ),
@@ -595,7 +597,7 @@ public class QuizApp implements XPageApplication
      */
     private void resetUserAnswers( HttpSession session )
     {
-        session.setAttribute( SESSION_KEY_QUIZ_STEP, null );
+        session.removeAttribute( SESSION_KEY_QUIZ_STEP );
     }
 
     /**
