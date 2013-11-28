@@ -188,4 +188,17 @@ public final class QuestionGroupHome
     {
         return _dao.findLastByQuiz( nIdQuiz, plugin );
     }
+
+    /**
+     * Check if a quiz has a free HTML group that will display the result of the
+     * quiz
+     * @param nIdQuiz The id of the quiz
+     * @param plugin The plugin
+     * @return True if the quiz has a free HTML group that will display the
+     *         result of the quiz, false otherwise
+     */
+    public static boolean hasGroupDisplayScore( int nIdQuiz, Plugin plugin )
+    {
+        return _dao.hasGroupDisplayScore( nIdQuiz, plugin );
+    }
 }

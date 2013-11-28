@@ -99,7 +99,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_CONFIRM_DELETE_QUIZ_PROFIL = "quiz.remove_question.confirmRemoveProfil";
     private static final String PROPERTY_IMPOSSIBLE_DELETE_QUIZ_PROFIL = "quiz.remove_question.impossibleRemoveProfil";
     private static final String PROPERTY_PAGE_TITLE_CREATE_PROFIL = "quiz.create_profil.pageTitle";
+
     private static final String MESSAGE_CANNOT_DELETE_QUIZ = "quiz.message_quiz.cannotDeleteQuiz";
+    private static final String MESSAGE_ONLY_ONE_GROUP_CAN_DISPLAY_RESULT = "quiz.message.group.onlyOneGroupDisplayResult";
 
     //Jsps
     private static final String JSP_DO_REMOVE_QUIZ = "jsp/admin/plugins/quiz/DoRemoveQuiz.jsp";
@@ -136,6 +138,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_HTML_CONTENT = "html_content";
     private static final String PARAMETER_GROUP_IMAGE = "group_image";
     private static final String PARAMETER_REMOVE_IMAGE = "remove_image";
+    private static final String PARAMETER_DISPLAY_SCORE = "display_score";
 
     // Templates
     private static final String TEMPLATE_MANAGE_QUIZ = "admin/plugins/quiz/manage_quiz.html";
@@ -522,6 +525,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
         group.setIsFreeHtml( bIsFreeHtml );
         if ( bIsFreeHtml )
         {
+            boolean bDisplayScore = StringUtils.isNotEmpty( request.getParameter( PARAMETER_DISPLAY_SCORE ) );
+            group.setDisplayScore( bDisplayScore );
             String strHtmlContent = request.getParameter( PARAMETER_HTML_CONTENT );
             group.setHtmlContent( strHtmlContent );
         }
@@ -604,6 +609,17 @@ public class QuizJspBean extends PluginAdminPageJspBean
         group.setSubject( strGroupSubject );
         if ( group.getIsFreeHtml( ) )
         {
+            boolean bDisplayScore = StringUtils.isNotEmpty( request.getParameter( PARAMETER_DISPLAY_SCORE ) );
+
+            // If the group was not a group that display result, and we set it to display result, we check that another group has not already this function for this quiz
+            if ( bDisplayScore && !group.getDisplayScore( )
+                    && QuestionGroupHome.hasGroupDisplayScore( nIdQuiz, getPlugin( ) ) )
+            {
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_GROUP_CAN_DISPLAY_RESULT,
+                        AdminMessage.TYPE_STOP );
+            }
+
+            group.setDisplayScore( bDisplayScore );
             String strHtmlContent = request.getParameter( PARAMETER_HTML_CONTENT );
             group.setHtmlContent( strHtmlContent );
         }

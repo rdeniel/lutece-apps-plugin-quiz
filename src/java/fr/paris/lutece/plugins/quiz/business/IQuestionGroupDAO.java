@@ -133,4 +133,14 @@ public interface IQuestionGroupDAO
      * @return the id of corresponding group
      */
     int findLastByQuiz( int nIdQuiz, Plugin plugin );
+
+    /**
+     * Check if a quiz has a free HTML group that will display the score of the
+     * quiz
+     * @param nIdQuiz The id of the quiz
+     * @param plugin The plugin
+     * @return True if the quiz has a free HTML group that will display the
+     *         result of the quiz, false otherwise
+     */
+    boolean hasGroupDisplayScore( int nIdQuiz, Plugin plugin );
 }

@@ -60,6 +60,7 @@ CREATE TABLE quiz_group (
   is_free_html SMALLINT DEFAULT 0,
   html_content TEXT default NULL,
   id_image INT default 0,
+  display_score SMALLINT DEFAULT 0,
   PRIMARY KEY  (id_group)
 );
 

@@ -47,6 +47,7 @@ public class QuestionGroup
     private boolean _bIsFreeHtml;
     private String _strHtmlContent;
     private int _nIdImage;
+    private boolean _bDisplayScore;
 
     /**
      * Returns the IdGroup
@@ -196,5 +197,26 @@ public class QuestionGroup
     public void setIdImage( int nIdImage )
     {
         _nIdImage = nIdImage;
+    }
+
+    /**
+     * Check if the score of the quiz should be displayed in this group. Only
+     * free HTML group can display scores
+     * @return True if the group should display the score of the quiz, false
+     *         otherwise.
+     */
+    public boolean getDisplayScore( )
+    {
+        return _bIsFreeHtml && _bDisplayScore;
+    }
+
+    /**
+     * Indicates that this group must display the score of the quiz or not
+     * @param bDisplayResult True if the group must display the score of the
+     *            quiz, false otherwise
+     */
+    public void setDisplayScore( boolean bDisplayResult )
+    {
+        _bDisplayScore = bDisplayResult;
     }
 }

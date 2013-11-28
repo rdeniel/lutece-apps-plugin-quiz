@@ -104,6 +104,7 @@ public class QuizApp implements XPageApplication
     private static final String MARK_QUESTIONS_COUNT = "questions_count";
     private static final String MARK_SCORE_MESSAGE = "score_message";
     private static final String MARK_GROUP = "group";
+    private static final String MARK_IS_LAST_GROUP = "is_last_group";
 
     private QuizService _quizService = SpringContextService.getBean( QuizService.BEAN_QUIZ_SERVICE );
 
@@ -327,16 +328,25 @@ public class QuizApp implements XPageApplication
 
         Quiz quizModel = (Quiz) ( _quizService.getQuiz( quiz.getIdQuiz( ) ).get( QuizService.KEY_QUIZ ) );
 
-        int nIdLastQuizGroup = QuestionGroupHome.findLastByQuiz( quiz.getIdQuiz( ),
-                PluginService.getPlugin( QuizService.PLUGIN_NAME ) );
-        int nSizeQuiz = quizModel.getQuestions( ).size( );
-        int nTotalQuestion = (Integer) request.getSession( ).getAttribute( MARK_QUESTIONS_COUNT );
+        QuestionGroup group = (QuestionGroup) model.get( MARK_GROUP );
 
-        if ( nTotalQuestion == nSizeQuiz
-                && nIdLastQuizGroup == ( (QuestionGroup) ( model.get( MARK_GROUP ) ) ).getIdGroup( ) )
+        boolean bDisplayScore = group.getDisplayScore( );
+        Plugin plugin = PluginService.getPlugin( QuizService.PLUGIN_NAME );
+        int nTotalQuestion = (Integer) request.getSession( ).getAttribute( MARK_QUESTIONS_COUNT );
+        int nIdLastQuizGroup = QuestionGroupHome.findLastByQuiz( quiz.getIdQuiz( ), plugin );
+        if ( !bDisplayScore )
+        {
+            // If there is no group that will display the result, then the last group must display it
+            if ( !QuestionGroupHome.hasGroupDisplayScore( group.getIdQuiz( ), plugin ) )
+            {
+                int nSizeQuiz = quizModel.getQuestions( ).size( );
+                bDisplayScore = nTotalQuestion == nSizeQuiz && nIdLastQuizGroup == group.getIdGroup( );
+            }
+        }
+
+        if ( bDisplayScore )
         {
             // The quiz is over
-
             int nScore = (Integer) request.getSession( ).getAttribute( MARK_SCORE );
 
             String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, request.getLocale( ) );
@@ -363,6 +373,8 @@ public class QuizApp implements XPageApplication
             _quizService.processEndOfQuiz( quiz, getUserAnswers( request.getSession( ) ) );
             resetUserAnswers( request.getSession( ) );
         }
+
+        model.put( MARK_IS_LAST_GROUP, nIdLastQuizGroup == group.getIdGroup( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST_STEP, request.getLocale( ),
                 model );

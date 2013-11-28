@@ -52,7 +52,7 @@
                         <pre>${quiz.conclusion}</pre>
                      </#if>
                  </#if>
-                 <#if !score_message?has_content>
+                 <#if !is_last_group>
                      <button type="submit" class="btn btn-small btn-primary pull-right">
                            <i class="icon-arrow-right icon-white"></i>&nbsp;#i18n{portal.util.labelNext}
                      </button>
