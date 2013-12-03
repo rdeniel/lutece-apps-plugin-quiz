@@ -370,7 +370,7 @@ public class QuizApp implements XPageApplication
             Object[] args = { nScore, nTotalQuestion };
             String strScoreMessage = MessageFormat.format( strMessage, args );
             model.put( MARK_SCORE_MESSAGE, strScoreMessage );
-            _quizService.processEndOfQuiz( quiz, getUserAnswers( request.getSession( ) ) );
+            _quizService.processEndOfQuiz( quiz, "" + nScore, getUserAnswers( request.getSession( ) ) );
             resetUserAnswers( request.getSession( ) );
         }
 
@@ -415,7 +415,7 @@ public class QuizApp implements XPageApplication
             return getErrorPage( quiz.getIdQuiz( ), strError, 0, locale );
         }
 
-        _quizService.processEndOfQuiz( quiz, mapParameters );
+        _quizService.processEndOfQuiz( quiz, "" + model.get( MARK_SCORE ), mapParameters );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUIZ_RESULTS, locale, model );
 
@@ -483,6 +483,7 @@ public class QuizApp implements XPageApplication
 
                 Object[] args = { nScore, nTotalQuestion };
                 String strScoreMessage = MessageFormat.format( strMessage, args );
+                model.put( MARK_SCORE, nScore );
                 model.put( MARK_SCORE_MESSAGE, strScoreMessage );
 
             }
@@ -499,7 +500,7 @@ public class QuizApp implements XPageApplication
         if ( QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nIdStep + 1, plugin ) == null )
         {
             model.put( MARK_HAS_NEXT_STEP, Boolean.FALSE );
-            _quizService.processEndOfQuiz( quiz, getUserAnswers( session ) );
+            _quizService.processEndOfQuiz( quiz, "" + model.get( MARK_SCORE ), getUserAnswers( session ) );
         }
         else
         {

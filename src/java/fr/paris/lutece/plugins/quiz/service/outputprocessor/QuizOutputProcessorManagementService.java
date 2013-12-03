@@ -155,13 +155,13 @@ public final class QuizOutputProcessorManagementService
      * @param mapAnswers the map containing answers
      * @param nIdQuiz The id of the answered quiz
      */
-    public void processEnabledProcessors( Map<String, String[]> mapAnswers, int nIdQuiz )
+    public void processEnabledProcessors( Map<String, String[]> mapAnswers, String strScore, int nIdQuiz )
     {
         for ( IQuizOutputProcessor processor : getProcessorsList( ) )
         {
             if ( isProcessorEnabled( processor.getProcessorId( ), nIdQuiz ) )
             {
-                processor.doProcessOutputProcessor( mapAnswers, nIdQuiz );
+                processor.doProcessOutputProcessor( mapAnswers, strScore, nIdQuiz );
             }
         }
     }

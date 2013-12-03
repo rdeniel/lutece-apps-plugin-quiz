@@ -482,16 +482,20 @@ public class QuizService
             }
         }
 
+        StringBuilder strProfile = new StringBuilder( );
+
         for ( Integer profileId : profilesId )
         {
             QuizProfile profile = QuizProfileHome.findByPrimaryKey( profileId, getPlugin( ) );
             profilesList.add( profile );
+            strProfile.append( profile.getName( ) ).append( "," );
         }
 
         String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_PROFILE, locale );
 
         model.put( MARK_MESSAGE, strMessage );
         model.put( KEY_QUIZ, quiz );
+        model.put( MARK_SCORE, strProfile.toString( ) );
         model.put( MARK_PROFILES_LIST, profilesList );
 
         return model;
@@ -580,9 +584,10 @@ public class QuizService
     /**
      * Process the end of the quiz
      * @param quiz The quiz
+     * @param nScore the score
      * @param userAnswers The answers made by the use
      */
-    public void processEndOfQuiz( Quiz quiz, Map<String, String[]> userAnswers )
+    public void processEndOfQuiz( Quiz quiz, String strScore, Map<String, String[]> userAnswers )
     {
         Map<String, String[]> mapAnswersModified = new HashMap<String, String[]>( userAnswers.size( ) );
         mapAnswersModified.putAll( userAnswers );
@@ -608,7 +613,7 @@ public class QuizService
 
         mapAnswersModified.remove( PARAMETER_ACTION );
 
-        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( mapAnswersModified,
+        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( mapAnswersModified, strScore,
                 quiz.getIdQuiz( ) );
     }
 }

@@ -36,9 +36,9 @@ INSERT INTO quiz_answer VALUES
 --
 
 INSERT INTO quiz_group VALUES  
-    (2,'Lutece et le Libre','Default',1,1,0,null,null),
-    (3,'Socle technique','',1,2,0,null,null),
-    (4,'Utilisation','Votre utilisateur de Lutèce',2,1,0,null,null);
+    (2,'Lutece et le Libre','Default',1,1,0,null,null,null),
+    (3,'Socle technique','',1,2,0,null,null,null),
+    (4,'Utilisation','Votre utilisateur de Lutèce',2,1,0,null,null,null);
 
 --
 -- Dumping data for table `quiz_question`

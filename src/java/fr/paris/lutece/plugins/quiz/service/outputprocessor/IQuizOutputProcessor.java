@@ -50,9 +50,10 @@ public interface IQuizOutputProcessor
      *            Keys of the map can either be ids of questions or keys of free
      *            HTML parameters. Values of the map are data entered by the
      *            user
+     * @param strScore the score
      * @param nIdQuiz The id of the quiz
      */
-    void doProcessOutputProcessor( Map<String, String[]> mapAnswers, int nIdQuiz );
+    void doProcessOutputProcessor( Map<String, String[]> mapAnswers, String strScore, int nIdQuiz );
 
     /**
      * Get the HTML to display the configuration form of the processor for a
