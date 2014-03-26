@@ -563,7 +563,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             profilId = Integer.parseInt( request.getParameter( PARAMETER_ID_PROFIL ) );
         }
 
-        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
+        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 )
+                && !answer.isCorrect( ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
         }
