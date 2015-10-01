@@ -1,68 +1,73 @@
-<div class="row-fluid">
-	<div class="span12" >
-		<fieldset>
-    		<legend>
-		    	<#if freehtml>
-		    		#i18n{quiz.modify_group.pageTitleFreeHtml}
-		    	<#else>
-		    		#i18n{quiz.modify_group.pageTitle}
-		    	</#if>
-		    </legend>
-			<form class="form-horizontal" enctype="multipart/form-data" name="modify_group" action="jsp/admin/plugins/quiz/DoModifyGroup.jsp"  method="post">
-				<input type="hidden" id="group_id" name="group_id" value="${group.idGroup}"/>
-		        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
-		        <div class="control-group">
-				<label class="control-label" for="group_name" >#i18n{quiz.create_group.name} * :</label>
-		            <div class="controls">
-						<input type="text" id="group_name" name="group_name" class="input-large" maxlength="50" tabindex="1"  value="${group.labelGroup}" />
+<div class="row">
+	<div class="col-xs-12 col-sm-12" >
+		<div class="box box-primary">
+			<div class="box-header">
+				<h3 class="box-title"><#if freehtml>#i18n{quiz.modify_group.pageTitleFreeHtml}<#else>#i18n{quiz.modify_group.pageTitle}</#if></h3>
+			</div>
+			<div class="box-body">
+				<form class="form-horizontal" enctype="multipart/form-data" name="modify_group" action="jsp/admin/plugins/quiz/DoModifyGroup.jsp"  method="post">
+					<input type="hidden" id="group_id" name="group_id" value="${group.idGroup}">
+			    <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
+			    <div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3" for="group_name" >#i18n{quiz.create_group.name} * :</label>
+			      <div class="col-xs-12 col-sm-9">
+							<input type="text" id="group_name" name="group_name" class="form-control" maxlength="50"  value="${group.labelGroup}">
+						</div>
 					</div>
-				</div>
-		        <div class="control-group">
-					<label class="control-label" for="group_name" >#i18n{quiz.create_group.subject} :</label>
-					<div class="controls">
-						<textarea id="group_subject" name="group_subject" rows="5" class="span5">${group.subject}</textarea>
+			    <div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3" for="group_name" >#i18n{quiz.create_group.subject} :</label>
+						<div class="col-xs-12 col-sm-9">
+							<textarea id="group_subject" name="group_subject" rows="5" class="form-control richtext">${group.subject}</textarea>
+						</div>
 					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="group_image">#i18n{quiz.create_group.groupImageLabel}</label>
-					<div class="controls">
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3" for="group_image">#i18n{quiz.create_group.groupImageLabel}</label>
+						<div class="col-xs-12 col-sm-6">
+							<input type="file" name="group_image" class="form-control">
+							<#if group.idImage &gt; 0>
+								<div class="checkbox">
+									<label for="remove_image"><input type="checkbox" id="remove_image" name="remove_image" value="true"> #i18n{quiz.modify_question.labelRemoveImage}</label>
+								</div>
+							</#if>
+						</div>
 						<#if group.idImage &gt; 0>
-							<img src="jsp/site/plugins/quiz/DoDownloadQuizImage.jsp?id_image=${group.idImage}" class="span" style="max-width: 300px;" />
-							<div class="row"></div>
-						</#if>			
-						<input type="file" name="group_image" >
-						<#if group.idImage &gt; 0>
-							<br />
-							<label class="checkbox inline">
-								<input type="checkbox" name="remove_image" value="true">
-								#i18n{quiz.modify_question.labelRemoveImage}
-							</label>
+							<div class="col-xs-12 col-sm-3">
+								<img src="jsp/site/plugins/quiz/DoDownloadQuizImage.jsp?id_image=${group.idImage}" class="img-thumbnail img-responsive">
+							</div>
 						</#if>
 					</div>
-				</div>
-				<#if freehtml>
-					<div class="control-group">
-						<label class="control-label" for="display_score">#i18n{quiz.create_group.displayResult}</label>
-						<div class="controls">
-							<input type="checkbox" name="display_score" value="display_score" id="display_score" <#if group.displayScore>checked="checked"</#if>>
+					<#if freehtml>
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3" for="display_score">#i18n{quiz.create_group.displayResult}</label>
+							<div class="col-xs-12 col-sm-9">
+								<div class="checkbox">
+									<label for="display_score">
+										<input type="checkbox" name="display_score" id="display_score" value="display_score" id="display_score" <#if group.displayScore>checked="checked"</#if>> #i18n{quiz.modify_group.displayResult}
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3" for="html_content">#i18n{quiz.create_group.htmlContent} :</label>
+							<div class="col-xs-12 col-sm-9">
+								<textarea id="html_content" name="html_content" class="form-control richtext">${group.htmlContent}</textarea>
+								<span class="help-text">#i18n{quiz.create_group.htmlContentHelp} <span class="label label-info">${input_prefix}</span></span>
+							</div>
+						</div>
+					</#if>
+			    <div class="form-group">
+						<div class="col-xs-12 col-sm-offset-3 col-sm-9">
+					  	<button class="btn btn-primary btn-flat" type="submit" name="save">
+								<i class="fa fa-check"></i> #i18n{quiz.create_group.buttonValidate}
+							</button>
+				      <a class="btn btn-default btn-flat" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
+								<i class="fa fa-remove"></i> #i18n{portal.admin.message.buttonCancel}
+							</a>
 						</div>
 					</div>
-					<div class="control-group">
-						<label class="control-label" for="html_content" >#i18n{quiz.create_group.htmlContent} :</label>
-						<div class="controls">
-							<textarea id="html_content" name="html_content" class="richtext">${group.htmlContent}</textarea>
-							<span class="help-block">#i18n{quiz.create_group.htmlContentHelp} <i>${input_prefix}</i></span>
-						</div>
-					</div>
-				</#if>
-		        <div class="form-actions">
-				    <button class="btn btn-primary btn-small" type="submit" name="save"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_group.buttonValidate}</button>
-			        <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
-						<i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
-					</a>
-				</div>
-			</form>
-	    </fieldset>
+				</form>
+	    </div>
+		</div>
 	</div>
 </div>
 <#include "/admin/util/editor/editor.html" />

@@ -1,74 +1,79 @@
-<div class="row-fluid">
-	<div class="span12">
-		<form class="form-horizontal" action="jsp/admin/plugins/quiz/CreateQuiz.jsp">
-			<fieldset>
-				<legend>#i18n{quiz.manage_quiz.pageTitle}
-					<button class="btn btn-primary btn-small pull-right" type="submit" >
-						<i class="icon-plus icon-white" ></i>
-						<span class="hidden-phone" >#i18n{quiz.manage_quiz.buttonValueCreateQuiz}</span>
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="box box-primary">
+			<div class="box-header">
+			<h3 class="box-title">#i18n{quiz.manage_quiz.pageTitle}</h3>
+				<div class="box-tools">
+				<form class="form-inline" action="jsp/admin/plugins/quiz/CreateQuiz.jsp">
+					<button class="btn btn-primary btn-xs btn-flat" type="submit" >
+						<i class="fa fa-plus"></i>
+						<span class="hidden-xs">#i18n{quiz.manage_quiz.buttonValueCreateQuiz}</span>
 					</button>
-				</legend>
-			</fieldset>
-		</form>
-		<table class="table table-striped table-condensed">
-			<thead>
-				<th>#i18n{quiz.manage_quiz.columnTitleName}</th>
-				<th>#i18n{quiz.manage_quiz.columnTitleDisponibility}</th>
-				<th>#i18n{quiz.manage_quiz.columnTitleStatus}</th>
-				<th>#i18n{quiz.manage_quiz.columnTitleAction}</th>
-			</thead>
-			<tbody>
-			<#list quiz_list?sort_by('idQuiz') as quiz>
-				<tr>
-					<td>${quiz.name} <a href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}" target="_blank"><i class="icon-globe"></i></a></td>
-					<td>
-						<#if quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility?? && quiz.dateBeginDisponibility == quiz.dateEndDisponibility>
-							   #i18n{quiz.manage_quiz.rowPeriodDisponibilityThe} ${quiz.dateBeginDisponibility}
-						<#elseif quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility??>
-							  #i18n{quiz.manage_quiz.rowPeriodDisponibilityFromTo} ${quiz.dateBeginDisponibility} #i18n{quiz.manage_quiz.rowPeriodDisponibilityTo} ${quiz.dateEndDisponibility}
-						<#elseif quiz.dateBeginDisponibility??>
-							 #i18n{quiz.manage_quiz.rowPeriodDisponibilityFrom} ${quiz.dateBeginDisponibility}
-						<#elseif quiz.dateEndDisponibility??>
-							 #i18n{quiz.manage_quiz.rowPeriodDisponibilityUntil} ${quiz.dateEndDisponibility}
-						</#if>
-					</td>
-					<td>
-							<#if quiz.enabled>
-								<span class="label label-success">
-									<i class="icon-ok icon-white"></i>
-								</span>
-							<#else>
-								<span class="label label-important">
-									<i class="icon-remove icon-white"></i>
-								</span>
+				</form>
+				</div>
+			</div>
+			<div>
+			<table class="table table-striped table-hover">
+				<thead>
+					<th>#i18n{quiz.manage_quiz.columnTitleName}</th>
+					<th>#i18n{quiz.manage_quiz.columnTitleDisponibility}</th>
+					<th>#i18n{quiz.manage_quiz.columnTitleStatus}</th>
+					<th>#i18n{quiz.manage_quiz.columnTitleAction}</th>
+				</thead>
+				<tbody>
+				<#list quiz_list?sort_by('idQuiz') as quiz>
+					<tr>
+						<td>${quiz.name} <a href="jsp/site/Portal.jsp?page=quiz&quiz_id=${quiz.idQuiz}" target="_blank"><i class="icon-globe"></i></a></td>
+						<td>
+							<#if quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility?? && quiz.dateBeginDisponibility == quiz.dateEndDisponibility>
+								   #i18n{quiz.manage_quiz.rowPeriodDisponibilityThe} ${quiz.dateBeginDisponibility}
+							<#elseif quiz.dateBeginDisponibility?? && quiz.dateEndDisponibility??>
+								  #i18n{quiz.manage_quiz.rowPeriodDisponibilityFromTo} ${quiz.dateBeginDisponibility} #i18n{quiz.manage_quiz.rowPeriodDisponibilityTo} ${quiz.dateEndDisponibility}
+							<#elseif quiz.dateBeginDisponibility??>
+								 #i18n{quiz.manage_quiz.rowPeriodDisponibilityFrom} ${quiz.dateBeginDisponibility}
+							<#elseif quiz.dateEndDisponibility??>
+								 #i18n{quiz.manage_quiz.rowPeriodDisponibilityUntil} ${quiz.dateEndDisponibility}
 							</#if>
 						</td>
 						<td>
-							<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="Modifier" >
-								<i class="icon-edit icon-white">&nbsp;</i>
-							</a>
-							<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" >
-								<i class="icon-comment icon-white">&nbsp;</i>
-							</a>
-							<#if quiz.enabled>
-								<a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" >
-									<i class="icon-remove icon-white">&nbsp;</i>
+								<#if quiz.enabled>
+									<span class="label label-success">
+										<i class="fa fa-check"></i>
+									</span>
+								<#else>
+									<span class="label label-important">
+										<i class="fa fa-remove"></i>
+									</span>
+								</#if>
+							</td>
+							<td>
+								<a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/ModifyQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="Modifier" >
+									<i class="fa fa-pencil"></i>
 								</a>
-							<#else>
-								<a class="btn btn-success btn-small" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" >
-									<i class="icon-ok icon-white">&nbsp;</i>
+								<a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleManageQuestions}" >
+									<i class="fa fa-comments-o"></i>
 								</a>
-							</#if>
-							<a class="btn btn-primary btn-small" href="jsp/admin/plugins/quiz/processors/ManageOutputProcessors.jsp?quiz_id=${quiz.idQuiz}" title="#i18n{quiz.manage_processord.pageTitle}" >
-								<i class="icon-wrench icon-white">&nbsp;</i>
-							</a>
-							<a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" >
-								<i class="icon-trash icon-white">&nbsp;</i>
-							</a>
-					</td>
-				</tr>
-				</#list>
-			</tbody>
-		</table>
+								<#if quiz.enabled>
+									<a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleUnDisplayQuiz}" >
+										<i class="fa fa-remove"></i>
+									</a>
+								<#else>
+									<a class="btn btn-success btn-xs btn-flat" href="jsp/admin/plugins/quiz/DoDisplayQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDisplayQuiz}" >
+										<i class="fa fa-check"></i>
+									</a>
+								</#if>
+								<a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/processors/ManageOutputProcessors.jsp?quiz_id=${quiz.idQuiz}" title="#i18n{quiz.manage_processord.pageTitle}" >
+									<i class="fa fa-wrench"></i>
+								</a>
+								<a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/quiz/RemoveQuiz.jsp?quiz_id=${quiz.idQuiz}"  title="#i18n{quiz.manage_quiz.linkTitleDeleteQuiz}" >
+									<i class="fa fa-trash"></i>
+								</a>
+						</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+			</div>
+		</div>
 	</div>
 </div>

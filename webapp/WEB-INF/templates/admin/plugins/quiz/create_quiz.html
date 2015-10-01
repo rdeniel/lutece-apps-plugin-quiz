@@ -1,102 +1,158 @@
-<div class="row-fluid">
-    <form class="form" name="create_quiz" action="jsp/admin/plugins/quiz/DoCreateQuiz.jsp"  method="post">
-    <input type="hidden" name="date_begin_disponibility_save" id="date_begin_disponibility_save" value="" />
-    <input type="hidden" name="date_end_disponibility_save" id="date_end_disponibility_save" value="" />
-    <div class="span8">
-        <fieldset>
-            <legend>#i18n{quiz.create_quiz.pageTitle}</legend>
-            <label  for="quiz_name" >#i18n{quiz.create_quiz.name} * :</label>
-            <input type="text" id="quiz_name" name="quiz_name" class="input-xxlarge" maxlength="50" tabindex="1" value="" />
-            <br/>
-            <label >#i18n{quiz.create_quiz.type} * :</label>
-            <label class="radio inline" for="quiz_type_reponse">
-                <input type="radio" name="quiz_type" id="quiz_type_reponse" onchange="javascript:doChangeTypeQuiz(this.quiz.quiz_type);" checked="checked" value="REPONSE" />
-                #i18n{quiz.create_quiz.labelReponseType}
-            </label>
-            <label class="radio inline" for="quiz_type_profile">
-                <input type="radio" name="quiz_type" id="quiz_type_profile" onchange="javascript:doChangeTypeQuiz(this.quiz.publication_mode);" value="PROFIL" />
-                #i18n{quiz.create_quiz.labelProfilType}
-            </label>
-            <br />
-            <br />
-            <label >#i18n{quiz.create_quiz.labelDisplay} :</label>
-            <label class="radio inline" for="display_step_by_step">
-            	<input type="radio" name="display_step_by_step" value="true">
-            	#i18n{quiz.create_quiz.labelDisplayStepByStep}
-            </label>
-            <label class="radio inline" for="display_step_by_step">
-            	<input type="radio" name="display_step_by_step" value="false" checked="checked">
-            	#i18n{quiz.create_quiz.labelDisplayAll}
-            </label>
-            <br />
-            <br />
-	        <label >#i18n{quiz.create_quiz.labelDisplayResults} :</label>
-	        <label class="radio inline" for="display_results_after_each_step">
-	        	<input type="radio" name="display_results_after_each_step" value="true">
-	        	#i18n{quiz.create_quiz.labelDisplayResultsAfterEachStep}
-	        </label>
-	        <label class="radio inline" for="display_results_after_each_step">
-	        	<input type="radio" name="display_results_after_each_step" value="false" checked="checked">
-	        	#i18n{quiz.create_quiz.labelDisplayResultsAtTheEnd}
-	        </label>
-            <br />
-            <br />
-            <label  for="quiz_introduction" >#i18n{quiz.create_quiz.introduction} :</label>
-            <textarea class="richtext" name="quiz_introduction" id="quiz_introduction" rows="5" style="width:60%;"></textarea>
-            <br />
-            <label  for="quiz_conclusion" >#i18n{quiz.create_quiz.conclusion} :</label>
-            <textarea class="richtext" name="quiz_conclusion" id="quiz_conclusion" rows="5" style="width:60%;"></textarea>
-            <div class="form-actions">
-                <button class="btn btn-primary btn-small" type="submit" name="save">
-                    <i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_quiz.buttonSave}
-                </button>
-                <button class="btn btn-primary btn-small" type="submit" name="apply">
-                    <i class="icon-ok-circle icon-white"></i>&nbsp;#i18n{quiz.modify_quiz.buttonApply}
-                </button>
-                <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuiz.jsp">
-                    <i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
-                </a>
+<div class="row">
+    <form class="form-horizontal" name="create_quiz" action="jsp/admin/plugins/quiz/DoCreateQuiz.jsp"  method="post">
+    <input type="hidden" name="date_begin_disponibility_save" id="date_begin_disponibility_save" value="">
+    <input type="hidden" name="date_end_disponibility_save" id="date_end_disponibility_save" value="">
+    <div class="col-xs-12 col-sm-8">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">#i18n{quiz.create_quiz.pageTitle}</h3>
+        </div>
+        <div class="box-body">
+          <div class="form-group">
+            <label for="" class="control-label col-xs-12 col-sm-3" for="quiz_name" >#i18n{quiz.create_quiz.name} * :</label>
+            <div class="col-xs-12 col-sm-9">
+              <input type="text" id="quiz_name" name="quiz_name" class="form-control" maxlength="50" tabindex="1" value="">
             </div>
-        </fieldset>
-    </div>  
-    <div class="span3">
-    
-        <fieldset>
-        <legend>#i18n{quiz.create_quiz.labelAdvancedSettings}</legend>
-        <label  for="">#i18n{quiz.create_quiz.labelActiveCaptcha} :</label>
-        <label class="chechbox" for="active_captcha">
-            <input type="checkbox" name="active_captcha" value="1" /> #i18n{quiz.create_quiz.labelActiveCaptchaComment}
-        </label>
-        <label  for="active_requirement"> #i18n{quiz.create_quiz.labelActiveRequirement} :</label>
-        <label class="chechbox" for="active_captcha">
-            <input type="checkbox" name="active_requirement" value="1" /> #i18n{quiz.create_quiz.labelActiveRequirementComment}
-        </label>
-        <label for="quiz_cgu" >&nbsp;</label>
-        <textarea class="input-large" name="quiz_cgu" id="quiz_cgu" rows="5" ></textarea>
-        </fieldset>    
-        <fieldset>    
-        <legend>#i18n{quiz.create_quiz.labelPublication}</legend>
-        <label  for="">#i18n{quiz.create_quiz.labelPublicationMode} :</label>
-        <label class="radio inline" for="publication_mode">
-            <input type="radio" name="publication_mode" id="publication_mode_user" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" checked="checked" value="0" />
-            #i18n{quiz.create_quiz.labelPublicationModeUser}
-        </label>
-        <label class="radio inline" for="publication_mode">#i18n{quiz.create_quiz.labelPublicationModeAuto}
-            <input type="radio" name="publication_mode" id="publication_mode_auto" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" value="1" />
-        </label>
-        <p class="help-block">#i18n{quiz.create_quiz.labelPublicationModeComment}</p>
-        <label  for="date_begin_disponibility">#i18n{quiz.create_quiz.labelDateBeginDisponibility} :</label>
-            <input type="text" name="date_begin_disponibility" id="date_begin_disponibility" value="" class="input-small" >
-        <p class="help-block">#i18n{quiz.create_quiz.labelDateBeginDisponibilityComment}</p>
-        <label  for="date_end_disponibility">#i18n{quiz.create_quiz.labelDateEndDisponibility} :</label>
-            <input type="text" name="date_end_disponibility" id="date_end_disponibility" value="" class="input-small" >
-        <p class="help-block">#i18n{quiz.create_quiz.labelDateEndDisponibilityComment}</p>
-        </fieldset>
+          </div>
+          <div class="form-group">
+            <label for="" class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_quiz.type} * :</label>
+            <div class="col-xs-12 col-sm-9">
+              <label class="radio-inline" for="quiz_type_reponse">
+                  <input type="radio" name="quiz_type" id="quiz_type_reponse" onchange="javascript:doChangeTypeQuiz(this.quiz.quiz_type);" checked="checked" value="REPONSE"> #i18n{quiz.create_quiz.labelReponseType}
+              </label>
+              <label class="radio-inline" for="quiz_type_profile">
+                  <input type="radio" name="quiz_type" id="quiz_type_profile" onchange="javascript:doChangeTypeQuiz(this.quiz.publication_mode);" value="PROFIL"> #i18n{quiz.create_quiz.labelProfilType}
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_quiz.labelDisplay}  :</label>
+            <div class="col-xs-12 col-sm-9">
+              <label class="radio-inline" for="display_step_by_step">
+              	<input type="radio" name="display_step_by_step" id="display_step_by_step" value="true"> #i18n{quiz.create_quiz.labelDisplayStepByStep}
+              </label>
+              <label class="radio-inline" for="display_step_by_step_all">
+              	<input type="radio" name="display_step_by_step" id="display_step_by_step_all" value="false" checked="checked"> #i18n{quiz.create_quiz.labelDisplayAll}
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_quiz.labelDisplayResults}</label>
+            <div class="col-xs-12 col-sm-9">
+    	        <label class="radio-inline" for="display_results_after_each_step">
+    	        	<input type="radio" name="display_results_after_each_step" id="display_results_after_each_step" value="true"> #i18n{quiz.create_quiz.labelDisplayResultsAfterEachStep}
+    	        </label>
+    	        <label class="radio-inline" for="display_results_after_each_step_end">
+    	        	<input type="radio" name="display_results_after_each_step" id="display_results_after_each_step_end"value="false" checked="checked">	#i18n{quiz.create_quiz.labelDisplayResultsAtTheEnd}
+    	        </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label  for="quiz_introduction" class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_quiz.introduction}</label>
+            <div class="col-xs-12 col-sm-9">
+              <textarea class="form-control richtext" name="quiz_introduction" id="quiz_introduction" rows="5"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label  for="quiz_conclusion" class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_quiz.conclusion}</label>
+            <div class="col-xs-12 col-sm-9">
+            <textarea class="form-control richtext" name="quiz_conclusion" id="quiz_conclusion" rows="5"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-12 col-sm-offset-3 col-sm-9">
+            <button class="btn btn-primary btn-flat" type="submit" name="save">
+                <i class="fa fa-check"></i> #i18n{quiz.create_quiz.buttonSave}
+            </button>
+            <button class="btn btn-primary btn-flat" type="submit" name="apply">
+              <i class="fa fa-check-circle"></i> #i18n{quiz.modify_quiz.buttonApply}
+            </button>
+            <a class="btn btn-default btn-flat" href="jsp/admin/plugins/quiz/ManageQuiz.jsp">
+              <i class="fa fa-remove"></i> #i18n{portal.admin.message.buttonCancel}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-    </form>
+  </div>
+  <div class="col-xs-12 col-sm-4">
+    <div class="box box-primary">
+      <div class="box-header">
+        <h3 class="box-title">#i18n{quiz.modify_quiz.labelAdvancedSettings}</h3>
+        <div class="box-tools">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+      </div>
+      <div class="box-body">
+        <div class="form-group">
+          <label  for="active_captcha" class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_quiz.labelActiveCaptcha}</label>
+          <div class="col-xs-12 col-sm-9">
+            <div class="chechbox">
+              <label for="active_captcha">
+                <input type="checkbox" id="active_captcha" name="active_captcha" value="1"> #i18n{quiz.create_quiz.labelActiveCaptchaComment}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-xs-12 col-sm-3" for="active_requirement"> #i18n{quiz.create_quiz.labelActiveRequirement}</label>
+          <div class="col-xs-12 col-sm-9">
+            <div class="chechbox">
+              <label for="active_requirement">
+                <input type="checkbox" name="active_requirement" id="active_requirement" value="1"> #i18n{quiz.create_quiz.labelActiveRequirementComment}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-xs-12 col-sm-3" for="quiz_cgu" ></label>
+          <div class="col-xs-12 col-sm-9">
+            <textarea class="richtext form-control" name="quiz_cgu" id="quiz_cgu" rows="5" ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="box box-primary">
+      <div class="box-header">
+        <h3 class="box-title">#i18n{quiz.modify_quiz.labelPublication}</h3>
+        <div class="box-tools">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+      </div>
+      <div class="box-body">
+        <div class="form-group">
+          <label  class="control-label col-xs-12 col-sm-3" for="">#i18n{quiz.create_quiz.labelPublicationMode}</label>
+          <div class="col-xs-12 col-sm-9">
+            <label class="radio-inline" for="publication_mode">
+              <input type="radio" name="publication_mode" id="publication_mode_user" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" checked="checked" value="0"> #i18n{quiz.create_quiz.labelPublicationModeUser}
+            </label>
+            <label class="radio-inline" for="publication_mode">
+              <input type="radio" name="publication_mode" id="publication_mode_auto" onchange="javascript:doChangePublicationMode(this.quiz.publication_mode);" value="1"> #i18n{quiz.create_quiz.labelPublicationModeAuto}
+            </label>
+            <p class="help-text">#i18n{quiz.create_quiz.labelPublicationModeComment}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label  class="control-label col-xs-12 col-sm-3" for="date_begin_disponibility">#i18n{quiz.create_quiz.labelDateBeginDisponibility}</label>
+          <div class="col-xs-12 col-sm-9">
+            <div class="input-daterange">
+              <div class="col-xs-12 col-sm-4">
+                <input type="text" name="date_begin_disponibility" id="date_begin_disponibility" value="" class="form-control" >
+              </div>
+              <div class="col-xs-12 col-sm-4">
+                <strong>#i18n{quiz.create_quiz.labelDateEndDisponibility}</strong>
+              </div>
+              <div class="col-xs-12 col-sm-4">
+                <input type="text" name="date_end_disponibility" id="date_end_disponibility" value="" class="form-control" >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
 </div>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />
-<script src="js/jquery/plugins/ui/jquery-ui-1.9.2.custom.min.js"></script>
-<script src="js/jquery/plugins/ui/ui.datepicker-fr.js"></script>
-<@getDatePickerRange idFieldFrom="date_begin_disponibility" idFieldTo="date_end_disponibility" language=locale />
+<@getDatePickerRangeBootstrap language=locale />

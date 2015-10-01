@@ -1,42 +1,50 @@
-<#include "/admin/util/editor/editor.html" />
-<div class="row-fluid">
-	<div class="span12" >
-	<fieldset>
-    <legend>#i18n{quiz.create_question.pageTitle}</legend>
-    <form class="form-horizontal"  name="create_question" enctype="multipart/form-data" action="jsp/admin/plugins/quiz/DoCreateQuestion.jsp" method="post">
-		<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
-		<div class="control-group">
-		<label class="label-group">#i18n{quiz.create_question.groupsList} *</label>
-			<div class="controls">
-				<@combo name="group_id" default_value="" items=groups_list />
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="box box-primary">
+			<div class="box-header">
+				<h3 class="box-title">#i18n{quiz.create_question.pageTitle}</h3>
+			</div>
+			<div class="box-body">
+				<form class="form-horizontal" name="create_question" enctype="multipart/form-data" action="jsp/admin/plugins/quiz/DoCreateQuestion.jsp" method="post">
+					<input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_question.groupsList} *</label>
+						<div class="col-xs-12 col-sm-9">
+							<@comboWithParams name="group_id" default_value="" additionalParameters=" class=\"form-control\" " items=groups_list />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_question.questionLabel} *</label>
+						<div class="col-xs-12 col-sm-9">
+							<textarea class="form-control richtext" name="question_label" id="question_label" rows="5"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_question.titleExplication} *</label>
+						<div class="col-xs-12 col-sm-9">
+							<textarea class="form-control richtext" name="explaination" id="explaination" rows="5"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3" for="question_image">#i18n{quiz.create_question.questionImageLabel}</label>
+						<div class="col-xs-12 col-sm-9">
+							<input type="file" name="question_image" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12 col-sm-offset-3 col-sm-9">
+							<button class="btn btn-primary btn-flat" type="submit">
+								<i class="fa fa-check"></i> #i18n{quiz.create_question.buttonValidate}
+							</button>
+							<a class="btn btn-default btn-flat" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
+								<i class="fa fa-remove"></i> #i18n{portal.admin.message.buttonCancel}
+							</a>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
-		<div class="control-group">
-		<label class="label-group">#i18n{quiz.create_question.questionLabel} *</label>
-			<div class="controls">
-				<textarea class="richtext" name="question_label" id="question_label" rows="3" cols="60"></textarea>
-			</div>
-		</div>
-        <div class="control-group">
-		<label class="control-label">#i18n{quiz.create_question.titleExplication} *</label>
-			<div class="controls">
-				<textarea class="richtext" name="explaination" id="explaination" rows="10" cols="60"></textarea>
-            </div>
-        </div>
-        <div class="control-group">
-		<label class="label-group" for="question_image">#i18n{quiz.create_question.questionImageLabel}</label>
-			<div class="controls">					
-				<input type="file" name="question_image" >
-			</div>
-		</div>
-        <div class="form-actions">
-            <button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.create_question.buttonValidate}</button>
-	    <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
-				<i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
-			</a>
-		</div>
-		</form>
-		</fieldset>
 	</div>
 </div>
+<#include "/admin/util/editor/editor.html" />
 <@initEditor />

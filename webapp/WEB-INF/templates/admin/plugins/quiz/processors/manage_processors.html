@@ -1,46 +1,59 @@
-<fieldset>
-	<legend>#i18n{quiz.manage_processord.pageTitle}</legend>
-	<#if list_configuration?size == 0 && list_disabled_processors?size == 0>
-		#i18n{quiz.manage_processord.labelNoProcessor}
-	<#else>
-		<#list list_configuration as config>
-			<div class="row-fluid" id="${config.idProcessor}">
-				<div class="span12 well">
-					<legend>
-						${config.title}
-						<div class="pull-right">
-							<a class="btn btn-danger btn-small" href="jsp/admin/plugins/quiz/processors/DoEnableDisableProcessor.jsp?quiz_id=${quiz_id}&idProcessor=${config.idProcessor}#${config.idProcessor}">
-								<i class="icon-remove-circle icon-white">&nbsp;</i>&nbsp;#i18n{quiz.manage_processord.labelDisable}
-							</a>
-						</div>
-					</legend>
-					<#if config.content??>
-					<form method="post" action="jsp/admin/plugins/quiz/processors/DoModifyOutputProcessorConfig.jsp">
-						<input type="hidden" name="quiz_id" value="${quiz_id}">
-						<input type="hidden" name="idProcessor" value="${config.idProcessor}">
-						${config.content}
-						<div class="form-actions">
-							<button class="btn btn-primary btn-small" type="submit" title="#i18n{portal.util.labelValidate}">
-								<i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelValidate}
-							</button>
-						</div>
-					</form>
-					</#if>
-				</div>
-			</div>
-		</#list> <#list list_disabled_processors as processor>
-		<div class="row-fluid" id="${processor.processorId}">
-			<div class="span12 well">
-				<legend>
-					${processor.getTitle( locale )}
-					<div class="pull-right">
-						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/quiz/processors/DoEnableDisableProcessor.jsp?quiz_id=${quiz_id}&idProcessor=${processor.processorId}#${processor.processorId}">
-							<i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{quiz.manage_processord.labelEnable}
-						</a>
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="box box-primary">
+  		<div class="box-header">
+        <h3 class="box-title">#i18n{quiz.manage_processord.pageTitle}</h3>
+      </div>
+      <div class="box-body">
+    		<#if list_configuration?size == 0 && list_disabled_processors?size == 0>
+					<div class="callout callout-warning">
+						<h2>
+							<i class="fa fa-exclamation-triangle"></i> #i18n{quiz.manage_processord.labelNoProcessor}
+						</h2>
 					</div>
-				</legend>
+				<#else>
+					<#list list_configuration as config>
+						<div class="panel panel-primary" id="${config.idProcessor}">
+						<div class="panel-heading">
+							${config.title}
+							<div class="pull-right">
+								<a class="btn btn-danger btn-xs" href="jsp/admin/plugins/quiz/processors/DoEnableDisableProcessor.jsp?quiz_id=${quiz_id}&idProcessor=${config.idProcessor}#${config.idProcessor}">
+									<i class="fa fa-remove"></i> #i18n{quiz.manage_processord.labelDisable}
+								</a>
+							</div>
+						</div>
+						<div class="panel-body">
+						<#if config.content??>
+							<form method="post" class="form-horizontal" action="jsp/admin/plugins/quiz/processors/DoModifyOutputProcessorConfig.jsp">
+							<input type="hidden" name="quiz_id" value="${quiz_id}">
+							<input type="hidden" name="idProcessor" value="${config.idProcessor}">
+							${config.content}
+							<div class="form-group">
+								<div class="col-xs-12 col-sm-offset-3 col-sm-9">
+									<button class="btn btn-primary btn-flat" type="submit" title="#i18n{portal.util.labelValidate}">
+										<i class="fa fa-check"></i> #i18n{portal.util.labelValidate}
+									</button>
+								</div>
+							</div>
+							</form>
+						</#if>
+						</div>
+					</div>
+				</#list>
+				<#list list_disabled_processors as processor>
+					<div class="panel panel-primary" id="${processor.processorId}">
+						<div class="panel-heading">
+							${processor.getTitle( locale )}
+							<div class="pull-right">
+								<a class="btn btn-xs btn-success" href="jsp/admin/plugins/quiz/processors/DoEnableDisableProcessor.jsp?quiz_id=${quiz_id}&idProcessor=${processor.processorId}#${processor.processorId}">
+									<i class="fa fa-check"></i> #i18n{quiz.manage_processord.labelEnable}
+								</a>
+							</div>
+						</div>
+					</div>
+				</#list>
+			</#if>
 			</div>
 		</div>
-		</#list>
-	</#if>
-</fieldset>
+	</div>
+</div>

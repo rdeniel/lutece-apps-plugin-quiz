@@ -1,31 +1,39 @@
-<#include "/admin/util/editor/editor.html" />
-<div class="row-fluid">
-    <div class="span12" >
-    <fieldset>
-    <legend>#i18n{quiz.modify_profil.pageTitle}</legend>
-    <form class="form-horizontal"  name="create_profil" enctype="multipart/form-data" action="jsp/admin/plugins/quiz/DoModifyProfil.jsp" method="post">
-        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
-        <input type="hidden" id="profil_id" name="profil_id" value="${profil.idProfile}"/>
-        <div class="control-group">
-        <label class="control-label" for="profil_name" >#i18n{quiz.create_profil.name} * :</label>
-            <div class="controls">
-                <input type="text" id="profil_name"  value="${profil.name}" name="profil_name" size="50" maxlength="50" tabindex="1" />
-            </div>
+<div class="row">
+	<div class="col-xs-12 col-sm-12" >
+		<div class="box box-primary">
+			<div class="box-header">
+				<h3 class="box-title">#i18n{quiz.modify_profil.pageTitle}</h3>
+			</div>
+			<div class="box-body">
+        <form class="form-horizontal"  name="create_profil" enctype="multipart/form-data" action="jsp/admin/plugins/quiz/DoModifyProfil.jsp" method="post">
+            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
+            <input type="hidden" id="profil_id" name="profil_id" value="${profil.idProfile}">
+        <div class="form-group">
+          <label class="control-label col-xs-12 col-sm-3" for="profil_name" >#i18n{quiz.create_profil.name} * :</label>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" id="profil_name" name="profil_name" class="form-control" maxlength="50" value="${profil.name}">
+          </div>
         </div>
-        <div class="control-group">
-        <label class="control-label" for="profil_description" >#i18n{quiz.create_profil.description} * :</label>
-        <div class="controls">
-            <textarea id="profil_description" name="profil_description" rows="5" cols="60">${profil.description}</textarea>
-            </div>
+        <div class="form-group">
+          <label class="control-label col-xs-12 col-sm-3" for="profil_description" >#i18n{quiz.create_profil.description} * :</label>
+          <div class="col-xs-12 col-sm-9">
+            <textarea id="profil_description" name="profil_description" rows="5" class="form-control richtext">${profil.description}</textarea>
+          </div>
         </div>
-        <div class="form-actions">
-            <button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_question.buttonValidate}</button>
-            <a class="btn btn-small" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
-                <i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
+        <div class="form-group">
+          <div class="col-xs-12 col-sm-offset-3 col-sm-9">
+            <button class="btn btn-primary btn-flat" type="submit">
+              <i class="fa fa-check"></i> #i18n{quiz.modify_question.buttonValidate}
+            </button>
+            <a class="btn btn-default btn-flat" href="jsp/admin/plugins/quiz/ManageQuestions.jsp?quiz_id=${quiz.idQuiz}">
+              <i class="fa fa-removee"></i> #i18n{portal.admin.message.buttonCancel}
             </a>
+          </div>
         </div>
         </form>
-        </fieldset>
+      </div>
     </div>
+  </div>
 </div>
+<#include "/admin/util/editor/editor.html" />
 <@initEditor />
