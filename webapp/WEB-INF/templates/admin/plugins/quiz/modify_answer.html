@@ -1,45 +1,53 @@
-<div class="row-fluid">
-    <div class="span12" >
-    <fieldset>
-    <legend>#i18n{quiz.modify_answer.pageTitle}</legend>
-        <form class="form-horizontal"  name="modify_answer" action="jsp/admin/plugins/quiz/DoModifyAnswer.jsp" method="post" >
-        <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}"/>
-        <input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}"/>
-        <input type="hidden" name="answer_id" id="answer_id" value="${answer.idAnswer}"/>
-        <div class="control-group">
-            <label class="label-group" for="">#i18n{quiz.modify_answer.titleQuestionLabel}</label>
-            <div class="controls">
-            ${question.questionLabel}
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+    <div class="box box-primary">
+      <div class="box-header">
+        <h3 class="box-title">#i18n{quiz.modify_answer.pageTitle}</h3>
+      </div>
+      <div class="box-body">
+        <form class="form-horizontal" name="modify_answer" action="jsp/admin/plugins/quiz/DoModifyAnswer.jsp" method="post">
+          <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
+          <input type="hidden" name="question_id" id="question_id" value="${question.idQuestion}">
+          <input type="hidden" name="answer_id" id="answer_id" value="${answer.idAnswer}">
+          <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-3" for="">#i18n{quiz.modify_answer.titleQuestionLabel}</label>
+            <div class="col-xs-12 col-sm-9">
+              <div class="form-control-static"> ${question.questionLabel}</div>
             </div>
-        </div>
-        <div class="control-group">
-        <label class="label-group" for="answer_label">#i18n{quiz.modify_answer.titleAnswerLabel} *</label>
-            <div class="controls">
-                <input type="text" id="answer_label" name="answer_label" class="input-xlarge" maxlength="255" tabindex="1"  value="${answer.labelAnswer}" />
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-3" for="answer_label">#i18n{quiz.modify_answer.titleAnswerLabel} *</label>
+            <div class="col-xs-12 col-sm-9">
+              <input type="text" id="answer_label" name="answer_label" class="form-control" maxlength="255" tabindex="1" value="${answer.labelAnswer}">
             </div>
-        </div>
-        <#if listProfils?has_content>
-            <label class="label-group">#i18n{quiz.create_answer.profilsList} *</label>
-            <div class="controls">
-                <@combo name="profil_id" default_value="${answer.idProfile}" items=listProfils />
+          </div>
+          <div class="form-group">
+            <#if listProfils?has_content>
+              <label class="control-label col-xs-12 col-sm-3">#i18n{quiz.create_answer.profilsList} *</label>
+              <div class="col-xs-12 col-sm-9">
+                <@comboWithParams name="profil_id" default_value="${answer.idProfile}" additionalParameters=" class=\"form-control\" " items=listProfils />
+              </div>
+            <#else>
+              <label class="control-label col-xs-12 col-sm-3" for="answer_label">#i18n{quiz.create_answer.titleValidity} *</label>
+              <div class="col-xs-12 col-sm-9">
+                <@comboWithParams name="validity_id" default_value="${answer.valid}" additionalParameters=" class=\"form-control\" " items=yesno_list />
+              </div>
+            </#if>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12 col-sm-offset-3 col-sm-9">
+              <button class="btn btn-primary btn-flat" type="submit">
+                <i class="fa fa-check"></i>&nbsp;#i18n{quiz.modify_answer.buttonValidate}
+              </button>
+              <a class="btn  btn-flat" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}">
+                <i class="fa fa-remove"></i> #i18n{portal.admin.message.buttonCancel}
+              </a>
             </div>
-        <#else>
-            <div class="control-group">
-            <label class="label-group" for="answer_label">#i18n{quiz.create_answer.titleValidity} *</label>
-                <div class="controls">
-                    <@combo name="validity_id" default_value="${answer.valid}" items=yesno_list  />
-                </div>
-            </div>
-        </#if>
-        <div class="form-actions">
-            <button class="btn btn-primary btn-small" type="submit" tabindex="3"><i class="icon-ok icon-white"></i>&nbsp;#i18n{quiz.modify_answer.buttonValidate}</button>
-            <a class="btn btn-small" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}">
-                <i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}
-            </a>
-        </div>  
+          </div>
         </form>
-    </fieldset>
+      </div>
     </div>
+  </div>
 </div>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />
