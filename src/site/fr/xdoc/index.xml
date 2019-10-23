@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<properties>
-		<title>Plugin quiz</title>
-	</properties>
-	<body>
-		<section name="Plugin quiz">
-			<subsection name="Introduction">
-			</subsection>
-		</section>
-	</body>
+    <properties>
+        <title>Plugin quiz</title>
+    </properties>
+    <body>
+        <section name="Plugin quiz">
+            <subsection name="Introduction">
+                <p>Ce plugin permet de créer facilement des Quiz ou questionnaire à choix multiples.</p>
+                <p>La présentation et du texte éditorial peuvent être gérés à chaque question.</p>
+                <p>Les bonnes réponses peuvent être détaillées au moment du calcul du score final.</p>
+                <p>Les données des réponses peuvent être exportées vers différentes cibles (fichier CSV, base de données, ...)</p>			
+            </subsection>
+        </section>
+    </body>
 </document>
