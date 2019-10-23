@@ -1,31 +1,28 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-12">
-    <div class="box box-primary">
-      <div class="box-header">
-        <h3 class="box-title">${quiz.name}</h3>
-        <div class="box-tools">
-          <form class="form-inline pull-right spaced" action="jsp/admin/plugins/quiz/CreateGroup.jsp">
-            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
-            <input type="hidden" id="freehtml" name="freehtml" value="true">
-            <button class="btn btn-primary btn-xs btn-flat" type="submit"><i class="fa fa-plus"></i> #i18n{quiz.manage_questions.buttonValueCreateFreeHtmlGroup}</button>
-          </form>
-          <form class="form-inline pull-right spaced" action="jsp/admin/plugins/quiz/CreateGroup.jsp">
-            <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
-            <button class="btn btn-primary btn-xs btn-flat" type="submit"><i class="fa fa-plus"></i> #i18n{quiz.manage_questions.buttonValueCreateGroup}</button>
-          </form>
+<@row>
+    <@columns>
+        <@box>
+            <@boxHeader title='${quiz.name}' boxTools=true>
+                <@tform action="jsp/admin/plugins/quiz/CreateGroup.jsp">
+                    <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
+                    <input type="hidden" id="freehtml" name="freehtml" value="true">
+                    <@button color='primary' type='submit' buttonIcon='plus' title='#i18n{quiz.manage_questions.buttonValueCreateFreeHtmlGroup}' />
+                </@tform>
+                <@tform class="form-inline pull-right spaced" action="jsp/admin/plugins/quiz/CreateGroup.jsp">
+                    <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
+                    <@button color='primary' type='submit' buttonIcon='plus' title='#i18n{quiz.manage_questions.buttonValueCreateGroup}' />
+                </@tform>
           <#if isTypeProfil?has_content && isTypeProfil>
-            <form class="form-inline pull-right spaced" action="jsp/admin/plugins/quiz/CreateProfil.jsp">
+            <@tform action='jsp/admin/plugins/quiz/CreateProfil.jsp' >
               <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
-              <button class="btn btn-primary btn-xs btn-flat" type="submit"><i class="fa fa-plus"></i> #i18n{quiz.manage_questions.buttonValueCreateProfil}</button>
-            </form>
+              <@button color='primary' type='submit' buttonIcon='plus'  title='#i18n{quiz.manage_questions.buttonValueCreateProfil}' />
+            </@tform>
           </#if>
-          <form class="form-inline pull-right" action="jsp/admin/plugins/quiz/CreateQuestion.jsp">
+          <@tform action='jsp/admin/plugins/quiz/CreateQuestion.jsp'>
             <input type="hidden" id="quiz_id" name="quiz_id" value="${quiz.idQuiz}">
-            <button class="btn btn-primary btn-xs btn-flat" type="submit"><i class="fa fa-plus"></i> #i18n{quiz.manage_questions.buttonValueCreateQuestion}</button>
-          </form>
-        </div>
-      </div>
-      <div class="box-body">
+            <@button color='primary' type="submit" buttonIcon='plus' title='#i18n{quiz.manage_questions.buttonValueCreateQuestion}' />
+          </@tform>
+        </@boxHeader>
+        <@boxBody>
       <#if listProfils?has_content>
         <div class="box box-primary">
           <div class="box-header">
@@ -58,47 +55,34 @@
           </div>
         </div>
       </#if>
+      </@boxBody>
       <div class="box box-primary">
         <div class="box-header">
           <h3 class="box-title"><i class="fa fa-object-group"></i> #i18n{quiz.manage_questions.columnTitleName}</h3>
         </div>
         <div class="box-body">
-          <table class="table table-striped table-hover">
-            <thead>
+          <@table>
               <tr>
                 <th>#i18n{quiz.manage_questions.columnTitleName}</th>
                 <th>#i18n{quiz.manage_questions.columnTitleAction}</th>
               </tr>
-            </thead>
-            <tbody>
+            <@tableHeadBodySeparator />
               <#list groups_list?sort_by( "positionGroup") as group>
                 <tr>
                   <td><strong><i class="fa fa-angle-double-right"></i> ${group.labelGroup}</strong></td>
                   <td>
                     <#if group.positionGroup==1>
                       <#if group_has_next>
-                        <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}" title="Descendre">
-                          <i class="fa fa-chevron-down"></i>
-                        </a>
+                        <@aButton color='primary' buttonIcon='chevron-down' href='jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}' title='Descendre' showTitle=false />
                       </#if>
-                      <#elseif group_has_next>
-                        <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}" title="Monter">
-                          <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}" title="Descendre">
-                          <i class="fa fa-chevron-down"></i>
-                        </a>
-                        <#else>
-                          <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}" title="Monter">
-                            <i class="fa fa-chevron-up"></i>
-                          </a>
+                    <#elseif group_has_next>
+                        <@aButton color='primary' buttonIcon='chevron-up' href='jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}' title='Monter' showTitle=false />
+                        <@aButton color='primary' buttonIcon='chevron-down' href='jsp/admin/plugins/quiz/DoMoveDownGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}' title='Descendre' showTitle=false />
+                    <#else>
+                        <@aButton color='primary' buttonIcon='chevron-up' href='jsp/admin/plugins/quiz/DoMoveUpGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}' title='Monter' showTitle=false />
                     </#if>
-                    <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/ModifyGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}" title="Modifier">
-                      <i class="fa fa-pencil"></i>
-                    </a>
-                    <a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/quiz/RemoveGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}" title="#i18n{quiz.manage_question.linkTitleDeleteGroup}">
-                      <i class="fa fa-trash"></i>
-                    </a>
+                    <@aButton color='primary' buttonIcon='pencil' href='jsp/admin/plugins/quiz/ModifyGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}' title='Modifier' showTitle=false />
+                    <@aButton color='danger' buttonIcon='trash' href='jsp/admin/plugins/quiz/RemoveGroup.jsp?quiz_id=${quiz.idQuiz}&group_id=${group.idGroup}' title='#i18n{quiz.manage_question.linkTitleDeleteGroup}' showTitle=false />
                   </td>
                 </tr>
                 <#list questions_list_group as question>
@@ -106,12 +90,8 @@
                     <tr>
                       <td <#if question.questionLabel!="">style="padding-left:2em;"</#if>>${question.questionLabel}</td>
                       <td>
-                        <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" title="Modifier">
-                          <i class="fa fa-pencil"></i>
-                        </a>
-                        <a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}">
-                          <i class="fa fa-trash"></i>
-                        </a>
+                        <@aButton color='primary' buttonIcon='pencil' href='jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}' title='Modifier' showTitle=false />
+                        <@aButton color='danger' buttonIcon='trash' href='jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}' title='#i18n{quiz.manage_question.linkTitleDeleteQuestion}' showTitle=false />
                       </td>
                     </tr>
                   </#if>
@@ -121,20 +101,17 @@
                 <tr>
                   <td>${question.questionLabel}</td>
                   <td>
-                    <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" title="Modifier">
-                      <i class=" fa fa-pencil"></i>
-                    </a>
-                    <a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}" title="#i18n{quiz.manage_question.linkTitleDeleteQuestion}">
-                      <i class=" fa fa-trash"></i>
-                    </a>
+                    <@aButton color='primary' buttonIcon='pencil' href='jsp/admin/plugins/quiz/ModifyQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}' title='Modifier' showTitle=false />
+                    <@aButton color='danger' buttonIcon='trash' href='jsp/admin/plugins/quiz/RemoveQuestion.jsp?quiz_id=${quiz.idQuiz}&question_id=${question.idQuestion}' title='#i18n{quiz.manage_question.linkTitleDeleteQuestion}' showTitle=false />
                   </td>
                 </tr>
               </#list>
-            </tbody>
-          </table>
+          
+          </@table>
         </div>
       </div>
     </div>
-    </div>
-  </div>
-</div>
+    </@box>
+    </@columns>
+</@row>
+    
