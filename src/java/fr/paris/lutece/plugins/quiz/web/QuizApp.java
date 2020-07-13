@@ -46,6 +46,7 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -189,7 +190,7 @@ public class QuizApp implements XPageApplication
             Quiz quiz = _quizService.findQuizById( nIdQuiz );
             if ( !quiz.isEnabled( ) )
             {
-                return getQuizList( request.getLocale( ) );
+                return getQuizList( getLocale( request ) );
             }
 
             if ( quiz.getDisplayStepByStep( ) )
@@ -218,20 +219,20 @@ public class QuizApp implements XPageApplication
                         if ( !StringUtils.equals( ACTION_NEXT_STEP, strAction ) )
                         {
                             mapResponsesCurrentStep = saveAndValidateQuizAnswers( quiz, nOldStepId,
-                                    request.getParameterMap( ), request.getLocale( ), plugin, request.getSession( true ) );
+                                    request.getParameterMap( ), getLocale( request ), plugin, request.getSession( true ) );
                             // We check that the map does not contain errors
                             String[] strError = mapResponsesCurrentStep.get( QuizService.KEY_ERROR );
 
                             if ( strError != null && strError.length > 0 )
                             {
-                                return getErrorPage( quiz.getIdQuiz( ), strError[0], nOldStepId, request.getLocale( ) );
+                                return getErrorPage( quiz.getIdQuiz( ), strError[0], nOldStepId, getLocale( request ) );
                             }
                         }
 
                         // If we must display the result of the current step
                         if ( quiz.getDisplayResultAfterEachStep( ) && StringUtils.equals( strAction, PARAMETER_RESULTS ) )
                         {
-                            page = getQuizStepResults( quiz, nOldStepId, request.getLocale( ), mapResponsesCurrentStep,
+                            page = getQuizStepResults( quiz, nOldStepId, getLocale( request ), mapResponsesCurrentStep,
                                     request.getSession( ), plugin );
                         }
                     }
@@ -248,7 +249,7 @@ public class QuizApp implements XPageApplication
                     page = getQuizNextStep( quiz, nOldStepId, request );
                     if ( page == null )
                     {
-                        page = getQuizResults( quiz, request.getLocale( ), getUserAnswers( request.getSession( ) ),
+                        page = getQuizResults( quiz, getLocale( request ), getUserAnswers( request.getSession( ) ),
                                 plugin );
                     }
                 }
@@ -257,17 +258,17 @@ public class QuizApp implements XPageApplication
             {
                 if ( strAction != null && strAction.equals( PARAMETER_RESULTS ) )
                 {
-                    page = getQuizResults( quiz, request.getLocale( ), request.getParameterMap( ), plugin );
+                    page = getQuizResults( quiz, getLocale( request ), request.getParameterMap( ), plugin );
                 }
                 else
                 {
-                    page = getQuizPage( nIdQuiz, request.getLocale( ) );
+                    page = getQuizPage( nIdQuiz, getLocale( request ) );
                 }
             }
         }
         else
         {
-            page = getQuizList( request.getLocale( ) );
+            page = getQuizList( getLocale( request ) );
         }
 
         return page;
@@ -349,17 +350,17 @@ public class QuizApp implements XPageApplication
             // The quiz is over
             int nScore = (Integer) request.getSession( ).getAttribute( MARK_SCORE );
 
-            String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, request.getLocale( ) );
+            String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, getLocale( request ) );
 
             switch ( nScore )
             {
             case 0:
-                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, request.getLocale( ) );
+                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, getLocale( request ) );
 
                 break;
 
             case 1:
-                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, request.getLocale( ) );
+                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, getLocale( request ) );
 
                 break;
 
@@ -376,11 +377,11 @@ public class QuizApp implements XPageApplication
 
         model.put( MARK_IS_LAST_GROUP, nIdLastQuizGroup == group.getIdGroup( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST_STEP, request.getLocale( ),
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_QUESTIONS_LIST_STEP, getLocale( request ),
                 model );
         page.setContent( template.getHtml( ) );
 
-        setQuizProperties( quiz, page, model, request.getLocale( ) );
+        setQuizProperties( quiz, page, model, getLocale( request ) );
 
         return page;
     }
@@ -627,5 +628,17 @@ public class QuizApp implements XPageApplication
         Object[] args = { quiz.getName( ) };
         page.setPathLabel( MessageFormat.format( strPath, args ) );
         page.setTitle( MessageFormat.format( strTitle, args ) );
+    }
+    
+    /**
+     * Default getLocale() implementation. Could be overriden
+     * 
+     * @param request
+     *            The HTTP request
+     * @return The Locale
+     */
+    protected Locale getLocale( HttpServletRequest request )
+    {
+        return LocaleService.getContextUserLocale( request );
     }
 }
