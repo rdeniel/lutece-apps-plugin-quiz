@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ package fr.paris.lutece.plugins.quiz.business.images;
 public class QuizImage
 {
     private int _nIdImage;
-    private byte[] _bArrayContent;
+    private byte [ ] _bArrayContent;
     private String _strContentType;
 
     /**
@@ -52,10 +52,13 @@ public class QuizImage
 
     /**
      * Constructor with every parameters initialized
-     * @param bArrayContent The content of the image
-     * @param strContentType The content type
+     * 
+     * @param bArrayContent
+     *            The content of the image
+     * @param strContentType
+     *            The content type
      */
-    public QuizImage( byte[] bArrayContent, String strContentType )
+    public QuizImage( byte [ ] bArrayContent, String strContentType )
     {
         this._bArrayContent = bArrayContent;
         this._strContentType = strContentType;
@@ -63,11 +66,15 @@ public class QuizImage
 
     /**
      * Constructor with every parameters initialized
-     * @param nIdImage The id of the image
-     * @param bArrayContent The content of the image
-     * @param strContentType The content type
+     * 
+     * @param nIdImage
+     *            The id of the image
+     * @param bArrayContent
+     *            The content of the image
+     * @param strContentType
+     *            The content type
      */
-    public QuizImage( int nIdImage, byte[] bArrayContent, String strContentType )
+    public QuizImage( int nIdImage, byte [ ] bArrayContent, String strContentType )
     {
         this._nIdImage = nIdImage;
         this._bArrayContent = bArrayContent;
@@ -76,6 +83,7 @@ public class QuizImage
 
     /**
      * Get the id of the image
+     * 
      * @return The id of the image
      */
     public int getIdImage( )
@@ -85,7 +93,9 @@ public class QuizImage
 
     /**
      * Set the id of the image
-     * @param nIdImage The id of the image
+     * 
+     * @param nIdImage
+     *            The id of the image
      */
     public void setIdImage( int nIdImage )
     {
@@ -94,24 +104,28 @@ public class QuizImage
 
     /**
      * Get the content of the image
+     * 
      * @return The content of the image
      */
-    public byte[] getContent( )
+    public byte [ ] getContent( )
     {
         return _bArrayContent;
     }
 
     /**
      * Set the content of the image
-     * @param bArrayContent The content of the image
+     * 
+     * @param bArrayContent
+     *            The content of the image
      */
-    public void setContent( byte[] bArrayContent )
+    public void setContent( byte [ ] bArrayContent )
     {
         this._bArrayContent = bArrayContent;
     }
 
     /**
      * Get the content type of the image
+     * 
      * @return The content type of the image
      */
     public String getContentType( )
@@ -121,7 +135,9 @@ public class QuizImage
 
     /**
      * Set the content type of the image
-     * @param strContentType The content type of the image
+     * 
+     * @param strContentType
+     *            The content type of the image
      */
     public void setContentType( String strContentType )
     {

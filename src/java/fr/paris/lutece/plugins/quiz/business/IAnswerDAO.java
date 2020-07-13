@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.List;
 
-
 /**
  * IAnswerDAO Interface
  */
@@ -45,23 +44,33 @@ public interface IAnswerDAO
 {
     /**
      * Insert a new record in the table.
-     * @param nIdQuestion The question Id
-     * @param answer instance of the Answer object to inssert
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuestion
+     *            The question Id
+     * @param answer
+     *            instance of the Answer object to inssert
+     * @param plugin
+     *            the Plugin
      */
     void insert( int nIdQuestion, Answer answer, Plugin plugin );
 
     /**
      * Update the record in the table
-     * @param answer the reference of the Answer
-     * @param plugin the Plugin
+     * 
+     * @param answer
+     *            the reference of the Answer
+     * @param plugin
+     *            the Plugin
      */
     void store( Answer answer, Plugin plugin );
 
     /**
      * Delete a record from the table
-     * @param nIdAnswer int identifier of the Answer to delete
-     * @param plugin the Plugin
+     * 
+     * @param nIdAnswer
+     *            int identifier of the Answer to delete
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nIdAnswer, Plugin plugin );
 
@@ -70,33 +79,44 @@ public interface IAnswerDAO
 
     /**
      * Load the data from the table
-     * @param nKey The identifier of the answer
-     * @param plugin the Plugin
+     * 
+     * @param nKey
+     *            The identifier of the answer
+     * @param plugin
+     *            the Plugin
      * @return The instance of the answer
      */
     Answer load( int nKey, Plugin plugin );
 
     /**
      * Load the data of all the answer objects and returns them as a List
-     * @param plugin the Plugin
-     * @param nIdQuestion the id of the question
+     * 
+     * @param plugin
+     *            the Plugin
+     * @param nIdQuestion
+     *            the id of the question
      * @return The List which contains the data of all the answer objects
      */
     List<Answer> selectAnswersList( int nIdQuestion, Plugin plugin );
 
     /**
      * Delete answer for a question
-     * @param nIdQuestion The question ID
-     * @param plugin The plugin
+     * 
+     * @param nIdQuestion
+     *            The question ID
+     * @param plugin
+     *            The plugin
      */
     void deleteAnswersByQuestion( int nIdQuestion, Plugin plugin );
 
     /**
      * Load the data of the answer from the table
-     * @param nIdProfil The identifier of the profil
-     * @param plugin The plugin
-     * @return <code>true</code> if there is at least one answer with profil,
-     *         <code>false</code> otherwise
+     * 
+     * @param nIdProfil
+     *            The identifier of the profil
+     * @param plugin
+     *            The plugin
+     * @return <code>true</code> if there is at least one answer with profil, <code>false</code> otherwise
      */
     boolean isAnswersWithProfil( int nIdProfil, Plugin plugin );
 

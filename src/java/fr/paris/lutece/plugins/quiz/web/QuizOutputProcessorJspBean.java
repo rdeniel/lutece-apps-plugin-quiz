@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Jsp bean to manage output processors
  */
@@ -84,10 +83,12 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
 
     /**
      * Get the page to manage output processors of a given quiz
-     * @param request The request
-     * @param response The response
-     * @return The HTML content to display, or null if the user has been
-     *         redirected top another URL
+     * 
+     * @param request
+     *            The request
+     * @param response
+     *            The response
+     * @return The HTML content to display, or null if the user has been redirected top another URL
      */
     public String getManageOutputProcessors( HttpServletRequest request, HttpServletResponse response )
     {
@@ -97,10 +98,9 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
         {
             setPageTitleProperty( MESSAGE_MANAGE_PROCESSORS_PAGE_TITLE );
             int nQuizId = Integer.parseInt( strQuizId );
-            //            Quiz quiz = _quizService.findQuizById( nQuizId );
+            // Quiz quiz = _quizService.findQuizById( nQuizId );
 
-            List<IQuizOutputProcessor> listProcessors = QuizOutputProcessorManagementService.getInstance( )
-                    .getProcessorsList( );
+            List<IQuizOutputProcessor> listProcessors = QuizOutputProcessorManagementService.getInstance( ).getProcessorsList( );
 
             List<Map<String, Object>> listProcessorForm = new ArrayList<Map<String, Object>>( );
             List<IQuizOutputProcessor> listDisabledProcessors = new ArrayList<IQuizOutputProcessor>( );
@@ -108,8 +108,7 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
             for ( IQuizOutputProcessor processor : listProcessors )
             {
                 // If the processor is enabled
-                if ( QuizOutputProcessorManagementService.getInstance( ).isProcessorEnabled(
-                        processor.getProcessorId( ), nQuizId ) )
+                if ( QuizOutputProcessorManagementService.getInstance( ).isProcessorEnabled( processor.getProcessorId( ), nQuizId ) )
                 {
                     Map<String, Object> mapProcessorContent = new HashMap<String, Object>( 2 );
                     mapProcessorContent.put( MARK_ID_PROCESSOR, processor.getProcessorId( ) );
@@ -130,8 +129,7 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
             model.put( MARK_LOCALE, getLocale( ) );
             model.put( PARAMETER_QUIZ_ID, nQuizId );
 
-            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANANGE_OUTPUT_PROCESSORS, getLocale( ),
-                    model );
+            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANANGE_OUTPUT_PROCESSORS, getLocale( ), model );
             return getAdminPage( template.getHtml( ) );
         }
 
@@ -139,7 +137,7 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
         {
             response.sendRedirect( AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_QUIZ );
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -148,7 +146,9 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
 
     /**
      * Do change the enabling of a processor for a given quiz
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The next URL to redirect to
      */
     public String doEnableDisableProcessor( HttpServletRequest request )
@@ -172,19 +172,19 @@ public class QuizOutputProcessorJspBean extends PluginAdminPageJspBean
 
     /**
      * Do modify the configuration of a processor
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The next URL to redirect to
      */
     public String doModifyProcessorConfig( HttpServletRequest request )
     {
         String strIdQuiz = request.getParameter( PARAMETER_QUIZ_ID );
         String strIdProcessor = request.getParameter( MARK_ID_PROCESSOR );
-        if ( StringUtils.isNotEmpty( strIdProcessor ) && StringUtils.isNotEmpty( strIdQuiz )
-                && StringUtils.isNumeric( strIdQuiz ) )
+        if ( StringUtils.isNotEmpty( strIdProcessor ) && StringUtils.isNotEmpty( strIdQuiz ) && StringUtils.isNumeric( strIdQuiz ) )
         {
             int nIdQuiz = Integer.parseInt( strIdQuiz );
-            IQuizOutputProcessor processor = QuizOutputProcessorManagementService.getInstance( ).getProcessor(
-                    strIdProcessor );
+            IQuizOutputProcessor processor = QuizOutputProcessorManagementService.getInstance( ).getProcessor( strIdProcessor );
             if ( processor != null )
             {
                 processor.doUpdateConfiguration( request, nIdQuiz );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,8 @@ public class UserAnswer
     }
 
     /**
-     * @param nQuestionId the questionId to set
+     * @param nQuestionId
+     *            the questionId to set
      */
     public void setQuestionId( int nQuestionId )
     {
@@ -70,7 +71,8 @@ public class UserAnswer
     }
 
     /**
-     * @param strQuestion the question to set
+     * @param strQuestion
+     *            the question to set
      */
     public void setQuestion( String strQuestion )
     {
@@ -86,7 +88,8 @@ public class UserAnswer
     }
 
     /**
-     * @param strExplaination the Explaination to set
+     * @param strExplaination
+     *            the Explaination to set
      */
     public void setExplaination( String strExplaination )
     {
@@ -102,7 +105,8 @@ public class UserAnswer
     }
 
     /**
-     * @param strAnswer the answer to set
+     * @param strAnswer
+     *            the answer to set
      */
     public void setAnswer( String strAnswer )
     {
@@ -118,7 +122,8 @@ public class UserAnswer
     }
 
     /**
-     * @param strValidAnswer the validAnswer to set
+     * @param strValidAnswer
+     *            the validAnswer to set
      */
     public void setValidAnswer( String strValidAnswer )
     {
@@ -127,6 +132,7 @@ public class UserAnswer
 
     /**
      * Check if this answer is a valid answer
+     * 
      * @return True if this answer is valid, false otherwise
      */
     public boolean getIsValid( )
@@ -136,7 +142,9 @@ public class UserAnswer
 
     /**
      * Set this answer valid or invalid
-     * @param bIsValid True if this answer is valid, false otherwise
+     * 
+     * @param bIsValid
+     *            True if this answer is valid, false otherwise
      */
     public void setIsValid( boolean bIsValid )
     {

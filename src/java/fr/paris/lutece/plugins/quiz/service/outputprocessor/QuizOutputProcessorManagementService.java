@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Service to manage quiz output processors.
  */
@@ -61,6 +60,7 @@ public final class QuizOutputProcessorManagementService
 
     /**
      * Get the instance of the service
+     * 
      * @return The instance of the service
      */
     public static QuizOutputProcessorManagementService getInstance( )
@@ -70,6 +70,7 @@ public final class QuizOutputProcessorManagementService
 
     /**
      * Get the list of every processors
+     * 
      * @return the list of every processors
      */
     public List<IQuizOutputProcessor> getProcessorsList( )
@@ -79,7 +80,9 @@ public final class QuizOutputProcessorManagementService
 
     /**
      * Get a processor from its id
-     * @param strProcessorId The id of the processor to get
+     * 
+     * @param strProcessorId
+     *            The id of the processor to get
      * @return The processor, or null if no processor has the given id
      */
     public IQuizOutputProcessor getProcessor( String strProcessorId )
@@ -96,8 +99,11 @@ public final class QuizOutputProcessorManagementService
 
     /**
      * Check if a processor is enabled or not for a given quiz
-     * @param strProcessorId The id of the processor to check
-     * @param nIdQuiz The id of the quiz
+     * 
+     * @param strProcessorId
+     *            The id of the processor to check
+     * @param nIdQuiz
+     *            The id of the quiz
      * @return True if the processor is enabled, false otherwise
      */
     public boolean isProcessorEnabled( String strProcessorId, int nIdQuiz )
@@ -113,17 +119,18 @@ public final class QuizOutputProcessorManagementService
     }
 
     /**
-     * Enable or disable a processor for a given quiz. If the processor was
-     * enabled, it is disabled and vice versa
-     * @param nIdQuiz The id of the quiz
-     * @param strProcessorId The id of the processor to enable or disable
+     * Enable or disable a processor for a given quiz. If the processor was enabled, it is disabled and vice versa
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz
+     * @param strProcessorId
+     *            The id of the processor to enable or disable
      */
     public void changeProcessorEnabling( String strProcessorId, int nIdQuiz )
     {
         boolean isEnabled = isProcessorEnabled( strProcessorId, nIdQuiz );
         IQuizOutputProcessor processor = getProcessor( strProcessorId );
-        DatastoreService.setDataValue( getProcessorEnablingDatastoreKey( strProcessorId, nIdQuiz ),
-                Boolean.toString( !isEnabled ) );
+        DatastoreService.setDataValue( getProcessorEnablingDatastoreKey( strProcessorId, nIdQuiz ), Boolean.toString( !isEnabled ) );
         if ( isEnabled )
         {
             processor.notifyProcessorDisabling( nIdQuiz );
@@ -136,7 +143,9 @@ public final class QuizOutputProcessorManagementService
 
     /**
      * Disable every enabled processors for a given quiz
-     * @param nIdQuiz the id of the quiz to disable processors of
+     * 
+     * @param nIdQuiz
+     *            the id of the quiz to disable processors of
      */
     public void disableProcessors( int nIdQuiz )
     {
@@ -150,12 +159,14 @@ public final class QuizOutputProcessorManagementService
     }
 
     /**
-     * Process every enabled processors for a given quiz over answers made by a
-     * user
-     * @param mapAnswers the map containing answers
-     * @param nIdQuiz The id of the answered quiz
+     * Process every enabled processors for a given quiz over answers made by a user
+     * 
+     * @param mapAnswers
+     *            the map containing answers
+     * @param nIdQuiz
+     *            The id of the answered quiz
      */
-    public void processEnabledProcessors( Map<String, String[]> mapAnswers, String strScore, int nIdQuiz )
+    public void processEnabledProcessors( Map<String, String [ ]> mapAnswers, String strScore, int nIdQuiz )
     {
         for ( IQuizOutputProcessor processor : getProcessorsList( ) )
         {
@@ -168,13 +179,15 @@ public final class QuizOutputProcessorManagementService
 
     /**
      * Get the datastore key to save the enabling of a processor for a quiz
-     * @param strProcessorId The id of the processor
-     * @param nIdQuiz The id of the quiz
+     * 
+     * @param strProcessorId
+     *            The id of the processor
+     * @param nIdQuiz
+     *            The id of the quiz
      * @return The datastore key
      */
     private String getProcessorEnablingDatastoreKey( String strProcessorId, int nIdQuiz )
     {
-        return DATASTORE_KEY_QUIZ_OUTPUT_PROCESSOR_ENABLED + strProcessorId
-                + DATASTORE_KEY_QUIZ_OUTPUT_PROCESSOR_ENABLED_QUIZ + nIdQuiz;
+        return DATASTORE_KEY_QUIZ_OUTPUT_PROCESSOR_ENABLED + strProcessorId + DATASTORE_KEY_QUIZ_OUTPUT_PROCESSOR_ENABLED_QUIZ + nIdQuiz;
     }
 }

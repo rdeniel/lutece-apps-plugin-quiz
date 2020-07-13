@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,8 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Collection;
 
-
 /**
- * This class provides instances management methods (create, find, ...) for Quiz
- * objects
+ * This class provides instances management methods (create, find, ...) for Quiz objects
  */
 public final class QuizHome
 {
@@ -57,9 +55,10 @@ public final class QuizHome
     /**
      * Creation of an instance of an article Quiz
      * 
-     * @param quiz An instance of the Quiz which contains the informations to
-     *            store
-     * @param plugin the plugin
+     * @param quiz
+     *            An instance of the Quiz which contains the informations to store
+     * @param plugin
+     *            the plugin
      * @return The instance of the Quiz which has been created
      */
     public static Quiz create( Quiz quiz, Plugin plugin )
@@ -72,9 +71,10 @@ public final class QuizHome
     /**
      * Updates of the Quiz instance specified in parameter
      * 
-     * @param quiz An instance of the Quiz which contains the informations to
-     *            store
-     * @param plugin the plugin
+     * @param quiz
+     *            An instance of the Quiz which contains the informations to store
+     * @param plugin
+     *            the plugin
      * @return The instance of the Quiz which has been updated.
      */
     public static Quiz update( Quiz quiz, Plugin plugin )
@@ -87,9 +87,10 @@ public final class QuizHome
     /**
      * Deletes the Quiz instance whose identifier is specified in parameter
      * 
-     * @param nIdQuiz The identifier of the article Quiz to delete in the
-     *            database
-     * @param plugin the plugin
+     * @param nIdQuiz
+     *            The identifier of the article Quiz to delete in the database
+     * @param plugin
+     *            the plugin
      */
     public static void remove( int nIdQuiz, Plugin plugin )
     {
@@ -100,11 +101,12 @@ public final class QuizHome
     // Finders
 
     /**
-     * Returns an instance of the article Quiz whose identifier is specified in
-     * parameter
+     * Returns an instance of the article Quiz whose identifier is specified in parameter
      * 
-     * @param nKey The primary key of the article to find in the database
-     * @param plugin the plugin
+     * @param nKey
+     *            The primary key of the article to find in the database
+     * @param plugin
+     *            the plugin
      * @return An instance of the Quiz which corresponds to the key
      */
     public static Quiz findByPrimaryKey( int nKey, Plugin plugin )
@@ -115,9 +117,9 @@ public final class QuizHome
     /**
      * Returns Quiz list
      * 
-     * @param plugin the plugin
-     * @return the list of the Quiz of the database in form of a Quiz Collection
-     *         object
+     * @param plugin
+     *            the plugin
+     * @return the list of the Quiz of the database in form of a Quiz Collection object
      */
     public static Collection<Quiz> findAll( Plugin plugin )
     {
@@ -127,9 +129,9 @@ public final class QuizHome
     /**
      * Returns Quiz list
      * 
-     * @param plugin the plugin
-     * @return the list of the Quiz enabled of the database in form of a Quiz
-     *         Collection object
+     * @param plugin
+     *            the plugin
+     * @return the list of the Quiz enabled of the database in form of a Quiz Collection object
      */
     public static Collection<Quiz> findAllEnabled( Plugin plugin )
     {
@@ -138,7 +140,9 @@ public final class QuizHome
 
     /**
      * Returns the last quiz
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * 
      * @return The last quiz
      */

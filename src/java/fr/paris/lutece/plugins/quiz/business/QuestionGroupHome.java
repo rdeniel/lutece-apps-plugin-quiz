@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,10 +39,8 @@ import fr.paris.lutece.util.ReferenceList;
 
 import java.util.List;
 
-
 /**
- * This class provides instances management methods (create, find, ...) for
- * QuestionGroup objects
+ * This class provides instances management methods (create, find, ...) for QuestionGroup objects
  */
 public final class QuestionGroupHome
 {
@@ -58,12 +56,14 @@ public final class QuestionGroupHome
 
     /**
      * Create an instance of the group class
-     * @param nIdQuiz The quiz ID
-     * @param group The instance of the QuestionGroup which contains the
-     *            informations to store
-     * @param plugin the Plugin
-     * @return The instance of group which has been created with its primary
-     *         key.
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param group
+     *            The instance of the QuestionGroup which contains the informations to store
+     * @param plugin
+     *            the Plugin
+     * @return The instance of group which has been created with its primary key.
      */
     public static QuestionGroup create( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
@@ -74,9 +74,11 @@ public final class QuestionGroupHome
 
     /**
      * Update of the group which is specified in parameter
-     * @param group The instance of the QuestionGroup which contains the data to
-     *            store
-     * @param plugin the Plugin
+     * 
+     * @param group
+     *            The instance of the QuestionGroup which contains the data to store
+     * @param plugin
+     *            the Plugin
      * @return The instance of the group which has been updated
      */
     public static QuestionGroup update( QuestionGroup group, Plugin plugin )
@@ -88,9 +90,13 @@ public final class QuestionGroupHome
 
     /**
      * Remove the group whose identifier is specified in parameter
-     * @param nIdQuiz The quiz ID
-     * @param nGroupId The group Id
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param nGroupId
+     *            The group Id
+     * @param plugin
+     *            the Plugin
      */
     public static void remove( int nIdQuiz, int nGroupId, Plugin plugin )
     {
@@ -102,8 +108,11 @@ public final class QuestionGroupHome
 
     /**
      * Returns an instance of a group whose identifier is specified in parameter
-     * @param nKey The group primary key
-     * @param plugin the Plugin
+     * 
+     * @param nKey
+     *            The group primary key
+     * @param plugin
+     *            the Plugin
      * @return an instance of QuestionGroup
      */
     public static QuestionGroup findByPrimaryKey( int nKey, Plugin plugin )
@@ -112,10 +121,12 @@ public final class QuestionGroupHome
     }
 
     /**
-     * Load the data of every group objects attached to a given quiz and returns
-     * them in a list
-     * @param nIdQuiz The quiz ID
-     * @param plugin the Plugin
+     * Load the data of every group objects attached to a given quiz and returns them in a list
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param plugin
+     *            the Plugin
      * @return the list which contains the data of all the group objects
      */
     public static List<QuestionGroup> getGroupsList( int nIdQuiz, Plugin plugin )
@@ -125,9 +136,13 @@ public final class QuestionGroupHome
 
     /**
      * Find a group by its quiz and position
-     * @param nIdQuiz The quiz ID
-     * @param nPosition The position of the required group
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param nPosition
+     *            The position of the required group
+     * @param plugin
+     *            the Plugin
      * @return The requested group, or null if no group has the given position
      */
     public static QuestionGroup getGroupByPosition( int nIdQuiz, int nPosition, Plugin plugin )
@@ -137,9 +152,12 @@ public final class QuestionGroupHome
 
     /**
      * Select the list of Groups
-     * @param nIdQuiz The quiz ID
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
      * @return Groups list
-     * @param plugin plugin Quiz
+     * @param plugin
+     *            plugin Quiz
      */
     public static ReferenceList getGroupsReferenceList( int nIdQuiz, Plugin plugin )
     {
@@ -148,8 +166,11 @@ public final class QuestionGroupHome
 
     /**
      * Remove a group for a given quiz
-     * @param nIdQuiz The quiz id
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz id
+     * @param plugin
+     *            The plugin
      */
     public static void removeByQuiz( int nIdQuiz, Plugin plugin )
     {
@@ -158,9 +179,13 @@ public final class QuestionGroupHome
 
     /**
      * Move up a group
-     * @param nIdQuiz The quiz id
-     * @param group The group
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz id
+     * @param group
+     *            The group
+     * @param plugin
+     *            The plugin
      */
     public static void moveUpGroup( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
@@ -169,9 +194,13 @@ public final class QuestionGroupHome
 
     /**
      * Move down a group
-     * @param nIdQuiz The quiz id
-     * @param group The group
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz id
+     * @param group
+     *            The group
+     * @param plugin
+     *            The plugin
      */
     public static void moveDownGroup( int nIdQuiz, QuestionGroup group, Plugin plugin )
     {
@@ -180,8 +209,11 @@ public final class QuestionGroupHome
 
     /**
      * Find the id of last group in quiz
-     * @param nIdQuiz the quiz id
-     * @param plugin the plugin
+     * 
+     * @param nIdQuiz
+     *            the quiz id
+     * @param plugin
+     *            the plugin
      * @return the id of corresponding group
      */
     public static int findLastByQuiz( int nIdQuiz, Plugin plugin )
@@ -190,12 +222,13 @@ public final class QuestionGroupHome
     }
 
     /**
-     * Check if a quiz has a free HTML group that will display the result of the
-     * quiz
-     * @param nIdQuiz The id of the quiz
-     * @param plugin The plugin
-     * @return True if the quiz has a free HTML group that will display the
-     *         result of the quiz, false otherwise
+     * Check if a quiz has a free HTML group that will display the result of the quiz
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz
+     * @param plugin
+     *            The plugin
+     * @return True if the quiz has a free HTML group that will display the result of the quiz, false otherwise
      */
     public static boolean hasGroupDisplayScore( int nIdQuiz, Plugin plugin )
     {

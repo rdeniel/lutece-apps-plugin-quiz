@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.quiz.business;
 
-
 /**
  * This is the business class for the object Answer
  */
@@ -49,6 +48,7 @@ public class Answer
 
     /**
      * Returns the IdAnswer
+     * 
      * @return The IdAnswer
      */
     public int getIdAnswer( )
@@ -58,7 +58,9 @@ public class Answer
 
     /**
      * Sets the IdAnswer
-     * @param nIdAnswer The IdAnswer
+     * 
+     * @param nIdAnswer
+     *            The IdAnswer
      */
     public void setIdAnswer( int nIdAnswer )
     {
@@ -67,6 +69,7 @@ public class Answer
 
     /**
      * Returns the IdQuestion
+     * 
      * @return The IdQuestion
      */
     public int getIdQuestion( )
@@ -76,7 +79,9 @@ public class Answer
 
     /**
      * Sets the IdQuestion
-     * @param nIdQuestion The IdQuestion
+     * 
+     * @param nIdQuestion
+     *            The IdQuestion
      */
     public void setIdQuestion( int nIdQuestion )
     {
@@ -85,6 +90,7 @@ public class Answer
 
     /**
      * Returns the LabelAnswer
+     * 
      * @return The LabelAnswer
      */
     public String getLabelAnswer( )
@@ -94,7 +100,9 @@ public class Answer
 
     /**
      * Sets the LabelAnswer
-     * @param strLabelAnswer The LabelAnswer
+     * 
+     * @param strLabelAnswer
+     *            The LabelAnswer
      */
     public void setLabelAnswer( String strLabelAnswer )
     {
@@ -103,6 +111,7 @@ public class Answer
 
     /**
      * Returns the IsValid
+     * 
      * @return The IsValid
      */
     public int getValid( )
@@ -112,6 +121,7 @@ public class Answer
 
     /**
      * Returns true if it is the correct answer
+     * 
      * @return true if it is the correct answer
      */
     public boolean isCorrect( )
@@ -121,7 +131,9 @@ public class Answer
 
     /**
      * Sets the IsValid
-     * @param nIsValid The IsValid
+     * 
+     * @param nIsValid
+     *            The IsValid
      */
     public void setValid( int nIsValid )
     {
@@ -137,7 +149,8 @@ public class Answer
     }
 
     /**
-     * @param nIdProfile the _nIdProfil to set
+     * @param nIdProfile
+     *            the _nIdProfil to set
      */
     public void setIdProfile( int nIdProfile )
     {
@@ -153,7 +166,8 @@ public class Answer
     }
 
     /**
-     * @param strProfil the _strProfil to set
+     * @param strProfil
+     *            the _strProfil to set
      */
     public void setProfil( String strProfil )
     {

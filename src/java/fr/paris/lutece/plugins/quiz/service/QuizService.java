@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Quiz Service
  */
@@ -114,6 +113,7 @@ public class QuizService
 
     /**
      * Gets the list of quiz
+     * 
      * @return The model
      */
     public Map<String, Object> getQuizList( )
@@ -128,7 +128,9 @@ public class QuizService
 
     /**
      * Find a quiz by its primary key
-     * @param nQuizId The id of the quiz
+     * 
+     * @param nQuizId
+     *            The id of the quiz
      * @return The quiz with the given id, or null if no quiz was found
      */
     public Quiz findQuizById( int nQuizId )
@@ -138,7 +140,9 @@ public class QuizService
 
     /**
      * Gets a quiz as a model map
-     * @param nId The quiz Id
+     * 
+     * @param nId
+     *            The quiz Id
      * @return The model
      */
     public Map<String, Object> getQuiz( int nId )
@@ -165,9 +169,11 @@ public class QuizService
 
     /**
      * Gets a quiz step as a model map
-     * @param quiz The quiz
-     * @param nOldStepId The id of the last displayed step, or 0 to display the
-     *            first step
+     * 
+     * @param quiz
+     *            The quiz
+     * @param nOldStepId
+     *            The id of the last displayed step, or 0 to display the first step
      * @return The model
      */
     public Map<String, Object> getQuizNextStep( Quiz quiz, int nOldStepId )
@@ -179,8 +185,7 @@ public class QuizService
         {
             return null;
         }
-        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
-                group.getIdGroup( ), plugin );
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ), group.getIdGroup( ), plugin );
 
         for ( QuizQuestion question : questionsList )
         {
@@ -199,6 +204,7 @@ public class QuizService
 
     /**
      * Gets the plugin object
+     * 
      * @return The plugin
      */
     private static Plugin getPlugin( )
@@ -213,17 +219,22 @@ public class QuizService
 
     /**
      * Get the answers of a user to questions of a quiz
-     * @param nIdQuiz The id of the quiz to get answers of
-     * @param nIdOldStep The last validated step
-     * @param parameterMap The map of HTTP parameters
-     * @param locale The locale to use to display error messages
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz to get answers of
+     * @param nIdOldStep
+     *            The last validated step
+     * @param parameterMap
+     *            The map of HTTP parameters
+     * @param locale
+     *            The locale to use to display error messages
+     * @param plugin
+     *            The plugin
      * @return A map containing question ids as keys and user answers as values
      */
-    public Map<String, String[]> getUserAnswersForGroup( int nIdQuiz, int nIdOldStep,
-            Map<String, String[]> parameterMap, Locale locale, Plugin plugin )
+    public Map<String, String [ ]> getUserAnswersForGroup( int nIdQuiz, int nIdOldStep, Map<String, String [ ]> parameterMap, Locale locale, Plugin plugin )
     {
-        //        Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
+        // Collection<QuizQuestion> questionsList = QuizQuestionHome.findAll( nIdQuiz, getPlugin( ) );
         QuestionGroup group = QuestionGroupHome.getGroupByPosition( nIdQuiz, nIdOldStep, plugin );
         // If the group was not found
         if ( group == null )
@@ -233,8 +244,8 @@ public class QuizService
         if ( group.getIsFreeHtml( ) )
         {
             String strPrefix = AppPropertiesService.getProperty( PROPERTY_INPUT_PREFIX );
-            Map<String, String[]> mapUserAnswers = new HashMap<String, String[]>( );
-            for ( Entry<String, String[]> entry : parameterMap.entrySet( ) )
+            Map<String, String [ ]> mapUserAnswers = new HashMap<String, String [ ]>( );
+            for ( Entry<String, String [ ]> entry : parameterMap.entrySet( ) )
             {
                 if ( entry.getKey( ).startsWith( strPrefix ) )
                 {
@@ -244,19 +255,19 @@ public class QuizService
             return mapUserAnswers;
         }
 
-        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( nIdQuiz,
-                group.getIdGroup( ), plugin );
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( nIdQuiz, group.getIdGroup( ), plugin );
 
-        Map<String, String[]> mapUserAnswers = new HashMap<String, String[]>( questionsList.size( ) );
+        Map<String, String [ ]> mapUserAnswers = new HashMap<String, String [ ]>( questionsList.size( ) );
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
-            String[] values = parameterMap.get( strQuestionId );
+            String [ ] values = parameterMap.get( strQuestionId );
             if ( values == null )
             {
-                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION,
-                        locale );
-                String[] strArray = { strMsgNoAnswserForQuestion + question.getQuestionLabel( ) };
+                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION, locale );
+                String [ ] strArray = {
+                        strMsgNoAnswserForQuestion + question.getQuestionLabel( )
+                };
                 mapUserAnswers.put( KEY_ERROR, strArray );
 
                 return mapUserAnswers;
@@ -268,12 +279,16 @@ public class QuizService
 
     /**
      * Get results
-     * @param nIdQuiz The quiz Id
-     * @param parameterMap The parameters map
-     * @param locale The current locale
+     * 
+     * @param nIdQuiz
+     *            The quiz Id
+     * @param parameterMap
+     *            The parameters map
+     * @param locale
+     *            The current locale
      * @return a model as a map
      */
-    public Map<String, Object> getResults( int nIdQuiz, Map<String, String[]> parameterMap, Locale locale )
+    public Map<String, Object> getResults( int nIdQuiz, Map<String, String [ ]> parameterMap, Locale locale )
     {
         Map<String, Object> model = new HashMap<String, Object>( );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
@@ -285,18 +300,17 @@ public class QuizService
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
-            String[] values = parameterMap.get( strQuestionId );
+            String [ ] values = parameterMap.get( strQuestionId );
 
             if ( values == null )
             {
-                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION,
-                        locale );
+                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION, locale );
                 model.put( KEY_ERROR, strMsgNoAnswserForQuestion + question.getQuestionLabel( ) );
 
                 return model;
             }
 
-            String strUserAnswer = values[0];
+            String strUserAnswer = values [0];
 
             if ( strUserAnswer != null )
             {
@@ -322,23 +336,25 @@ public class QuizService
 
         String strMessage = I18nService.getLocalizedString( PROPERTY_MSG_MANY_GOOD_ANSWERS, locale );
 
-        switch ( nScore )
+        switch( nScore )
         {
-        case 0:
-            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, locale );
+            case 0:
+                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_NO_GOOD_ANSWER, locale );
 
-            break;
+                break;
 
-        case 1:
-            strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, locale );
+            case 1:
+                strMessage = I18nService.getLocalizedString( PROPERTY_MSG_ONE_GOOD_ANSWER, locale );
 
-            break;
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
 
-        Object[] args = { nScore, questionsList.size( ) };
+        Object [ ] args = {
+                nScore, questionsList.size( )
+        };
         String strScoreMessage = MessageFormat.format( strMessage, args );
         model.put( MARK_SCORE_MESSAGE, strScoreMessage );
         model.put( MARK_SCORE, nScore );
@@ -352,15 +368,20 @@ public class QuizService
 
     /**
      * Get results for the current step
-     * @param quiz The quiz
-     * @param nIdCurrentStep The id of the step
-     * @param mapResponsesCurrentStep The parameters map
-     * @param locale The current locale
-     * @param plugin The plugin
+     * 
+     * @param quiz
+     *            The quiz
+     * @param nIdCurrentStep
+     *            The id of the step
+     * @param mapResponsesCurrentStep
+     *            The parameters map
+     * @param locale
+     *            The current locale
+     * @param plugin
+     *            The plugin
      * @return a model as a map
      */
-    public Map<String, Object> getStepResults( Quiz quiz, int nIdCurrentStep,
-            Map<String, String[]> mapResponsesCurrentStep, Locale locale, Plugin plugin )
+    public Map<String, Object> getStepResults( Quiz quiz, int nIdCurrentStep, Map<String, String [ ]> mapResponsesCurrentStep, Locale locale, Plugin plugin )
     {
         Map<String, Object> model = new HashMap<String, Object>( );
         QuestionGroup group = QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nIdCurrentStep, plugin );
@@ -374,16 +395,15 @@ public class QuizService
             return null;
         }
 
-        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
-                group.getIdGroup( ), plugin );
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ), group.getIdGroup( ), plugin );
         int nScore = 0;
         List<UserAnswer> listUserAnswers = new ArrayList<UserAnswer>( questionsList.size( ) );
         Map<String, Integer> mapQuestionImages = new HashMap<String, Integer>( questionsList.size( ) );
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
-            String[] values = mapResponsesCurrentStep.get( strQuestionId );
-            String strUserAnswer = values[0];
+            String [ ] values = mapResponsesCurrentStep.get( strQuestionId );
+            String strUserAnswer = values [0];
 
             if ( strUserAnswer != null )
             {
@@ -419,12 +439,16 @@ public class QuizService
 
     /**
      * Compute the profile of a user from his answers
-     * @param nIdQuiz The id of the answered quiz
-     * @param parameterMap The map containing answers
-     * @param locale The locale
+     * 
+     * @param nIdQuiz
+     *            The id of the answered quiz
+     * @param parameterMap
+     *            The map containing answers
+     * @param locale
+     *            The locale
      * @return The model
      */
-    public Map<String, Object> calculateQuizProfile( int nIdQuiz, Map<String, String[]> parameterMap, Locale locale )
+    public Map<String, Object> calculateQuizProfile( int nIdQuiz, Map<String, String [ ]> parameterMap, Locale locale )
     {
         Map<String, Object> model = new HashMap<String, Object>( );
         Quiz quiz = QuizHome.findByPrimaryKey( nIdQuiz, getPlugin( ) );
@@ -434,18 +458,17 @@ public class QuizService
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
-            String[] values = parameterMap.get( strQuestionId );
+            String [ ] values = parameterMap.get( strQuestionId );
 
             if ( values == null )
             {
-                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION,
-                        locale );
+                String strMsgNoAnswserForQuestion = I18nService.getLocalizedString( PROPERTY_NO_ANSWER_FOR_QUESTION, locale );
                 model.put( KEY_ERROR, strMsgNoAnswserForQuestion + question.getQuestionLabel( ) );
 
                 return model;
             }
 
-            String strUserAnswer = values[0];
+            String strUserAnswer = values [0];
             if ( strUserAnswer != null )
             {
                 int nUserAnswer = Integer.parseInt( strUserAnswer );
@@ -476,10 +499,11 @@ public class QuizService
                 profilesId = new ArrayList<Integer>( );
                 profilesId.add( entry.getKey( ) );
             }
-            else if ( entry.getValue( ).compareTo( mainProfile ) == 0 )
-            {
-                profilesId.add( entry.getKey( ) );
-            }
+            else
+                if ( entry.getValue( ).compareTo( mainProfile ) == 0 )
+                {
+                    profilesId.add( entry.getKey( ) );
+                }
         }
 
         StringBuilder strProfile = new StringBuilder( );
@@ -503,15 +527,21 @@ public class QuizService
 
     /**
      * Compute the profile of a user from his answers
-     * @param quiz The quiz
-     * @param nIdCurrentStep The id of the current step
-     * @param mapResponsesCurrentStep The map containing answers
-     * @param locale The locale
-     * @param plugin The plugin
+     * 
+     * @param quiz
+     *            The quiz
+     * @param nIdCurrentStep
+     *            The id of the current step
+     * @param mapResponsesCurrentStep
+     *            The map containing answers
+     * @param locale
+     *            The locale
+     * @param plugin
+     *            The plugin
      * @return The model
      */
-    public Map<String, Object> calculateQuizStepProfile( Quiz quiz, int nIdCurrentStep,
-            Map<String, String[]> mapResponsesCurrentStep, Locale locale, Plugin plugin )
+    public Map<String, Object> calculateQuizStepProfile( Quiz quiz, int nIdCurrentStep, Map<String, String [ ]> mapResponsesCurrentStep, Locale locale,
+            Plugin plugin )
     {
         Map<String, Object> model = new HashMap<String, Object>( );
         QuestionGroup group = QuestionGroupHome.getGroupByPosition( quiz.getIdQuiz( ), nIdCurrentStep, plugin );
@@ -520,16 +550,15 @@ public class QuizService
         {
             return null;
         }
-        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ),
-                group.getIdGroup( ), plugin );
+        Collection<QuizQuestion> questionsList = QuizQuestionHome.findQuestionsWithAnswerByIdGroup( quiz.getIdQuiz( ), group.getIdGroup( ), plugin );
         Map<Integer, Integer> profilMap = new HashMap<Integer, Integer>( );
 
         for ( QuizQuestion question : questionsList )
         {
             String strQuestionId = String.valueOf( question.getIdQuestion( ) );
-            String[] values = mapResponsesCurrentStep.get( strQuestionId );
+            String [ ] values = mapResponsesCurrentStep.get( strQuestionId );
 
-            String strUserAnswer = values[0];
+            String strUserAnswer = values [0];
             if ( strUserAnswer != null )
             {
                 int nUserAnswer = Integer.parseInt( strUserAnswer );
@@ -560,10 +589,11 @@ public class QuizService
                 profilesId = new ArrayList<Integer>( );
                 profilesId.add( entry.getKey( ) );
             }
-            else if ( entry.getValue( ).compareTo( mainProfile ) == 0 )
-            {
-                profilesId.add( entry.getKey( ) );
-            }
+            else
+                if ( entry.getValue( ).compareTo( mainProfile ) == 0 )
+                {
+                    profilesId.add( entry.getKey( ) );
+                }
         }
 
         for ( Integer profileId : profilesId )
@@ -583,13 +613,17 @@ public class QuizService
 
     /**
      * Process the end of the quiz
-     * @param quiz The quiz
-     * @param nScore the score
-     * @param userAnswers The answers made by the use
+     * 
+     * @param quiz
+     *            The quiz
+     * @param nScore
+     *            the score
+     * @param userAnswers
+     *            The answers made by the use
      */
-    public void processEndOfQuiz( Quiz quiz, String strScore, Map<String, String[]> userAnswers )
+    public void processEndOfQuiz( Quiz quiz, String strScore, Map<String, String [ ]> userAnswers )
     {
-        Map<String, String[]> mapAnswersModified = new HashMap<String, String[]>( userAnswers.size( ) );
+        Map<String, String [ ]> mapAnswersModified = new HashMap<String, String [ ]>( userAnswers.size( ) );
         mapAnswersModified.putAll( userAnswers );
 
         // We replace every id of answers by the corresponding label
@@ -597,15 +631,17 @@ public class QuizService
         for ( QuizQuestion question : listQuestions )
         {
             String strIdQuestion = Integer.toString( question.getIdQuestion( ) );
-            String[] strArrayAnswer = userAnswers.get( strIdQuestion );
+            String [ ] strArrayAnswer = userAnswers.get( strIdQuestion );
             if ( strArrayAnswer != null && strArrayAnswer.length > 0 )
             {
-                String strIdAnswer = strArrayAnswer[0];
+                String strIdAnswer = strArrayAnswer [0];
                 if ( StringUtils.isNotEmpty( strIdAnswer ) && StringUtils.isNumeric( strIdAnswer ) )
                 {
                     int nIdAnswer = Integer.parseInt( strIdAnswer );
                     Answer answer = AnswerHome.findByPrimaryKey( nIdAnswer, getPlugin( ) );
-                    String[] strArrayAnswerLabel = { answer.getLabelAnswer( ) };
+                    String [ ] strArrayAnswerLabel = {
+                            answer.getLabelAnswer( )
+                    };
                     mapAnswersModified.put( strIdQuestion, strArrayAnswerLabel );
                 }
             }
@@ -613,7 +649,6 @@ public class QuizService
 
         mapAnswersModified.remove( PARAMETER_ACTION );
 
-        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( mapAnswersModified, strScore,
-                quiz.getIdQuiz( ) );
+        QuizOutputProcessorManagementService.getInstance( ).processEnabledProcessors( mapAnswersModified, strScore, quiz.getIdQuiz( ) );
     }
 }

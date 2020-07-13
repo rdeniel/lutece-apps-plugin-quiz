@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,7 @@ public class QuestionGroup
 
     /**
      * Returns the IdGroup
+     * 
      * @return The IdGroup
      */
     public int getIdGroup( )
@@ -60,7 +61,9 @@ public class QuestionGroup
 
     /**
      * Sets the IdGroup
-     * @param nIdGroup The IdGroup
+     * 
+     * @param nIdGroup
+     *            The IdGroup
      */
     public void setIdGroup( int nIdGroup )
     {
@@ -69,6 +72,7 @@ public class QuestionGroup
 
     /**
      * Returns the LabelGroup
+     * 
      * @return The LabelGroup
      */
     public String getLabelGroup( )
@@ -78,7 +82,9 @@ public class QuestionGroup
 
     /**
      * Sets the LabelGroup
-     * @param strLabelGroup The LabelGroup
+     * 
+     * @param strLabelGroup
+     *            The LabelGroup
      */
     public void setLabelGroup( String strLabelGroup )
     {
@@ -87,6 +93,7 @@ public class QuestionGroup
 
     /**
      * Returns the Subject
+     * 
      * @return The Subject
      */
     public String getSubject( )
@@ -96,7 +103,9 @@ public class QuestionGroup
 
     /**
      * Sets the Subject
-     * @param strSubject The Subject
+     * 
+     * @param strSubject
+     *            The Subject
      */
     public void setSubject( String strSubject )
     {
@@ -105,6 +114,7 @@ public class QuestionGroup
 
     /**
      * Returns the identifier of this Quiz.
+     * 
      * @return _nIdQuiz The Quiz identifier
      */
     public int getIdQuiz( )
@@ -114,7 +124,9 @@ public class QuestionGroup
 
     /**
      * Sets the identifier of the quiz to the specified integer.
-     * @param nIdQuiz The quiz identifier
+     * 
+     * @param nIdQuiz
+     *            The quiz identifier
      */
     public void setIdQuiz( int nIdQuiz )
     {
@@ -123,6 +135,7 @@ public class QuestionGroup
 
     /**
      * Returns the identifier of this Quiz.
+     * 
      * @return _nIdQuiz The Quiz identifier
      */
     public int getPositionGroup( )
@@ -132,7 +145,9 @@ public class QuestionGroup
 
     /**
      * Sets the identifier of the quiz to the specified integer.
-     * @param nPositionGroup The group position
+     * 
+     * @param nPositionGroup
+     *            The group position
      */
     public void setPositionGroup( int nPositionGroup )
     {
@@ -141,8 +156,8 @@ public class QuestionGroup
 
     /**
      * Check if this group is a group with free HTML
-     * @return True if this group is a group with free HTML, false if it has
-     *         questions
+     * 
+     * @return True if this group is a group with free HTML, false if it has questions
      */
     public boolean getIsFreeHtml( )
     {
@@ -151,8 +166,9 @@ public class QuestionGroup
 
     /**
      * Set this group free HTML group or a question group
-     * @param bIsFreeHtml True if this group is a group with free HTML, false if
-     *            it has questions
+     * 
+     * @param bIsFreeHtml
+     *            True if this group is a group with free HTML, false if it has questions
      */
     public void setIsFreeHtml( boolean bIsFreeHtml )
     {
@@ -160,10 +176,9 @@ public class QuestionGroup
     }
 
     /**
-     * Get the HTMl content of this group, or null if this group is not a free
-     * HTML group
-     * @return the HTMl content of this group, or null if this group is not a
-     *         free HTML group
+     * Get the HTMl content of this group, or null if this group is not a free HTML group
+     * 
+     * @return the HTMl content of this group, or null if this group is not a free HTML group
      */
     public String getHtmlContent( )
     {
@@ -171,10 +186,10 @@ public class QuestionGroup
     }
 
     /**
-     * Set the HTMl content of this group, or null if this group is not a free
-     * HTML group
-     * @param strHtmlContent the HTMl content of this group, or null if this
-     *            group is not a free HTML group
+     * Set the HTMl content of this group, or null if this group is not a free HTML group
+     * 
+     * @param strHtmlContent
+     *            the HTMl content of this group, or null if this group is not a free HTML group
      */
     public void setHtmlContent( String strHtmlContent )
     {
@@ -183,6 +198,7 @@ public class QuestionGroup
 
     /**
      * Get the id of the image
+     * 
      * @return the id of the image
      */
     public int getIdImage( )
@@ -192,7 +208,9 @@ public class QuestionGroup
 
     /**
      * Set the id of the image
-     * @param nIdImage the id of the image
+     * 
+     * @param nIdImage
+     *            the id of the image
      */
     public void setIdImage( int nIdImage )
     {
@@ -200,10 +218,9 @@ public class QuestionGroup
     }
 
     /**
-     * Check if the score of the quiz should be displayed in this group. Only
-     * free HTML group can display scores
-     * @return True if the group should display the score of the quiz, false
-     *         otherwise.
+     * Check if the score of the quiz should be displayed in this group. Only free HTML group can display scores
+     * 
+     * @return True if the group should display the score of the quiz, false otherwise.
      */
     public boolean getDisplayScore( )
     {
@@ -212,8 +229,9 @@ public class QuestionGroup
 
     /**
      * Indicates that this group must display the score of the quiz or not
-     * @param bDisplayResult True if the group must display the score of the
-     *            quiz, false otherwise
+     * 
+     * @param bDisplayResult
+     *            True if the group must display the score of the quiz, false otherwise
      */
     public void setDisplayScore( boolean bDisplayResult )
     {

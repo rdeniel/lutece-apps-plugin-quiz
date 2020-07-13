@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,8 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Collection;
 
-
 /**
- * This class provides instances management methods (create, find, ...) for
- * QuizQuestion objects
+ * This class provides instances management methods (create, find, ...) for QuizQuestion objects
  */
 public final class QuizQuestionHome
 {
@@ -57,9 +55,10 @@ public final class QuizQuestionHome
     /**
      * Creation of an instance of an article QuizQuestion
      * 
-     * @param quizQuestion An instance of the QuizQuestion which contains the
-     *            informations to store
-     * @param plugin the plugin
+     * @param quizQuestion
+     *            An instance of the QuizQuestion which contains the informations to store
+     * @param plugin
+     *            the plugin
      * @return The instance of the QuizQuestion which has been created
      */
     public static QuizQuestion create( QuizQuestion quizQuestion, Plugin plugin )
@@ -72,9 +71,10 @@ public final class QuizQuestionHome
     /**
      * Updates of the QuizQuestion instance specified in parameter
      * 
-     * @param question An instance of the QuizQuestion which contains the
-     *            informations to store
-     * @param plugin the plugin
+     * @param question
+     *            An instance of the QuizQuestion which contains the informations to store
+     * @param plugin
+     *            the plugin
      * @return The instance of the QuizQuestion which has been updated.
      */
     public static QuizQuestion update( QuizQuestion question, Plugin plugin )
@@ -85,12 +85,12 @@ public final class QuizQuestionHome
     }
 
     /**
-     * Deletes the QuizQuestion instance whose identifier is specified in
-     * parameter
+     * Deletes the QuizQuestion instance whose identifier is specified in parameter
      * 
-     * @param nIdQuestion The identifier of the article QuizQuestion to delete
-     *            in the database
-     * @param plugin the plugin
+     * @param nIdQuestion
+     *            The identifier of the article QuizQuestion to delete in the database
+     * @param plugin
+     *            the plugin
      */
     public static void remove( int nIdQuestion, Plugin plugin )
     {
@@ -98,12 +98,12 @@ public final class QuizQuestionHome
     }
 
     /**
-     * Deletes the QuizQuestion instance whose identifier is specified in
-     * parameter
+     * Deletes the QuizQuestion instance whose identifier is specified in parameter
      * 
-     * @param nQuiz The identifier of the article QuizQuestion to delete in the
-     *            database
-     * @param plugin the plugin
+     * @param nQuiz
+     *            The identifier of the article QuizQuestion to delete in the database
+     * @param plugin
+     *            the plugin
      */
     public static void removeQuestionsByQuiz( int nQuiz, Plugin plugin )
     {
@@ -111,11 +111,12 @@ public final class QuizQuestionHome
     }
 
     /**
-     * Returns an instance of the article QuizQuestion whose identifier is
-     * specified in parameter
+     * Returns an instance of the article QuizQuestion whose identifier is specified in parameter
      * 
-     * @param nKey The primary key of the article to find in the database
-     * @param plugin the plugin
+     * @param nKey
+     *            The primary key of the article to find in the database
+     * @param plugin
+     *            the plugin
      * @return An instance of the QuizQuestion which corresponds to the key
      */
     public static QuizQuestion findByPrimaryKey( int nKey, Plugin plugin )
@@ -126,11 +127,11 @@ public final class QuizQuestionHome
     /**
      * Returns QuizQuestion list
      * 
-     * @param plugin the plugin
-     * @param nIdQuiz The identifier of the article Quiz to find it in the
-     *            database
-     * @return the list of the QuizQuestion of the database in form of a
-     *         QuizQuestion Collection object
+     * @param plugin
+     *            the plugin
+     * @param nIdQuiz
+     *            The identifier of the article Quiz to find it in the database
+     * @return the list of the QuizQuestion of the database in form of a QuizQuestion Collection object
      */
     public static Collection<QuizQuestion> findAll( int nIdQuiz, Plugin plugin )
     {
@@ -139,9 +140,13 @@ public final class QuizQuestionHome
 
     /**
      * Gets a list of questions for a group
-     * @param nIdQuiz The Quiz id
-     * @param nIdGroup The group id
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The Quiz id
+     * @param nIdGroup
+     *            The group id
+     * @param plugin
+     *            The plugin
      * @return The list
      */
     public static Collection<Integer> findIdQuestionsByGroup( int nIdQuiz, int nIdGroup, Plugin plugin )
@@ -151,9 +156,13 @@ public final class QuizQuestionHome
 
     /**
      * Gets a list of questions for a group
-     * @param nIdQuiz The Quiz id
-     * @param nIdGroup The group id
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The Quiz id
+     * @param nIdGroup
+     *            The group id
+     * @param plugin
+     *            The plugin
      * @return The list
      */
     public static Collection<QuizQuestion> findQuestionsByGroup( int nIdQuiz, int nIdGroup, Plugin plugin )
@@ -164,10 +173,12 @@ public final class QuizQuestionHome
     /**
      * Deletes the QuizQuestions instance by Group
      * 
-     * @param nIdQuiz The identifier of the article Quiz to delete in the
-     *            database
-     * @param nIdGroup the id of the group
-     * @param plugin the plugin
+     * @param nIdQuiz
+     *            The identifier of the article Quiz to delete in the database
+     * @param nIdGroup
+     *            the id of the group
+     * @param plugin
+     *            the plugin
      */
     public static void removeQuestionsByGroup( int nIdQuiz, int nIdGroup, Plugin plugin )
     {
@@ -175,10 +186,10 @@ public final class QuizQuestionHome
     }
 
     /**
-     * Returns an instance of the article QuizQuestion whose identifier is
-     * specified in parameter
+     * Returns an instance of the article QuizQuestion whose identifier is specified in parameter
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return An instance of the QuizQuestion which corresponds to the key
      */
     public static QuizQuestion findLastQuestion( Plugin plugin )
@@ -188,8 +199,11 @@ public final class QuizQuestionHome
 
     /**
      * Gets a list of questions that has at least one answer
-     * @param nIdQuiz the Quiz Id
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            the Quiz Id
+     * @param plugin
+     *            The plugin
      * @return a list of questions
      */
     public static Collection<QuizQuestion> findQuestionsWithAnswer( int nIdQuiz, Plugin plugin )
@@ -198,11 +212,14 @@ public final class QuizQuestionHome
     }
 
     /**
-     * Gets a list of questions that has at least one answer and re associated
-     * with a given group
-     * @param nIdQuiz the Quiz Id
-     * @param nIdGroup The id of the group
-     * @param plugin The plugin
+     * Gets a list of questions that has at least one answer and re associated with a given group
+     * 
+     * @param nIdQuiz
+     *            the Quiz Id
+     * @param nIdGroup
+     *            The id of the group
+     * @param plugin
+     *            The plugin
      * @return a list of questions
      */
     public static Collection<QuizQuestion> findQuestionsWithAnswerByIdGroup( int nIdQuiz, int nIdGroup, Plugin plugin )

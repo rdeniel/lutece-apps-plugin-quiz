@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 
-
 /**
  * This class represents the business object Quiz
  */
@@ -53,7 +52,7 @@ public class Quiz
     private Date _tDateBeginDisponibility;
     private Date _tDateEndDisponibility;
     private Timestamp _tDateCreation;
-    private byte[] _strImg;
+    private byte [ ] _strImg;
     private int _nCaptcha;
     private int _nRequirement;
     private boolean _bDisplayStepByStep;
@@ -71,6 +70,7 @@ public class Quiz
 
     /**
      * Returns the identifier of this Quiz.
+     * 
      * @return _nIdQuiz The Quiz identifier
      */
     public int getIdQuiz( )
@@ -80,7 +80,9 @@ public class Quiz
 
     /**
      * Sets the identifier of the quiz to the specified integer.
-     * @param nIdQuiz The quiz identifier
+     * 
+     * @param nIdQuiz
+     *            The quiz identifier
      */
     public void setIdQuiz( int nIdQuiz )
     {
@@ -89,6 +91,7 @@ public class Quiz
 
     /**
      * Returns the name of this quiz.
+     * 
      * @return _strName The name of the quiz
      */
     public String getName( )
@@ -98,7 +101,9 @@ public class Quiz
 
     /**
      * Sets the name of the quiz to the specified string
-     * @param strName The new name
+     * 
+     * @param strName
+     *            The new name
      */
     public void setName( String strName )
     {
@@ -107,6 +112,7 @@ public class Quiz
 
     /**
      * Returns The boolean status of quiz
+     * 
      * @return _bIsEnabled The boolean
      */
     public boolean isEnabled( )
@@ -116,7 +122,9 @@ public class Quiz
 
     /**
      * Set The Boolean status
-     * @param status The Status
+     * 
+     * @param status
+     *            The Status
      */
     public void setStatus( int status )
     {
@@ -132,6 +140,7 @@ public class Quiz
 
     /**
      * Returns a collection of questions
+     * 
      * @return _questions The list of questions
      */
     public Collection<QuizQuestion> getQuestions( )
@@ -141,7 +150,9 @@ public class Quiz
 
     /**
      * Sets the list of questions on a Collection
-     * @param questions The Collection of questions
+     * 
+     * @param questions
+     *            The Collection of questions
      */
     public void setQuestions( Collection<QuizQuestion> questions )
     {
@@ -150,6 +161,7 @@ public class Quiz
 
     /**
      * Returns the name of this quiz.
+     * 
      * @return _strName The name of the quiz
      */
     public String getIntroduction( )
@@ -159,7 +171,9 @@ public class Quiz
 
     /**
      * Sets the introduction of the quiz to the specified string
-     * @param strIntroduction The new name
+     * 
+     * @param strIntroduction
+     *            The new name
      */
     public void setIntroduction( String strIntroduction )
     {
@@ -168,6 +182,7 @@ public class Quiz
 
     /**
      * Returns the conclusion of this quiz.
+     * 
      * @return The conclusion of the quiz
      */
     public String getConclusion( )
@@ -177,7 +192,9 @@ public class Quiz
 
     /**
      * Sets the conclusion of the quiz to the specified string
-     * @param strConclusion The conclusion
+     * 
+     * @param strConclusion
+     *            The conclusion
      */
     public void setConclusion( String strConclusion )
     {
@@ -186,6 +203,7 @@ public class Quiz
 
     /**
      * Gets the CGU
+     * 
      * @return the CGU
      */
     public String getCgu( )
@@ -195,7 +213,9 @@ public class Quiz
 
     /**
      * Sets CGU
-     * @param strCgu The CGU to set
+     * 
+     * @param strCgu
+     *            The CGU to set
      */
     public void setCgu( String strCgu )
     {
@@ -204,7 +224,9 @@ public class Quiz
 
     /**
      * Define the date begin of the publication
-     * @param dateBeginDisponibility The date begin of the publication
+     * 
+     * @param dateBeginDisponibility
+     *            The date begin of the publication
      */
     public void setDateBeginDisponibility( Date dateBeginDisponibility )
     {
@@ -213,6 +235,7 @@ public class Quiz
 
     /**
      * Return the date begin of the publication
+     * 
      * @return The date begin of the publication
      */
     public Date getDateBeginDisponibility( )
@@ -231,7 +254,9 @@ public class Quiz
 
     /**
      * set the date of end disponibility
-     * @param dateEndDisponibility the date of end disponibility
+     * 
+     * @param dateEndDisponibility
+     *            the date of end disponibility
      */
     public void setDateEndDisponibility( Date dateEndDisponibility )
     {
@@ -249,7 +274,9 @@ public class Quiz
 
     /**
      * set the creation date
-     * @param dateCreation the creation date
+     * 
+     * @param dateCreation
+     *            the creation date
      */
     public void setDateCreation( Timestamp dateCreation )
     {
@@ -258,24 +285,28 @@ public class Quiz
 
     /**
      * Returns the Value
+     * 
      * @return The Value
      */
-    public byte[] getImg( )
+    public byte [ ] getImg( )
     {
         return _strImg;
     }
 
     /**
      * Sets the Value
-     * @param strImg The Value
+     * 
+     * @param strImg
+     *            The Value
      */
-    public void setValue( byte[] strImg )
+    public void setValue( byte [ ] strImg )
     {
         _strImg = strImg;
     }
 
     /**
      * Gest captcha status
+     * 
      * @return true if active
      */
     public int getActiveCaptcha( )
@@ -285,7 +316,9 @@ public class Quiz
 
     /**
      * Sets captcha status
-     * @param nCaptcha The captcha status
+     * 
+     * @param nCaptcha
+     *            The captcha status
      */
     public void setActiveCaptcha( int nCaptcha )
     {
@@ -294,6 +327,7 @@ public class Quiz
 
     /**
      * Gets the requirement status
+     * 
      * @return the requirement status
      */
     public int getActiveRequirement( )
@@ -303,7 +337,9 @@ public class Quiz
 
     /**
      * Sets the requirement status
-     * @param nRequirement the requirement status
+     * 
+     * @param nRequirement
+     *            the requirement status
      */
     public void setActiveRequirement( int nRequirement )
     {
@@ -319,7 +355,8 @@ public class Quiz
     }
 
     /**
-     * @param strTypeQuiz the _strTypeQuiz to set
+     * @param strTypeQuiz
+     *            the _strTypeQuiz to set
      */
     public void setTypeQuiz( String strTypeQuiz )
     {
@@ -328,8 +365,8 @@ public class Quiz
 
     /**
      * Check if this quiz should be displayed step by step or in a block
-     * @return True if this quiz should be displayed step by step, false if it
-     *         should be displayed in a block
+     * 
+     * @return True if this quiz should be displayed step by step, false if it should be displayed in a block
      */
     public boolean getDisplayStepByStep( )
     {
@@ -338,8 +375,9 @@ public class Quiz
 
     /**
      * Set the display method of this quiz
-     * @param bDisplayStepByStep True if this quiz should be displayed step by
-     *            step, false if it should be displayed in a block
+     * 
+     * @param bDisplayStepByStep
+     *            True if this quiz should be displayed step by step, false if it should be displayed in a block
      */
     public void setDisplayStepByStep( boolean bDisplayStepByStep )
     {
@@ -347,10 +385,9 @@ public class Quiz
     }
 
     /**
-     * Check if results of the quiz should be displayed after each step or at
-     * the end of the quiz
-     * @return True if results of the quiz should be displayed after each step
-     *         or at the end of the quiz
+     * Check if results of the quiz should be displayed after each step or at the end of the quiz
+     * 
+     * @return True if results of the quiz should be displayed after each step or at the end of the quiz
      */
     public boolean getDisplayResultAfterEachStep( )
     {
@@ -359,8 +396,9 @@ public class Quiz
 
     /**
      * Display results of the quiz after each step or at the end of the quiz
-     * @param bDisplayResultAfterEachStep True if results of the quiz should be
-     *            displayed after each step or at the end of the quiz
+     * 
+     * @param bDisplayResultAfterEachStep
+     *            True if results of the quiz should be displayed after each step or at the end of the quiz
      */
     public void setDisplayResultAfterEachStep( boolean bDisplayResultAfterEachStep )
     {

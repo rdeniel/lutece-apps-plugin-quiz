@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * This class provides Data Access methods for Answer objects
  */
@@ -57,179 +56,217 @@ public final class AnswerDAO implements IAnswerDAO
 
     /**
      * Generates a new primary key
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return The new primary key
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
-
-        int nKey;
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+            daoUtil.executeQuery( );
+
+            int nKey;
+
+            if ( !daoUtil.next( ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+            daoUtil.free( );
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free( );
-
-        return nKey;
     }
 
     /**
      * Insert a new record in the table.
-     * @param nIdQuestion Question ID
-     * @param answer instance of the Answer object to insert
-     * @param plugin The plugin
+     * 
+     * @param nIdQuestion
+     *            Question ID
+     * @param answer
+     *            instance of the Answer object to insert
+     * @param plugin
+     *            The plugin
      */
     public void insert( int nIdQuestion, Answer answer, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
 
-        answer.setIdAnswer( newPrimaryKey( plugin ) );
+            answer.setIdAnswer( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, answer.getIdAnswer( ) );
-        daoUtil.setInt( 2, answer.getIdQuestion( ) );
-        daoUtil.setString( 3, answer.getLabelAnswer( ) );
-        daoUtil.setInt( 4, answer.getValid( ) );
-        daoUtil.setInt( 5, answer.getIdProfile( ) );
+            daoUtil.setInt( 1, answer.getIdAnswer( ) );
+            daoUtil.setInt( 2, answer.getIdQuestion( ) );
+            daoUtil.setString( 3, answer.getLabelAnswer( ) );
+            daoUtil.setInt( 4, answer.getValid( ) );
+            daoUtil.setInt( 5, answer.getIdProfile( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
      * Load the data of the answer from the table
-     * @param nId The identifier of the answer
-     * @param plugin The plugin
+     * 
+     * @param nId
+     *            The identifier of the answer
+     * @param plugin
+     *            The plugin
      * @return the instance of the Answer
      */
     public Answer load( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery( );
-
-        Answer answer = null;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            answer = new Answer( );
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeQuery( );
 
-            answer.setIdAnswer( daoUtil.getInt( 1 ) );
-            answer.setIdQuestion( daoUtil.getInt( 2 ) );
-            answer.setLabelAnswer( daoUtil.getString( 3 ) );
-            answer.setValid( daoUtil.getInt( 4 ) );
-            answer.setIdProfile( daoUtil.getInt( 5 ) );
+            Answer answer = null;
+
+            if ( daoUtil.next( ) )
+            {
+                answer = new Answer( );
+
+                answer.setIdAnswer( daoUtil.getInt( 1 ) );
+                answer.setIdQuestion( daoUtil.getInt( 2 ) );
+                answer.setLabelAnswer( daoUtil.getString( 3 ) );
+                answer.setValid( daoUtil.getInt( 4 ) );
+                answer.setIdProfile( daoUtil.getInt( 5 ) );
+            }
+
+            daoUtil.free( );
+
+            return answer;
         }
-
-        daoUtil.free( );
-
-        return answer;
     }
 
     /**
      * Delete a record from the table
-     * @param nAnswerId The identifier of the answer
-     * @param plugin The plugin
+     * 
+     * @param nAnswerId
+     *            The identifier of the answer
+     * @param plugin
+     *            The plugin
      */
     public void delete( int nAnswerId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nAnswerId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nAnswerId );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
      * Update the record in the table
-     * @param answer The reference of the answer
-     * @param plugin The plugin
+     * 
+     * @param answer
+     *            The reference of the answer
+     * @param plugin
+     *            The plugin
      */
     public void store( Answer answer, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
 
-        daoUtil.setInt( 1, answer.getIdAnswer( ) );
-        daoUtil.setInt( 2, answer.getIdQuestion( ) );
-        daoUtil.setString( 3, answer.getLabelAnswer( ) );
-        daoUtil.setInt( 4, answer.getValid( ) );
-        daoUtil.setInt( 5, answer.getIdProfile( ) );
-        daoUtil.setInt( 6, answer.getIdAnswer( ) );
+            daoUtil.setInt( 1, answer.getIdAnswer( ) );
+            daoUtil.setInt( 2, answer.getIdQuestion( ) );
+            daoUtil.setString( 3, answer.getLabelAnswer( ) );
+            daoUtil.setInt( 4, answer.getValid( ) );
+            daoUtil.setInt( 5, answer.getIdProfile( ) );
+            daoUtil.setInt( 6, answer.getIdAnswer( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
      * Load the data of all the answers and returns them as a List
-     * @param nIdQuestion the id of the question
-     * @param plugin The plugin
+     * 
+     * @param nIdQuestion
+     *            the id of the question
+     * @param plugin
+     *            The plugin
      * @return The List which contains the data of all the answers
      */
     public List<Answer> selectAnswersList( int nIdQuestion, Plugin plugin )
     {
-        List<Answer> answerList = new ArrayList<Answer>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.setInt( 1, nIdQuestion );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        List<Answer> answerList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            Answer answer = new Answer( );
+            daoUtil.setInt( 1, nIdQuestion );
+            daoUtil.executeQuery( );
 
-            answer.setIdAnswer( daoUtil.getInt( 1 ) );
-            answer.setIdQuestion( daoUtil.getInt( 2 ) );
-            answer.setLabelAnswer( daoUtil.getString( 3 ) );
-            answer.setValid( daoUtil.getInt( 4 ) );
-            answer.setIdProfile( daoUtil.getInt( 5 ) );
+            while ( daoUtil.next( ) )
+            {
+                Answer answer = new Answer( );
 
-            answerList.add( answer );
+                answer.setIdAnswer( daoUtil.getInt( 1 ) );
+                answer.setIdQuestion( daoUtil.getInt( 2 ) );
+                answer.setLabelAnswer( daoUtil.getString( 3 ) );
+                answer.setValid( daoUtil.getInt( 4 ) );
+                answer.setIdProfile( daoUtil.getInt( 5 ) );
+
+                answerList.add( answer );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
-
         return answerList;
     }
 
     /**
      * Delete answers for a given question
-     * @param nIdQuestion The question Id
-     * @param plugin The plugin
+     * 
+     * @param nIdQuestion
+     *            The question Id
+     * @param plugin
+     *            The plugin
      */
     public void deleteAnswersByQuestion( int nIdQuestion, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ANSWERS_BY_QUESTION, plugin );
-        daoUtil.setInt( 1, nIdQuestion );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ANSWERS_BY_QUESTION, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdQuestion );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
      * Load the data of the answer from the table
-     * @param nIdProfil The identifier of the profil
-     * @param plugin The plugin
-     * @return <code>true</code> if there is at least one answer with profil,
-     *         <code>false</code> otherwise
+     * 
+     * @param nIdProfil
+     *            The identifier of the profil
+     * @param plugin
+     *            The plugin
+     * @return <code>true</code> if there is at least one answer with profil, <code>false</code> otherwise
      */
     public boolean isAnswersWithProfil( int nIdProfil, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PROFIL, plugin );
-        daoUtil.setInt( 1, nIdProfil );
-        daoUtil.executeQuery( );
-
-        boolean result = false;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PROFIL, plugin ) )
         {
-            result = true;
+            daoUtil.setInt( 1, nIdProfil );
+            daoUtil.executeQuery( );
+
+            boolean result = false;
+
+            if ( daoUtil.next( ) )
+            {
+                result = true;
+            }
+
+            daoUtil.free( );
+
+            return result;
         }
-
-        daoUtil.free( );
-
-        return result;
     }
 }

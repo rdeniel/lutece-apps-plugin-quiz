@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import fr.paris.lutece.util.ReferenceList;
 
 import java.util.List;
 
-
 /**
  * IQuestionGroupDAO Interface
  */
@@ -46,24 +45,35 @@ public interface IQuestionGroupDAO
 {
     /**
      * Insert a new record in the table.
-     * @param nIdQuiz The quiz ID
-     * @param group instance of the QuestionGroup object to inssert
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param group
+     *            instance of the QuestionGroup object to inssert
+     * @param plugin
+     *            the Plugin
      */
     void insert( int nIdQuiz, QuestionGroup group, Plugin plugin );
 
     /**
      * Update the record in the table
-     * @param group the reference of the QuestionGroup
-     * @param plugin the Plugin
+     * 
+     * @param group
+     *            the reference of the QuestionGroup
+     * @param plugin
+     *            the Plugin
      */
     void store( QuestionGroup group, Plugin plugin );
 
     /**
      * Delete a record from the table
-     * @param nIdQuiz The Quiz ID
-     * @param nIdGroup int identifier of the QuestionGroup to delete
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuiz
+     *            The Quiz ID
+     * @param nIdGroup
+     *            int identifier of the QuestionGroup to delete
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nIdQuiz, int nIdGroup, Plugin plugin );
 
@@ -72,75 +82,103 @@ public interface IQuestionGroupDAO
 
     /**
      * Load the data from the table
-     * @param nKey The identifier of the group
-     * @param plugin the Plugin
+     * 
+     * @param nKey
+     *            The identifier of the group
+     * @param plugin
+     *            the Plugin
      * @return The instance of the group
      */
     QuestionGroup load( int nKey, Plugin plugin );
 
     /**
      * Load the data of all the group objects and returns them as a List
-     * @param nIdQuiz The Quiz Id
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuiz
+     *            The Quiz Id
+     * @param plugin
+     *            the Plugin
      * @return The List which contains the data of all the group objects
      */
     List<QuestionGroup> selectQuestionGroupsList( int nIdQuiz, Plugin plugin );
 
     /**
      * Returns a list of groups
-     * @param nIdQuiz The Quiz ID
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The Quiz ID
+     * @param plugin
+     *            The plugin
      * @return The list
      */
     ReferenceList selectQuestionGroupsReferenceList( int nIdQuiz, Plugin plugin );
 
     /**
      * Delete for a quiz
-     * @param nIdQuiz The Quiz ID
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The Quiz ID
+     * @param plugin
+     *            The plugin
      */
     void deleteByQuiz( int nIdQuiz, Plugin plugin );
 
     /**
      * Move up a group
-     * @param nIdQuiz The quiz Id
-     * @param group The group
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz Id
+     * @param group
+     *            The group
+     * @param plugin
+     *            The plugin
      */
     void changePositionUp( int nIdQuiz, QuestionGroup group, Plugin plugin );
 
     /**
      * Move down a group
-     * @param nIdQuiz The quiz Id
-     * @param group The group
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz Id
+     * @param group
+     *            The group
+     * @param plugin
+     *            The plugin
      */
     void changePositionDown( int nIdQuiz, QuestionGroup group, Plugin plugin );
 
     /**
      * Find a group by its quiz and position
-     * @param nIdQuiz The quiz ID
-     * @param nPosition The position of the required group
-     * @param plugin the Plugin
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param nPosition
+     *            The position of the required group
+     * @param plugin
+     *            the Plugin
      * @return The requested group, or null if no group has the given position
      */
     QuestionGroup selectQuestionGroupByPosition( int nIdQuiz, int nPosition, Plugin plugin );
 
     /**
      * Find the id of last group in quiz
-     * @param nIdQuiz the quiz id
-     * @param plugin the plugin
+     * 
+     * @param nIdQuiz
+     *            the quiz id
+     * @param plugin
+     *            the plugin
      * @return the id of corresponding group
      */
     int findLastByQuiz( int nIdQuiz, Plugin plugin );
 
     /**
-     * Check if a quiz has a free HTML group that will display the score of the
-     * quiz
-     * @param nIdQuiz The id of the quiz
-     * @param plugin The plugin
-     * @return True if the quiz has a free HTML group that will display the
-     *         result of the quiz, false otherwise
+     * Check if a quiz has a free HTML group that will display the score of the quiz
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz
+     * @param plugin
+     *            The plugin
+     * @return True if the quiz has a free HTML group that will display the result of the quiz, false otherwise
      */
     boolean hasGroupDisplayScore( int nIdQuiz, Plugin plugin );
 }

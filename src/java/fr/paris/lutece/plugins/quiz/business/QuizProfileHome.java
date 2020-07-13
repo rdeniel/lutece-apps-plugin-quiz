@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.util.ReferenceList;
 
 import java.util.Collection;
 
-
 /**
  * Home for profiles
  */
@@ -57,10 +56,10 @@ public final class QuizProfileHome
     /**
      * Creation of an instance of an article Quiz profile
      * 
-     * @param profile An instance of the Quiz profile which contains the
-     *            informations to
-     *            store
-     * @param plugin the plugin
+     * @param profile
+     *            An instance of the Quiz profile which contains the informations to store
+     * @param plugin
+     *            the plugin
      * @return The instance of the Quiz profile which has been created
      */
     public static QuizProfile create( QuizProfile profile, Plugin plugin )
@@ -72,8 +71,11 @@ public final class QuizProfileHome
 
     /**
      * Select the list of profile
-     * @param nIdQuiz The quiz ID
-     * @param plugin plugin Quiz
+     * 
+     * @param nIdQuiz
+     *            The quiz ID
+     * @param plugin
+     *            plugin Quiz
      * @return profiles list
      */
     public static ReferenceList selectQuizProfilsReferenceList( int nIdQuiz, Plugin plugin )
@@ -83,8 +85,11 @@ public final class QuizProfileHome
 
     /**
      * Load a profile with its id
-     * @param nKey the id to load
-     * @param plugin plugin Quiz
+     * 
+     * @param nKey
+     *            the id to load
+     * @param plugin
+     *            plugin Quiz
      * @return corresponding profile
      */
     public static QuizProfile findByPrimaryKey( int nKey, Plugin plugin )
@@ -94,8 +99,11 @@ public final class QuizProfileHome
 
     /**
      * Return the name of a profile
-     * @param nIdProfile The profile ID
-     * @param plugin plugin Quiz
+     * 
+     * @param nIdProfile
+     *            The profile ID
+     * @param plugin
+     *            plugin Quiz
      * @return name of the corresponding profile
      */
     public static String getName( int nIdProfile, Plugin plugin )
@@ -105,8 +113,11 @@ public final class QuizProfileHome
 
     /**
      * Find all profiles for a quiz
-     * @param nIdQuiz the id quiz
-     * @param plugin plugin Quiz
+     * 
+     * @param nIdQuiz
+     *            the id quiz
+     * @param plugin
+     *            plugin Quiz
      * @return profiles list
      */
     public static Collection<QuizProfile> findAll( int nIdQuiz, Plugin plugin )
@@ -116,8 +127,11 @@ public final class QuizProfileHome
 
     /**
      * Remove a profile
-     * @param nIdProfile The id of the profile to remove
-     * @param plugin The plugin
+     * 
+     * @param nIdProfile
+     *            The id of the profile to remove
+     * @param plugin
+     *            The plugin
      */
     public static void remove( int nIdProfile, Plugin plugin )
     {
@@ -126,8 +140,11 @@ public final class QuizProfileHome
 
     /**
      * Update a profile
-     * @param quizProfile The profile to update
-     * @param plugin The plugin
+     * 
+     * @param quizProfile
+     *            The profile to update
+     * @param plugin
+     *            The plugin
      */
     public static void update( QuizProfile quizProfile, Plugin plugin )
     {
@@ -136,8 +153,11 @@ public final class QuizProfileHome
 
     /**
      * Remove every profiles associated with a given quiz
-     * @param nIdQuiz The id of the quiz
-     * @param plugin The plugin
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz
+     * @param plugin
+     *            The plugin
      */
     public static void removeProfilesByQuiz( int nIdQuiz, Plugin plugin )
     {

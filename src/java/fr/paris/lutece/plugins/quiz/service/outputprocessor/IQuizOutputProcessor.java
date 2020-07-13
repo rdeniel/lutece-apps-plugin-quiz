@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * Interface for output processor services
  */
@@ -46,55 +45,67 @@ public interface IQuizOutputProcessor
 {
     /**
      * Do process the output processor
-     * @param mapAnswers The map containing answers of the user to the quiz.
-     *            Keys of the map can either be ids of questions or keys of free
-     *            HTML parameters. Values of the map are data entered by the
-     *            user
-     * @param strScore the score
-     * @param nIdQuiz The id of the quiz
+     * 
+     * @param mapAnswers
+     *            The map containing answers of the user to the quiz. Keys of the map can either be ids of questions or keys of free HTML parameters. Values of
+     *            the map are data entered by the user
+     * @param strScore
+     *            the score
+     * @param nIdQuiz
+     *            The id of the quiz
      */
-    void doProcessOutputProcessor( Map<String, String[]> mapAnswers, String strScore, int nIdQuiz );
+    void doProcessOutputProcessor( Map<String, String [ ]> mapAnswers, String strScore, int nIdQuiz );
 
     /**
-     * Get the HTML to display the configuration form of the processor for a
-     * given quiz. Returns null if this processor does not need to display any
+     * Get the HTML to display the configuration form of the processor for a given quiz. Returns null if this processor does not need to display any
      * configuration form
-     * @param request The request
-     * @param nIdQuiz The id of the quiz
+     * 
+     * @param request
+     *            The request
+     * @param nIdQuiz
+     *            The id of the quiz
      * @return The HTML code to display, or null if no configuration is needed
      */
     String getProcessorConfigurationHtml( HttpServletRequest request, int nIdQuiz );
 
     /**
      * Do update the configuration of the output processor for a given quiz
-     * @param request the request
-     * @param nIdQuiz The id of the quiz
+     * 
+     * @param request
+     *            the request
+     * @param nIdQuiz
+     *            The id of the quiz
      */
     void doUpdateConfiguration( HttpServletRequest request, int nIdQuiz );
 
     /**
      * Notify the processor that it has been enabled for a given quiz
-     * @param nIdQuiz The id of the quiz
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz
      */
     void notifyProcessorEnabling( int nIdQuiz );
 
     /**
-     * Notify the processor that it has been disabled for a given quiz. Any
-     * configuration for the quiz must be removed once this method has been
-     * called.
-     * @param nIdQuiz The id of the quiz
+     * Notify the processor that it has been disabled for a given quiz. Any configuration for the quiz must be removed once this method has been called.
+     * 
+     * @param nIdQuiz
+     *            The id of the quiz
      */
     void notifyProcessorDisabling( int nIdQuiz );
 
     /**
      * Get the unique id of the processor.
+     * 
      * @return The unique id of the processor
      */
     String getProcessorId( );
 
     /**
      * Get the title of the processor
-     * @param locale The locale to display the title in
+     * 
+     * @param locale
+     *            The locale to display the title in
      * @return The title of the processor
      */
     String getTitle( Locale locale );

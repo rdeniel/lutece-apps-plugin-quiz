@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,13 +40,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * This class provides Data Access methods for Quiz objects
  */
 public class QuizDAO implements IQuizDAO
 {
-    //Requests
+    // Requests
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_quiz ) FROM quiz_quiz ";
     private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_quiz FROM quiz_quiz";
     private static final String SQL_QUERY_DELETE = " DELETE FROM quiz_quiz WHERE id_quiz= ? ";
@@ -59,188 +58,207 @@ public class QuizDAO implements IQuizDAO
     /**
      * Calculate a new primary key to add a new Quiz
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return The new key.
      */
     int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
-
-        int nKey;
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+            daoUtil.executeQuery( );
+
+            int nKey;
+
+            if ( !daoUtil.next( ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+            daoUtil.free( );
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free( );
-
-        return nKey;
     }
 
     /**
      * Insert a new record in the table.
      * 
-     * @param quiz The Instance of the object Quiz
-     * @param plugin the plugin
+     * @param quiz
+     *            The Instance of the object Quiz
+     * @param plugin
+     *            the plugin
      */
     public void insert( Quiz quiz, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        quiz.setIdQuiz( newPrimaryKey( plugin ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            quiz.setIdQuiz( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, quiz.getIdQuiz( ) );
-        daoUtil.setString( 2, quiz.getName( ) );
-        daoUtil.setString( 3, quiz.getIntroduction( ) );
-        daoUtil.setString( 4, quiz.getConclusion( ) );
-        daoUtil.setBoolean( 5, false );
-        daoUtil.setInt( 6, quiz.getActiveCaptcha( ) );
-        daoUtil.setInt( 7, quiz.getActiveRequirement( ) );
-        daoUtil.setDate( 8, ( quiz.getDateBeginDisponibility( ) != null ) ? new Date( quiz.getDateBeginDisponibility( )
-                .getTime( ) ) : null );
-        daoUtil.setDate( 9, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( )
-                .getTime( ) ) : null );
-        daoUtil.setTimestamp( 10, quiz.getDateCreation( ) );
-        daoUtil.setString( 11, quiz.getCgu( ) );
-        daoUtil.setString( 12, quiz.getTypeQuiz( ) );
-        daoUtil.setBoolean( 13, quiz.getDisplayStepByStep( ) );
-        daoUtil.setBoolean( 14, quiz.getDisplayResultAfterEachStep( ) );
+            daoUtil.setInt( 1, quiz.getIdQuiz( ) );
+            daoUtil.setString( 2, quiz.getName( ) );
+            daoUtil.setString( 3, quiz.getIntroduction( ) );
+            daoUtil.setString( 4, quiz.getConclusion( ) );
+            daoUtil.setBoolean( 5, false );
+            daoUtil.setInt( 6, quiz.getActiveCaptcha( ) );
+            daoUtil.setInt( 7, quiz.getActiveRequirement( ) );
+            daoUtil.setDate( 8, ( quiz.getDateBeginDisponibility( ) != null ) ? new Date( quiz.getDateBeginDisponibility( ).getTime( ) ) : null );
+            daoUtil.setDate( 9, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( ).getTime( ) ) : null );
+            daoUtil.setTimestamp( 10, quiz.getDateCreation( ) );
+            daoUtil.setString( 11, quiz.getCgu( ) );
+            daoUtil.setString( 12, quiz.getTypeQuiz( ) );
+            daoUtil.setBoolean( 13, quiz.getDisplayStepByStep( ) );
+            daoUtil.setBoolean( 14, quiz.getDisplayResultAfterEachStep( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
      * Return A Quiz Collection
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return list The Collection of quiz
      */
     public Collection<Quiz> selectQuizList( Plugin plugin )
     {
-        Collection<Quiz> quizList = new ArrayList<Quiz>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        Collection<Quiz> quizList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin ) )
         {
-            quizList.add( load( daoUtil.getInt( 1 ), plugin ) );
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                quizList.add( load( daoUtil.getInt( 1 ), plugin ) );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
-
         return quizList;
     }
 
     /**
      * Return A Quiz Collection
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return list The Collection of quiz
      */
     public Collection<Quiz> selectQuizEnabledList( Plugin plugin )
     {
-        Collection<Quiz> quizEnabledList = new ArrayList<Quiz>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ENABLED, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        Collection<Quiz> quizEnabledList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ENABLED, plugin ) )
         {
-            quizEnabledList.add( load( daoUtil.getInt( 1 ), plugin ) );
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                quizEnabledList.add( load( daoUtil.getInt( 1 ), plugin ) );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
-
         return quizEnabledList;
     }
 
     /**
      * Delete a record from the table
      * 
-     * @param nIdQuiz The indentifier of the object Quiz
-     * @param plugin the plugin
+     * @param nIdQuiz
+     *            The indentifier of the object Quiz
+     * @param plugin
+     *            the plugin
      */
     public void delete( int nIdQuiz, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdQuiz );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
      * load the data of Quiz from the table
      * 
-     * @param nIdQuiz The indentifier of the object Quiz
-     * @param plugin the plugin
+     * @param nIdQuiz
+     *            The indentifier of the object Quiz
+     * @param plugin
+     *            the plugin
      * @return The Instance of the object Quiz
      */
     public Quiz load( int nIdQuiz, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeQuery( );
-
         Quiz quiz = null;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            quiz = new Quiz( );
-            quiz.setIdQuiz( daoUtil.getInt( 1 ) );
-            quiz.setName( daoUtil.getString( 2 ) );
-            quiz.setIntroduction( daoUtil.getString( 3 ) );
-            quiz.setConclusion( daoUtil.getString( 4 ) );
-            quiz.setStatus( daoUtil.getInt( 5 ) );
-            quiz.setActiveCaptcha( daoUtil.getInt( 6 ) );
-            quiz.setActiveRequirement( daoUtil.getInt( 7 ) );
-            quiz.setDateBeginDisponibility( daoUtil.getDate( 8 ) );
-            quiz.setDateEndDisponibility( daoUtil.getDate( 9 ) );
-            quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
-            quiz.setCgu( daoUtil.getString( 11 ) );
-            quiz.setTypeQuiz( daoUtil.getString( 12 ) );
-            quiz.setDisplayStepByStep( daoUtil.getBoolean( 13 ) );
-            quiz.setDisplayResultAfterEachStep( daoUtil.getBoolean( 14 ) );
+            daoUtil.setInt( 1, nIdQuiz );
+            daoUtil.executeQuery( );
+
+            if ( daoUtil.next( ) )
+            {
+                quiz = new Quiz( );
+                quiz.setIdQuiz( daoUtil.getInt( 1 ) );
+                quiz.setName( daoUtil.getString( 2 ) );
+                quiz.setIntroduction( daoUtil.getString( 3 ) );
+                quiz.setConclusion( daoUtil.getString( 4 ) );
+                quiz.setStatus( daoUtil.getInt( 5 ) );
+                quiz.setActiveCaptcha( daoUtil.getInt( 6 ) );
+                quiz.setActiveRequirement( daoUtil.getInt( 7 ) );
+                quiz.setDateBeginDisponibility( daoUtil.getDate( 8 ) );
+                quiz.setDateEndDisponibility( daoUtil.getDate( 9 ) );
+                quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
+                quiz.setCgu( daoUtil.getString( 11 ) );
+                quiz.setTypeQuiz( daoUtil.getString( 12 ) );
+                quiz.setDisplayStepByStep( daoUtil.getBoolean( 13 ) );
+                quiz.setDisplayResultAfterEachStep( daoUtil.getBoolean( 14 ) );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
-
         return quiz;
     }
 
     /**
      * load the data of Quiz from the table
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return The Instance of the object Quiz
      */
     public Quiz loadLastQuiz( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LAST_QUIZ, plugin );
-        daoUtil.executeQuery( );
-
         Quiz quiz = null;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LAST_QUIZ, plugin ) )
         {
-            quiz = new Quiz( );
-            quiz.setIdQuiz( daoUtil.getInt( 1 ) );
-            quiz.setName( daoUtil.getString( 2 ) );
-            quiz.setIntroduction( daoUtil.getString( 3 ) );
-            quiz.setConclusion( daoUtil.getString( 4 ) );
-            quiz.setStatus( daoUtil.getInt( 5 ) );
-            quiz.setActiveCaptcha( daoUtil.getInt( 6 ) );
-            quiz.setActiveRequirement( daoUtil.getInt( 7 ) );
-            quiz.setDateBeginDisponibility( daoUtil.getDate( 8 ) );
-            quiz.setDateEndDisponibility( daoUtil.getDate( 9 ) );
-            quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
-            quiz.setCgu( daoUtil.getString( 11 ) );
-            quiz.setTypeQuiz( daoUtil.getString( 12 ) );
-            quiz.setDisplayStepByStep( daoUtil.getBoolean( 13 ) );
-            quiz.setDisplayResultAfterEachStep( daoUtil.getBoolean( 14 ) );
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                quiz = new Quiz( );
+                quiz.setIdQuiz( daoUtil.getInt( 1 ) );
+                quiz.setName( daoUtil.getString( 2 ) );
+                quiz.setIntroduction( daoUtil.getString( 3 ) );
+                quiz.setConclusion( daoUtil.getString( 4 ) );
+                quiz.setStatus( daoUtil.getInt( 5 ) );
+                quiz.setActiveCaptcha( daoUtil.getInt( 6 ) );
+                quiz.setActiveRequirement( daoUtil.getInt( 7 ) );
+                quiz.setDateBeginDisponibility( daoUtil.getDate( 8 ) );
+                quiz.setDateEndDisponibility( daoUtil.getDate( 9 ) );
+                quiz.setDateCreation( daoUtil.getTimestamp( 10 ) );
+                quiz.setCgu( daoUtil.getString( 11 ) );
+                quiz.setTypeQuiz( daoUtil.getString( 12 ) );
+                quiz.setDisplayStepByStep( daoUtil.getBoolean( 13 ) );
+                quiz.setDisplayResultAfterEachStep( daoUtil.getBoolean( 14 ) );
+            }
+
+            daoUtil.free( );
+        }
 
         return quiz;
     }
@@ -248,29 +266,31 @@ public class QuizDAO implements IQuizDAO
     /**
      * Update the record in the table
      * 
-     * @param quiz The instance of the Quiz to update
-     * @param plugin the plugin
+     * @param quiz
+     *            The instance of the Quiz to update
+     * @param plugin
+     *            the plugin
      */
     public void store( Quiz quiz, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setString( 1, quiz.getName( ) );
-        daoUtil.setString( 2, quiz.getIntroduction( ) );
-        daoUtil.setString( 3, quiz.getConclusion( ) );
-        daoUtil.setBoolean( 4, quiz.isEnabled( ) );
-        daoUtil.setInt( 5, quiz.getActiveCaptcha( ) );
-        daoUtil.setInt( 6, quiz.getActiveRequirement( ) );
-        daoUtil.setDate( 7, ( quiz.getDateBeginDisponibility( ) != null ) ? new Date( quiz.getDateBeginDisponibility( )
-                .getTime( ) ) : null );
-        daoUtil.setDate( 8, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( )
-                .getTime( ) ) : null );
-        daoUtil.setString( 9, quiz.getCgu( ) );
-        daoUtil.setBoolean( 10, quiz.getDisplayStepByStep( ) );
-        daoUtil.setBoolean( 11, quiz.getDisplayResultAfterEachStep( ) );
-        daoUtil.setInt( 12, quiz.getIdQuiz( ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            daoUtil.setString( 1, quiz.getName( ) );
+            daoUtil.setString( 2, quiz.getIntroduction( ) );
+            daoUtil.setString( 3, quiz.getConclusion( ) );
+            daoUtil.setBoolean( 4, quiz.isEnabled( ) );
+            daoUtil.setInt( 5, quiz.getActiveCaptcha( ) );
+            daoUtil.setInt( 6, quiz.getActiveRequirement( ) );
+            daoUtil.setDate( 7, ( quiz.getDateBeginDisponibility( ) != null ) ? new Date( quiz.getDateBeginDisponibility( ).getTime( ) ) : null );
+            daoUtil.setDate( 8, ( quiz.getDateEndDisponibility( ) != null ) ? new Date( quiz.getDateEndDisponibility( ).getTime( ) ) : null );
+            daoUtil.setString( 9, quiz.getCgu( ) );
+            daoUtil.setBoolean( 10, quiz.getDisplayStepByStep( ) );
+            daoUtil.setBoolean( 11, quiz.getDisplayResultAfterEachStep( ) );
+            daoUtil.setInt( 12, quiz.getIdQuiz( ) );
 
-        daoUtil.executeUpdate( );
+            daoUtil.executeUpdate( );
 
-        daoUtil.free( );
+            daoUtil.free( );
+        }
     }
 }

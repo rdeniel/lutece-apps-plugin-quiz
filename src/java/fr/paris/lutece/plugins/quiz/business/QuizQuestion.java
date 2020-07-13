@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.quiz.business;
 
 import java.util.List;
 
-
 /**
  * This class represents business object QuizQuestion
  */
@@ -58,6 +57,7 @@ public class QuizQuestion
 
     /**
      * Returns the identifier of this QuizQuestion.
+     * 
      * @return _nIdQuestion The Question identifier
      */
     public int getIdQuestion( )
@@ -67,7 +67,9 @@ public class QuizQuestion
 
     /**
      * Sets the identifier of the question to the specified integer.
-     * @param nIdQuestion The Question identifier
+     * 
+     * @param nIdQuestion
+     *            The Question identifier
      */
     public void setIdQuestion( int nIdQuestion )
     {
@@ -76,6 +78,7 @@ public class QuizQuestion
 
     /**
      * Return the identifier of the quiz
+     * 
      * @return _nIdQuiz The Quiz identifier
      */
     public int getIdQuiz( )
@@ -85,7 +88,9 @@ public class QuizQuestion
 
     /**
      * Sets the identifier of the quiz to the specifies integer
-     * @param nIdQuiz The Quiz identifier
+     * 
+     * @param nIdQuiz
+     *            The Quiz identifier
      */
     public void setIdQuiz( int nIdQuiz )
     {
@@ -94,6 +99,7 @@ public class QuizQuestion
 
     /**
      * Return The Question
+     * 
      * @return _strQuestion The Question
      */
     public String getQuestionLabel( )
@@ -103,7 +109,9 @@ public class QuizQuestion
 
     /**
      * Set the Question to the specified string
-     * @param strQuestion The Question
+     * 
+     * @param strQuestion
+     *            The Question
      */
     public void setQuestionLabel( String strQuestion )
     {
@@ -112,6 +120,7 @@ public class QuizQuestion
 
     /**
      * Returns the IdGroup
+     * 
      * @return The IdGroup
      */
     public int getIdGroup( )
@@ -121,7 +130,9 @@ public class QuizQuestion
 
     /**
      * Sets the IdGroup
-     * @param nIdGroup The IdGroup
+     * 
+     * @param nIdGroup
+     *            The IdGroup
      */
     public void setIdGroup( int nIdGroup )
     {
@@ -130,6 +141,7 @@ public class QuizQuestion
 
     /**
      * Gets explaination
+     * 
      * @return The explaination
      */
     public String getExplaination( )
@@ -139,7 +151,9 @@ public class QuizQuestion
 
     /**
      * Sets the explaination
-     * @param strExplication The explaination to set
+     * 
+     * @param strExplication
+     *            The explaination to set
      */
     public void setExplaination( String strExplication )
     {
@@ -148,7 +162,9 @@ public class QuizQuestion
 
     /**
      * Sets answsers to the question
-     * @param listAnswers A list of answers
+     * 
+     * @param listAnswers
+     *            A list of answers
      */
     public void setAnswers( List<Answer> listAnswers )
     {
@@ -157,6 +173,7 @@ public class QuizQuestion
 
     /**
      * Gest answer to a question
+     * 
      * @return The answer list
      */
     public List<Answer> getAnswers( )
@@ -166,6 +183,7 @@ public class QuizQuestion
 
     /**
      * Get the id of the image
+     * 
      * @return the id of the image
      */
     public int getIdImage( )
@@ -175,7 +193,9 @@ public class QuizQuestion
 
     /**
      * Set the id of the image
-     * @param nIdImage the id of the image
+     * 
+     * @param nIdImage
+     *            the id of the image
      */
     public void setIdImage( int nIdImage )
     {

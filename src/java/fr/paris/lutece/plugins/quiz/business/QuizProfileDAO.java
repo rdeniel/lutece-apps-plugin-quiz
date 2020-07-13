@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,6 @@ import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Quiz profile DAO
  */
@@ -61,26 +60,29 @@ public class QuizProfileDAO implements IQuizProfileDAO
     /**
      * Find the new primary key in the table.
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return the new primary key
      */
     private int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
-
-        int nKey;
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+            daoUtil.executeQuery( );
+
+            int nKey;
+
+            if ( !daoUtil.next( ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+            daoUtil.free( );
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free( );
-
-        return nKey;
     }
 
     /**
@@ -89,16 +91,18 @@ public class QuizProfileDAO implements IQuizProfileDAO
     @Override
     public void insert( QuizProfile profil, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_PROFIL, plugin );
-        profil.setIdProfile( newPrimaryKey( plugin ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_PROFIL, plugin ) )
+        {
+            profil.setIdProfile( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, profil.getIdProfile( ) );
-        daoUtil.setString( 2, profil.getName( ) );
-        daoUtil.setString( 3, profil.getDescription( ) );
-        daoUtil.setInt( 4, profil.getIdQuiz( ) );
+            daoUtil.setInt( 1, profil.getIdProfile( ) );
+            daoUtil.setString( 2, profil.getName( ) );
+            daoUtil.setString( 3, profil.getDescription( ) );
+            daoUtil.setInt( 4, profil.getIdQuiz( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -109,21 +113,22 @@ public class QuizProfileDAO implements IQuizProfileDAO
     {
         ReferenceList profilsReferenceList = new ReferenceList( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
-        daoUtil.setInt( 1, nIdQuiz );
-
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin ) )
         {
-            ReferenceItem item = new ReferenceItem( );
-            item.setCode( String.valueOf( daoUtil.getInt( 1 ) ) );
-            item.setName( daoUtil.getString( 2 ) );
-            profilsReferenceList.add( item );
+            daoUtil.setInt( 1, nIdQuiz );
+
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                ReferenceItem item = new ReferenceItem( );
+                item.setCode( String.valueOf( daoUtil.getInt( 1 ) ) );
+                item.setName( daoUtil.getString( 2 ) );
+                profilsReferenceList.add( item );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
-
         return profilsReferenceList;
     }
 
@@ -135,17 +140,19 @@ public class QuizProfileDAO implements IQuizProfileDAO
     {
         String name = StringUtils.EMPTY;
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_LOAD_PROFIL_BY_ID, plugin );
-        daoUtil.setInt( 1, nIdProfil );
-
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_LOAD_PROFIL_BY_ID, plugin ) )
         {
-            name = daoUtil.getString( 1 );
-        }
+            daoUtil.setInt( 1, nIdProfil );
 
-        daoUtil.free( );
+            daoUtil.executeQuery( );
+
+            if ( daoUtil.next( ) )
+            {
+                name = daoUtil.getString( 1 );
+            }
+
+            daoUtil.free( );
+        }
 
         return name;
     }
@@ -156,21 +163,22 @@ public class QuizProfileDAO implements IQuizProfileDAO
     @Override
     public QuizProfile load( int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PROFIL, plugin );
-        daoUtil.setInt( 1, nKey );
-        daoUtil.executeQuery( );
-
         QuizProfile quizProfil = null;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PROFIL, plugin ) )
         {
-            quizProfil = new QuizProfile( );
-            quizProfil.setIdProfile( daoUtil.getInt( 1 ) );
-            quizProfil.setName( daoUtil.getString( 2 ) );
-            quizProfil.setDescription( daoUtil.getString( 3 ) );
-        }
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                quizProfil = new QuizProfile( );
+                quizProfil.setIdProfile( daoUtil.getInt( 1 ) );
+                quizProfil.setName( daoUtil.getString( 2 ) );
+                quizProfil.setDescription( daoUtil.getString( 3 ) );
+            }
+
+            daoUtil.free( );
+        }
 
         return quizProfil;
     }
@@ -181,24 +189,25 @@ public class QuizProfileDAO implements IQuizProfileDAO
     @Override
     public Collection<QuizProfile> findAll( int nIdQuiz, Plugin plugin )
     {
-        Collection<QuizProfile> result = new ArrayList<QuizProfile>( );
+        Collection<QuizProfile> result = new ArrayList<>( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
-        daoUtil.setInt( 1, nIdQuiz );
-
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin ) )
         {
-            QuizProfile profil = new QuizProfile( );
-            profil.setIdProfile( daoUtil.getInt( 1 ) );
-            profil.setName( daoUtil.getString( 2 ) );
-            profil.setDescription( daoUtil.getString( 3 ) );
-            result.add( profil );
+            daoUtil.setInt( 1, nIdQuiz );
+
+            daoUtil.executeQuery( );
+
+            while ( daoUtil.next( ) )
+            {
+                QuizProfile profil = new QuizProfile( );
+                profil.setIdProfile( daoUtil.getInt( 1 ) );
+                profil.setName( daoUtil.getString( 2 ) );
+                profil.setDescription( daoUtil.getString( 3 ) );
+                result.add( profil );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
-
         return result;
     }
 
@@ -208,10 +217,12 @@ public class QuizProfileDAO implements IQuizProfileDAO
     @Override
     public void delete( int nIdProfil, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdProfil );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdProfil );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -220,14 +231,16 @@ public class QuizProfileDAO implements IQuizProfileDAO
     @Override
     public void store( QuizProfile quizProfil, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setString( 1, quizProfil.getName( ) );
-        daoUtil.setString( 2, quizProfil.getDescription( ) );
-        daoUtil.setInt( 3, quizProfil.getIdProfile( ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            daoUtil.setString( 1, quizProfil.getName( ) );
+            daoUtil.setString( 2, quizProfil.getDescription( ) );
+            daoUtil.setInt( 3, quizProfil.getIdProfile( ) );
 
-        daoUtil.executeUpdate( );
+            daoUtil.executeUpdate( );
 
-        daoUtil.free( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -236,9 +249,11 @@ public class QuizProfileDAO implements IQuizProfileDAO
     @Override
     public void deleteByQuiz( int nIdQuiz, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_QUIZ, plugin );
-        daoUtil.setInt( 1, nIdQuiz );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_QUIZ, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdQuiz );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.quiz.business.images;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
-
 /**
  * Home for images of quiz's questions
  * 
@@ -55,8 +54,11 @@ public final class QuizImageHome
 
     /**
      * Get the image associated with a question
-     * @param nIdImage The id of the image
-     * @param plugin The plugin
+     * 
+     * @param nIdImage
+     *            The id of the image
+     * @param plugin
+     *            The plugin
      * @return The image
      */
     public static QuizImage getImage( int nIdImage, Plugin plugin )
@@ -66,8 +68,11 @@ public final class QuizImageHome
 
     /**
      * Insert an image
-     * @param quizImage The image to insert
-     * @param plugin The plugin
+     * 
+     * @param quizImage
+     *            The image to insert
+     * @param plugin
+     *            The plugin
      */
     public static void insertImage( QuizImage quizImage, Plugin plugin )
     {
@@ -76,8 +81,11 @@ public final class QuizImageHome
 
     /**
      * Update an image
-     * @param quizImage The image to insert
-     * @param plugin The plugin
+     * 
+     * @param quizImage
+     *            The image to insert
+     * @param plugin
+     *            The plugin
      */
     public static void updateImage( QuizImage quizImage, Plugin plugin )
     {
@@ -86,8 +94,11 @@ public final class QuizImageHome
 
     /**
      * Remove an image
-     * @param nIdImage The id of the image to remove
-     * @param plugin The plugin
+     * 
+     * @param nIdImage
+     *            The id of the image to remove
+     * @param plugin
+     *            The plugin
      */
     public static void removeImage( int nIdImage, Plugin plugin )
     {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Jsp Bean to manage questions and answers of quiz
  */
@@ -94,15 +93,15 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_ONLY_ONE_ANSWER = "quiz.message.noMoreThanOneGoodAnswer";
     private static final String MESSGAE_ERROR_NO_QUESTION_LABEL = "quiz.message.error.noQuestionLabel";
 
-    //Jsps
+    // Jsps
     private static final String JSP_DO_REMOVE_QUESTION = "jsp/admin/plugins/quiz/DoRemoveQuestion.jsp";
     private static final String JSP_DO_REMOVE_ANSWER = "jsp/admin/plugins/quiz/DoRemoveAnswer.jsp";
 
-    //Urls
+    // Urls
     private static final String JSP_URL_MANAGE_QUESTIONS = "ManageQuestions.jsp";
     private static final String JSP_URL_MODIFY_QUESTION = "ModifyQuestion.jsp";
 
-    //Parameters
+    // Parameters
     private static final String PARAMETER_QUIZ_ID = "quiz_id";
     private static final String PARAMETER_QUESTION_ID = "question_id";
     private static final String PARAMETER_QUESTION_LABEL = "question_label";
@@ -122,7 +121,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_CREATE_ANSWER = "admin/plugins/quiz/create_answer.html";
     private static final String TEMPLATE_MODIFY_ANSWER = "admin/plugins/quiz/modify_answer.html";
 
-    //Markers
+    // Markers
     private static final String MARK_QUIZ = "quiz";
     private static final String MARK_QUESTION = "question";
     private static final String MARK_GROUPS_LIST = "groups_list";
@@ -140,7 +139,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
     /**
      * Return the manage questions page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     public String getManageQuestions( HttpServletRequest request )
@@ -196,7 +197,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Returns the Question creation form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html creation form
      */
     public String getCreateQuizQuestion( HttpServletRequest request )
@@ -221,7 +223,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Process question creation
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return URL
      */
     public String doCreateQuizQuestion( HttpServletRequest request )
@@ -270,7 +273,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Returns the question modification form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String getModifyQuizQuestion( HttpServletRequest request )
@@ -308,7 +312,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Process the modifications of a question
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
      */
     public String doModifyQuizQuestion( HttpServletRequest request )
@@ -372,25 +377,26 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Returns the question removing form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html creation form
      */
     public String getRemoveQuizQuestion( HttpServletRequest request )
     {
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdQuizQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
-        String strUrl = JSP_DO_REMOVE_QUESTION + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID
-                + "=" + nIdQuizQuestion;
+        String strUrl = JSP_DO_REMOVE_QUESTION + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID + "=" + nIdQuizQuestion;
         String strMessageKey = PROPERTY_CONFIRM_DELETE_QUIZ_QUESTION;
-        String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "",
-                AdminMessage.TYPE_CONFIRMATION );
+        String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "", AdminMessage.TYPE_CONFIRMATION );
 
         return strAdminMessageUrl;
     }
 
     /**
      * Remove a question
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doRemoveQuizQuestion( HttpServletRequest request )
@@ -409,7 +415,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the create answer page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     public String getCreateAnswer( HttpServletRequest request )
@@ -433,8 +441,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
             if ( profilsList.isEmpty( ) )
             {
-                return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil",
-                        AdminMessage.TYPE_STOP );
+                return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil", AdminMessage.TYPE_STOP );
             }
             model.put( MARK_LIST_PROFILS, profilsList );
         }
@@ -450,7 +457,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
     /**
      * Create an answer
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doCreateAnswer( HttpServletRequest request )
@@ -498,7 +507,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the Modify answer page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     public String getModifyAnswer( HttpServletRequest request )
@@ -522,8 +533,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
             if ( profilsList.isEmpty( ) )
             {
-                return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil",
-                        AdminMessage.TYPE_STOP );
+                return AdminMessageService.getMessageUrl( request, "quiz.create_answer.errorProfil", AdminMessage.TYPE_STOP );
             }
             model.put( MARK_LIST_PROFILS, profilsList );
         }
@@ -539,7 +549,9 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
     /**
      * Modify the answer
-     * @param request The HHTP request
+     * 
+     * @param request
+     *            The HHTP request
      * @return The exit url
      */
     public String doModifyAnswer( HttpServletRequest request )
@@ -563,8 +575,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             profilId = Integer.parseInt( request.getParameter( PARAMETER_ID_PROFIL ) );
         }
 
-        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 )
-                && !answer.isCorrect( ) )
+        if ( ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) && !answer.isCorrect( ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
         }
@@ -574,8 +585,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        if ( ( answer.getValid( ) == 0 ) && ( nValid == 1 )
-                && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
+        if ( ( answer.getValid( ) == 0 ) && ( nValid == 1 ) && ( AnswerHome.getValidAnswerCount( nIdQuestion, getPlugin( ) ) > 0 ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_ANSWER, AdminMessage.TYPE_STOP );
         }
@@ -597,7 +607,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Returns the question removing form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html creation form
      */
     public String getRemoveAnswer( HttpServletRequest request )
@@ -619,7 +630,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             }
         }
 
-        if ( ( i == 1 ) && ( answer2.getValid( ) == 1 ) ) //si 1 r�ponse bonne et r�ponse ajout�e bonne
+        if ( ( i == 1 ) && ( answer2.getValid( ) == 1 ) ) // si 1 r�ponse bonne et r�ponse ajout�e bonne
         {
             strMessageKey = PROPERTY_CONFIRM_DELETE_ANSWER_TURN_RED;
             QuizQuestionHome.update( question, getPlugin( ) );
@@ -629,11 +640,10 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
             strMessageKey = PROPERTY_CONFIRM_DELETE_ANSWER;
         }
 
-        String strUrl = JSP_DO_REMOVE_ANSWER + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID
-                + "=" + nIdQuestion + "&" + PARAMETER_ANSWER_ID + "=" + nIdAnswer;
+        String strUrl = JSP_DO_REMOVE_ANSWER + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_QUESTION_ID + "=" + nIdQuestion + "&"
+                + PARAMETER_ANSWER_ID + "=" + nIdAnswer;
 
-        String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "",
-                AdminMessage.TYPE_CONFIRMATION );
+        String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "", AdminMessage.TYPE_CONFIRMATION );
 
         return strAdminMessageUrl;
     }
@@ -641,7 +651,8 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
     /**
      * Remove an answer
      * 
-     * @param request The HTTP request
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doRemoveAnswer( HttpServletRequest request )
@@ -661,6 +672,7 @@ public class QuizQuestionJspBean extends PluginAdminPageJspBean
 
     /**
      * Return a reference list with Yes/No choice
+     * 
      * @return The list
      */
     private ReferenceList getYesNoList( )

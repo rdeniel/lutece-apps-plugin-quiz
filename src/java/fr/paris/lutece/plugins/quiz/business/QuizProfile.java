@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,6 +48,7 @@ public class QuizProfile
 
     /**
      * Get the id of the profile
+     * 
      * @return The id of the profile
      */
     public int getIdProfile( )
@@ -57,7 +58,9 @@ public class QuizProfile
 
     /**
      * Set the id of the profile
-     * @param nIdProfile The id of the profile
+     * 
+     * @param nIdProfile
+     *            The id of the profile
      */
     public void setIdProfile( int nIdProfile )
     {
@@ -73,7 +76,8 @@ public class QuizProfile
     }
 
     /**
-     * @param strName the _strName to set
+     * @param strName
+     *            the _strName to set
      */
     public void setName( String strName )
     {
@@ -89,7 +93,8 @@ public class QuizProfile
     }
 
     /**
-     * @param strDescription the _strDescription to set
+     * @param strDescription
+     *            the _strDescription to set
      */
     public void setDescription( String strDescription )
     {
@@ -105,7 +110,8 @@ public class QuizProfile
     }
 
     /**
-     * @param nIdQuiz the _nIdQuiz to set
+     * @param nIdQuiz
+     *            the _nIdQuiz to set
      */
     public void setIdQuiz( int nIdQuiz )
     {

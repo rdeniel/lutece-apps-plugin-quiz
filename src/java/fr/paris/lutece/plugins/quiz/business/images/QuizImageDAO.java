@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.quiz.business.images;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
-
 /**
  * DAO for images
  */
@@ -50,20 +49,24 @@ public class QuizImageDAO implements IQuizImageDAO
 
     /**
      * Get a new primary key
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return the new primary key
      */
     private int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEX_PRIMARY_KEY, plugin );
-        daoUtil.executeQuery( );
-        int nId = 1;
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEX_PRIMARY_KEY, plugin ) )
         {
-            nId = daoUtil.getInt( 1 ) + 1;
+            daoUtil.executeQuery( );
+            int nId = 1;
+            if ( daoUtil.next( ) )
+            {
+                nId = daoUtil.getInt( 1 ) + 1;
+            }
+            daoUtil.free( );
+            return nId;
         }
-        daoUtil.free( );
-        return nId;
     }
 
     /**
@@ -73,14 +76,16 @@ public class QuizImageDAO implements IQuizImageDAO
     public QuizImage findQuizImage( int nIdImage, Plugin plugin )
     {
         QuizImage quizImage = null;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_QUIZ_IMAGE, plugin );
-        daoUtil.setInt( 1, nIdImage );
-        daoUtil.executeQuery( );
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_QUIZ_IMAGE, plugin ) )
         {
-            quizImage = new QuizImage( nIdImage, daoUtil.getBytes( 1 ), daoUtil.getString( 2 ) );
+            daoUtil.setInt( 1, nIdImage );
+            daoUtil.executeQuery( );
+            if ( daoUtil.next( ) )
+            {
+                quizImage = new QuizImage( nIdImage, daoUtil.getBytes( 1 ), daoUtil.getString( 2 ) );
+            }
+            daoUtil.free( );
         }
-        daoUtil.free( );
         return quizImage;
     }
 
@@ -90,13 +95,15 @@ public class QuizImageDAO implements IQuizImageDAO
     @Override
     public synchronized void insertQuizImage( QuizImage quizImage, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_QUIZ_IMAGE, plugin );
-        quizImage.setIdImage( newPrimaryKey( plugin ) );
-        daoUtil.setInt( 1, quizImage.getIdImage( ) );
-        daoUtil.setBytes( 2, quizImage.getContent( ) );
-        daoUtil.setString( 3, quizImage.getContentType( ) );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_QUIZ_IMAGE, plugin ) )
+        {
+            quizImage.setIdImage( newPrimaryKey( plugin ) );
+            daoUtil.setInt( 1, quizImage.getIdImage( ) );
+            daoUtil.setBytes( 2, quizImage.getContent( ) );
+            daoUtil.setString( 3, quizImage.getContentType( ) );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -105,12 +112,14 @@ public class QuizImageDAO implements IQuizImageDAO
     @Override
     public void updateQuizImage( QuizImage quizImage, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_QUIZ_IMAGE, plugin );
-        daoUtil.setBytes( 1, quizImage.getContent( ) );
-        daoUtil.setString( 2, quizImage.getContentType( ) );
-        daoUtil.setInt( 3, quizImage.getIdImage( ) );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_QUIZ_IMAGE, plugin ) )
+        {
+            daoUtil.setBytes( 1, quizImage.getContent( ) );
+            daoUtil.setString( 2, quizImage.getContentType( ) );
+            daoUtil.setInt( 3, quizImage.getIdImage( ) );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -119,10 +128,12 @@ public class QuizImageDAO implements IQuizImageDAO
     @Override
     public void removeQuizImage( int nIdImage, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_QUIZ_IMAGE, plugin );
-        daoUtil.setInt( 1, nIdImage );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_REMOVE_QUIZ_IMAGE, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdImage );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
 }

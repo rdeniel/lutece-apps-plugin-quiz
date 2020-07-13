@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.quiz.business.images;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
-
 /**
  * Interface of DAO for question images
  */
@@ -43,30 +42,42 @@ public interface IQuizImageDAO
 {
     /**
      * Get the image
-     * @param nIdImage The id of the image
-     * @param plugin The plugin
+     * 
+     * @param nIdImage
+     *            The id of the image
+     * @param plugin
+     *            The plugin
      * @return The byte array of the image, or null if no image was found
      */
     QuizImage findQuizImage( int nIdImage, Plugin plugin );
 
     /**
      * Insert an image into the database
-     * @param quizImage The image
-     * @param plugin The plugin
+     * 
+     * @param quizImage
+     *            The image
+     * @param plugin
+     *            The plugin
      */
     void insertQuizImage( QuizImage quizImage, Plugin plugin );
 
     /**
      * Update an image of a question
-     * @param quizImage The image
-     * @param plugin The plugin
+     * 
+     * @param quizImage
+     *            The image
+     * @param plugin
+     *            The plugin
      */
     void updateQuizImage( QuizImage quizImage, Plugin plugin );
 
     /**
      * Remove an image associated with a question
-     * @param nIdImage The id of the question to remove
-     * @param plugin The plugin
+     * 
+     * @param nIdImage
+     *            The id of the question to remove
+     * @param plugin
+     *            The plugin
      */
     void removeQuizImage( int nIdImage, Plugin plugin );
 }

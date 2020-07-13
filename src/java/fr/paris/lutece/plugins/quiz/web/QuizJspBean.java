@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,10 +70,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang.StringUtils;
 
-
 /**
- * This class provides the user interface to manage quiz ( manage,
- * create, modify, remove) and groups.
+ * This class provides the user interface to manage quiz ( manage, create, modify, remove) and groups.
  */
 public class QuizJspBean extends PluginAdminPageJspBean
 {
@@ -103,18 +101,18 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_CANNOT_DELETE_QUIZ = "quiz.message_quiz.cannotDeleteQuiz";
     private static final String MESSAGE_ONLY_ONE_GROUP_CAN_DISPLAY_RESULT = "quiz.message.group.onlyOneGroupDisplayResult";
 
-    //Jsps
+    // Jsps
     private static final String JSP_DO_REMOVE_QUIZ = "jsp/admin/plugins/quiz/DoRemoveQuiz.jsp";
     private static final String JSP_DO_REMOVE_GROUP = "jsp/admin/plugins/quiz/DoRemoveGroup.jsp";
     private static final String JSP_MANAGE_QUIZ = "jsp/admin/plugins/quiz/ManageQuiz.jsp";
     private static final String JSP_DO_REMOVE_PROFIL = "jsp/admin/plugins/quiz/DoRemoveProfil.jsp";
 
-    //Urls
+    // Urls
     private static final String JSP_URL_MANAGE_QUIZ = "ManageQuiz.jsp";
     private static final String JSP_URL_MODIFY_QUIZ = "ModifyQuiz.jsp";
     private static final String JSP_URL_MANAGE_QUESTIONS = "ManageQuestions.jsp";
 
-    //Parameters
+    // Parameters
     private static final String PARAMETER_QUIZ_ID = "quiz_id";
     private static final String PARAMETER_QUIZ_NAME = "quiz_name";
     private static final String PARAMETER_INTRODUCTION = "quiz_introduction";
@@ -149,7 +147,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_CREATE_PROFIL = "admin/plugins/quiz/create_profil.html";
     private static final String TEMPLATE_MODIFY_PROFIL = "admin/plugins/quiz/modify_profil.html";
 
-    //Markers
+    // Markers
     private static final String MARK_QUIZ_LIST = "quiz_list";
     private static final String MARK_QUIZ = "quiz";
     private static final String MARK_WEBAPP_URL = "webapp_url";
@@ -165,7 +163,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Returns quiz management form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String getManageQuiz( HttpServletRequest request )
@@ -185,7 +184,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Returns the Quiz creation form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html creation form
      */
     public String getCreateQuiz( HttpServletRequest request )
@@ -205,7 +205,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Process quiz creation
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return URL
      */
     public String doCreateQuiz( HttpServletRequest request )
@@ -217,8 +218,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strDateBeginDisponibility = request.getParameter( PARAMETER_DATE_BEGIN_DISPONIBILITY );
         String strType = request.getParameter( PARAMETER_TYPE );
         boolean bDisplayStepByStep = Boolean.parseBoolean( request.getParameter( PARAMETER_DISPLAY_STEP_BY_STEP ) );
-        boolean bDisplayResultAfterEachStep = Boolean.parseBoolean( request
-                .getParameter( PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP ) );
+        boolean bDisplayResultAfterEachStep = Boolean.parseBoolean( request.getParameter( PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP ) );
 
         java.util.Date tDateBeginDisponibility = null;
         tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale( ) );
@@ -281,7 +281,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Returns the form for quiz modification
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String getModifyQuiz( HttpServletRequest request )
@@ -304,7 +305,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Process the Quiz modifications
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String doModifyQuiz( HttpServletRequest request )
@@ -314,8 +316,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         String strConclusion = request.getParameter( PARAMETER_CONCLUSION );
         String strDateBeginDisponibility = request.getParameter( PARAMETER_DATE_BEGIN_DISPONIBILITY );
         boolean bDisplayStepByStep = Boolean.parseBoolean( request.getParameter( PARAMETER_DISPLAY_STEP_BY_STEP ) );
-        boolean bDisplayResultAfterEachStep = Boolean.parseBoolean( request
-                .getParameter( PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP ) );
+        boolean bDisplayResultAfterEachStep = Boolean.parseBoolean( request.getParameter( PARAMETER_DISPLAY_RESULTS_AFTER_EACH_STEP ) );
 
         java.util.Date tDateBeginDisponibility = null;
         tDateBeginDisponibility = DateUtil.formatDate( strDateBeginDisponibility, getLocale( ) );
@@ -391,7 +392,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Returns the quiz remove page
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String getRemoveQuiz( HttpServletRequest request )
@@ -404,16 +406,14 @@ public class QuizJspBean extends PluginAdminPageJspBean
         if ( quiz.isEnabled( ) )
         {
             String strMessageKey = MESSAGE_CANNOT_DELETE_QUIZ;
-            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, JSP_MANAGE_QUIZ, "",
-                    AdminMessage.TYPE_STOP );
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, JSP_MANAGE_QUIZ, "", AdminMessage.TYPE_STOP );
         }
         else
         {
             strUrl = JSP_DO_REMOVE_QUIZ + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz;
 
             String strMessageKey = PROPERTY_CONFIRM_DELETE_QUIZ;
-            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "",
-                    AdminMessage.TYPE_CONFIRMATION );
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "", AdminMessage.TYPE_CONFIRMATION );
         }
 
         return strAdminMessageUrl;
@@ -422,7 +422,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Remove a quiz
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String doRemoveQuiz( HttpServletRequest request )
@@ -447,7 +448,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Returns quiz displaying form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String doDisplayQuiz( HttpServletRequest request )
@@ -473,7 +475,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the group create page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The group create page
      */
     public String getCreateGroup( HttpServletRequest request )
@@ -506,7 +510,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Create a group
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doCreateGroup( HttpServletRequest request )
@@ -557,7 +563,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the modify group page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     public String getModifyGroup( HttpServletRequest request )
@@ -594,7 +602,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Modify a group
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doModifyGroup( HttpServletRequest request )
@@ -611,12 +621,11 @@ public class QuizJspBean extends PluginAdminPageJspBean
         {
             boolean bDisplayScore = StringUtils.isNotEmpty( request.getParameter( PARAMETER_DISPLAY_SCORE ) );
 
-            // If the group was not a group that display result, and we set it to display result, we check that another group has not already this function for this quiz
-            if ( bDisplayScore && !group.getDisplayScore( )
-                    && QuestionGroupHome.hasGroupDisplayScore( nIdQuiz, getPlugin( ) ) )
+            // If the group was not a group that display result, and we set it to display result, we check that another group has not already this function for
+            // this quiz
+            if ( bDisplayScore && !group.getDisplayScore( ) && QuestionGroupHome.hasGroupDisplayScore( nIdQuiz, getPlugin( ) ) )
             {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_GROUP_CAN_DISPLAY_RESULT,
-                        AdminMessage.TYPE_STOP );
+                return AdminMessageService.getMessageUrl( request, MESSAGE_ONLY_ONE_GROUP_CAN_DISPLAY_RESULT, AdminMessage.TYPE_STOP );
             }
 
             group.setDisplayScore( bDisplayScore );
@@ -669,7 +678,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Returns the question removing form
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return Html creation form
      */
     public String getRemoveGroup( HttpServletRequest request )
@@ -677,8 +687,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
         String strMessageKey = "";
-        String strUrl = JSP_DO_REMOVE_GROUP + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_GROUP_ID + "="
-                + nIdGroup;
+        String strUrl = JSP_DO_REMOVE_GROUP + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_GROUP_ID + "=" + nIdGroup;
 
         Collection<Integer> idQuestionsList = QuizQuestionHome.findIdQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
 
@@ -691,8 +700,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
             strMessageKey = PROPERTY_CONFIRM_DELETE_GROUP_WITH_QUESTIONS;
         }
 
-        String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "",
-                AdminMessage.TYPE_CONFIRMATION );
+        String strAdminMessageUrl = AdminMessageService.getMessageUrl( request, strMessageKey, strUrl, "", AdminMessage.TYPE_CONFIRMATION );
 
         return strAdminMessageUrl;
     }
@@ -700,7 +708,8 @@ public class QuizJspBean extends PluginAdminPageJspBean
     /**
      * Remove a group
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the exit url
      */
     public String doRemoveGroup( HttpServletRequest request )
@@ -708,8 +717,7 @@ public class QuizJspBean extends PluginAdminPageJspBean
         int nIdQuiz = Integer.parseInt( request.getParameter( PARAMETER_QUIZ_ID ) );
         int nIdGroup = Integer.parseInt( request.getParameter( PARAMETER_GROUP_ID ) );
 
-        Collection<QuizQuestion> listQuestions = QuizQuestionHome
-                .findQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
+        Collection<QuizQuestion> listQuestions = QuizQuestionHome.findQuestionsByGroup( nIdQuiz, nIdGroup, getPlugin( ) );
 
         for ( QuizQuestion question : listQuestions )
         {
@@ -728,7 +736,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Move up a group
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return the exit url
      */
     public String doMoveUpGroup( HttpServletRequest request )
@@ -747,7 +757,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Move down a group
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return the exit url
      */
     public String doMoveDownGroup( HttpServletRequest request )
@@ -766,7 +778,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the create profil page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The page
      */
     public String getCreateProfil( HttpServletRequest request )
@@ -788,7 +802,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Create a profil
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doCreateProfil( HttpServletRequest request )
@@ -819,7 +835,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the profil removing form
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return Html creation form
      */
     public String getRemoveProfil( HttpServletRequest request )
@@ -830,16 +848,13 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
         if ( AnswerHome.isAnswersWithProfil( nIdProfil, getPlugin( ) ) )
         {
-            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, PROPERTY_IMPOSSIBLE_DELETE_QUIZ_PROFIL,
-                    AdminMessage.TYPE_STOP );
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, PROPERTY_IMPOSSIBLE_DELETE_QUIZ_PROFIL, AdminMessage.TYPE_STOP );
         }
         else
         {
-            String strUrl = JSP_DO_REMOVE_PROFIL + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_PROFIL_ID
-                    + "=" + nIdProfil;
+            String strUrl = JSP_DO_REMOVE_PROFIL + "?" + PARAMETER_QUIZ_ID + "=" + nIdQuiz + "&" + PARAMETER_PROFIL_ID + "=" + nIdProfil;
 
-            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, PROPERTY_CONFIRM_DELETE_QUIZ_PROFIL,
-                    strUrl, "", AdminMessage.TYPE_CONFIRMATION );
+            strAdminMessageUrl = AdminMessageService.getMessageUrl( request, PROPERTY_CONFIRM_DELETE_QUIZ_PROFIL, strUrl, "", AdminMessage.TYPE_CONFIRMATION );
         }
 
         return strAdminMessageUrl;
@@ -847,7 +862,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Remove a profil
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The exit url
      */
     public String doRemoveProfil( HttpServletRequest request )
@@ -865,7 +882,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the form for profil modification
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return Html form
      */
     public String getModifyProfil( HttpServletRequest request )
@@ -890,7 +909,9 @@ public class QuizJspBean extends PluginAdminPageJspBean
 
     /**
      * Process the modifications of a profil
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
      */
     public String doModifyProfil( HttpServletRequest request )
